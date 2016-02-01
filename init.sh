@@ -271,8 +271,6 @@ function init_ril()
 			set_property rild.libargs "-d /dev/ttyUSB2 -v /dev/ttyUSB1"
 			;;
 		*)
-			set_property rild.libpath /system/lib/libreference-ril.so
-			set_property rild.libargs "-d /dev/ttyUSB2"
 			;;
 	esac
 }
