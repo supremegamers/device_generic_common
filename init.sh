@@ -243,6 +243,9 @@ function create_pointercal()
 function init_tscal()
 {
 	case "$PRODUCT" in
+		ST70416-6*)
+			modprobe gslx680_ts_acpi
+			;&
 		T91|T101|ET2002|74499FU|945GSE-ITE8712|CF-19[CDYFGKLP]*)
 			create_pointercal
 			return
