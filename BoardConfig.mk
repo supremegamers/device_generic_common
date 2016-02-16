@@ -58,6 +58,7 @@ USE_INTEL_OMX_COMPONENTS := true
 
 USE_OPENGL_RENDERER := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS ?= 3
+BOARD_USES_DRM_HWCOMPOSER ?= true
 
 USE_CAMERA_STUB ?= false
 
@@ -70,7 +71,7 @@ BOARD_WPA_SUPPLICANT_PRIVATE_LIB ?= private_lib_driver_cmd
 WPA_SUPPLICANT_VERSION ?= VER_2_1_DEVEL
 WIFI_DRIVER_MODULE_PATH ?= auto
 
-BOARD_GPU_DRIVERS ?= i915 i965 nouveau r300g r600g swrast
+BOARD_GPU_DRIVERS ?= i915 i965 nouveau r300g r600g swrast virgl
 ifneq ($(strip $(BOARD_GPU_DRIVERS)),)
 TARGET_HARDWARE_3D := true
 BOARD_EGL_CFG ?= device/generic/common/gpu/egl_mesa.cfg
