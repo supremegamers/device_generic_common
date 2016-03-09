@@ -2,8 +2,6 @@ import /init.bluetooth.rc
 import /init.superuser.rc
 
 on early-init
-    mount debugfs debugfs /sys/kernel/debug
-    chmod 755 /sys/kernel/debug
     write /proc/sys/kernel/ctrl-alt-del 1
 
     write /sys/module/xt_qtaguid/parameters/ctrl_write_limited N
