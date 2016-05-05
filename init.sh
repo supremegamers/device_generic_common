@@ -109,7 +109,7 @@ function init_uvesafb()
 			;;
 	esac
 
-	modprobe uvesafb mode_option=${UVESA_MODE:-800x600}-16 ${UVESA_OPTION:-mtrr=3 scroll=redraw}
+	modprobe uvesafb mode_option=${UVESA_MODE:-800x600}-32 ${UVESA_OPTION:-mtrr=3 scroll=redraw}
 }
 
 function init_hal_gralloc()
@@ -121,15 +121,15 @@ function init_hal_gralloc()
 		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb)
 			set_property ro.hardware.gralloc drm
 			set_drm_mode
-			[ -n "$DEBUG" ] && set_property debug.egl.trace error
 			;;
 		"")
 			init_uvesafb
 			;&
 		0*)
-			[ "$HWACCEL" = "1" ] || set_property debug.egl.hw 0
 			;;
 	esac
+
+	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
 function init_hal_hwcomposer()
