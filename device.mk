@@ -80,7 +80,7 @@ PRODUCT_AAPT_PREF_CONFIG := mdpi
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Get the firmwares
-$(call inherit-product,$(LOCAL_PATH)/firmware.mk)
+$(call inherit-product,device/generic/firmware/firmware.mk)
 
 # Get the touchscreen calibration tool
 $(call inherit-product-if-exists,external/tslib/tslib.mk)
