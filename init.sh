@@ -109,7 +109,8 @@ function init_uvesafb()
 			;;
 	esac
 
-	modprobe uvesafb mode_option=${UVESA_MODE:-800x600}-32 ${UVESA_OPTION:-mtrr=3 scroll=redraw}
+	[ "$HWACCEL" = "0" ] && bpp=16 || bpp=32
+	modprobe uvesafb mode_option=${UVESA_MODE:-800x600}-$bpp ${UVESA_OPTION:-mtrr=3 scroll=redraw}
 }
 
 function init_hal_gralloc()
