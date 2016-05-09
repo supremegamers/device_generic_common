@@ -402,18 +402,20 @@ PRODUCT=$(cat $DMIPATH/product_name)
 # import cmdline variables
 for c in `cat /proc/cmdline`; do
 	case $c in
-		androidboot.hardware=*)
+		*.*=*)
 			;;
 		*=*)
 			eval $c
-			case $c in
-				HWACCEL=*)
-					set_property debug.egl.hw $HWACCEL
-					;;
-				DEBUG=*)
-					set_property debug.logcat 1
-					;;
-			esac
+			if [ -z "$1" ]; then
+				case $c in
+					HWACCEL=*)
+						set_property debug.egl.hw $HWACCEL
+						;;
+					DEBUG=*)
+						[ -n "$DEBUG" ] && set_property debug.logcat 1
+						;;
+				esac
+			fi
 			;;
 	esac
 done
