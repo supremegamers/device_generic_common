@@ -17,14 +17,6 @@ NATIVE_BRIDGE_ABI_LIST_64_BIT := arm64-v8a
 
 LOCAL_SRC_FILES := bin/enable_nativebridge
 
-ifneq ($(filter %x86_64/,$(PRODUCT_DIR)),)
-
-LOCAL_SRC_FILES += $(subst $(LOCAL_PATH)/,,$(shell find $(LOCAL_PATH)/lib64/arm64 -type f))
-
-endif
-
-LOCAL_SRC_FILES += $(subst $(LOCAL_PATH)/,,$(shell find $(LOCAL_PATH)/lib/arm -type f))
-
 PRODUCT_COPY_FILES := $(foreach f,$(LOCAL_SRC_FILES),$(LOCAL_PATH)/$(f):system/$(f))
 
 PRODUCT_PROPERTY_OVERRIDES := \
