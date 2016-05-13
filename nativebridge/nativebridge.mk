@@ -21,21 +21,13 @@ ifneq ($(filter %x86_64/,$(PRODUCT_DIR)),)
 
 LOCAL_SRC_FILES += $(subst $(LOCAL_PATH)/,,$(shell find $(LOCAL_PATH)/lib64/arm64 -type f))
 
-PRODUCT_PROPERTY_OVERRIDES := \
-    ro.dalvik.vm.isa.arm64=x86_64 \
-    ro.enable.native.bridge.exec64=1 \
-
-else
-
-PRODUCT_PROPERTY_OVERRIDES :=
-
 endif
 
 LOCAL_SRC_FILES += $(subst $(LOCAL_PATH)/,,$(shell find $(LOCAL_PATH)/lib/arm -type f))
 
 PRODUCT_COPY_FILES := $(foreach f,$(LOCAL_SRC_FILES),$(LOCAL_PATH)/$(f):system/$(f))
 
-PRODUCT_PROPERTY_OVERRIDES += \
+PRODUCT_PROPERTY_OVERRIDES := \
     ro.dalvik.vm.isa.arm=x86 \
     ro.enable.native.bridge.exec=1 \
 
