@@ -61,7 +61,7 @@ function init_hal_bluetooth()
 	if [ -n "$BTUART_PORT" ]; then
 		set_property hal.bluetooth.uart $BTUART_PORT
 		chown bluetooth.bluetooth $BTUART_PORT
-		btattach -P bcm -B $BTUART_PORT &
+		start btattach:-B$BTUART_PORT
 		log -t hciconfig -p i "`hciconfig`"
 	fi
 }

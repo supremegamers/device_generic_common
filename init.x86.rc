@@ -99,6 +99,11 @@ service powerbtnd /system/bin/powerbtnd
 service logcat /system/bin/logcat -v threadtime -f /data/log.txt
     class debug
 
+service btattach /system/bin/btattach -Pbcm
+    class main
+    disabled
+    oneshot
+
 service wacom-input /system/bin/wacom-input
     disabled
     oneshot
