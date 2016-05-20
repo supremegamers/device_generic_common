@@ -18,6 +18,7 @@ BOARD_MALLOC_ALIGNMENT := 16
 # of an SDK AVD. Note that this operation only works on Linux for now
 ifeq ($(HOST_OS),linux)
 WITH_DEXPREOPT := true
+WITH_DEXPREOPT_PIC := true
 TARGET_GCC_VERSION_EXP := 4.9
 endif
 
