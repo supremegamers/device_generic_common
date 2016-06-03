@@ -50,6 +50,16 @@ function init_hal_bluetooth()
 			modprobe b43 btcoex=0
 			modprobe btusb
 			;;
+		# FIXME
+		# Fix MacBook 2013-2015 (Air6/7&Pro11/12) BCM4360 ssb&wl conflict.
+		MacBookPro11* | MacBookPro12* | MacBookAir6* | MacBookAir7*)
+			rmmod b43
+			rmmod ssb
+			rmmod bcma
+			rmmod wl
+			modprobe wl
+			modprobe btusb
+			;;
 		*)
 			for bt in $(lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
 				chown 1002.1002 $bt && chmod 660 $bt
