@@ -117,7 +117,7 @@ function init_hal_gralloc()
 {
 	case "$(cat /proc/fb | head -1)" in
 		*virtiodrmfb)
-			set_property ro.hardware.hwcomposer drm
+#			set_property ro.hardware.hwcomposer drm
 			;&
 		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb)
 			set_property ro.hardware.gralloc drm
