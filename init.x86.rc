@@ -17,10 +17,11 @@ on init
     # Backward compatibility
     symlink system/lib /lib
 
-    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
-
 on fs
     mount_all /fstab.${ro.hardware}
+
+on post-fs
+    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
 
 on post-fs-data
     sysclktz 1
@@ -33,9 +34,6 @@ on post-fs-data
 
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
-
-on early-boot
-    readprops /x86.prop
 
 on boot
     setprop ro.radio.use-ppp yes

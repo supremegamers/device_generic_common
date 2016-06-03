@@ -6,8 +6,8 @@
 
 function set_property()
 {
-	# this must be run before post-fs stage
-	echo $1=$2 >> /x86.prop
+	setprop "$1" "$2"
+	[ -n "$DEBUG" ] && echo "$1"="$2" >> /dev/x86.prop
 }
 
 function init_misc()
@@ -308,7 +308,6 @@ function do_init()
 	init_hal_sensors
 	init_tscal
 	init_ril
-	chmod 640 /x86.prop
 	post_init
 }
 
