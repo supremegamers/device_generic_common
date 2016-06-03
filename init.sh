@@ -218,6 +218,9 @@ function init_hal_sensors()
 			modprobe hdaps
 			hal_sensors=hdaps
 			;;
+		*i7Stylus*)
+			set_property hal.sensors.iio.accel.matrix 1,0,0,0,-1,0,0,0,-1
+			;;
 		*)
 			;;
 	esac
