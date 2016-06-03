@@ -68,7 +68,7 @@ function init_hal_bluetooth()
 
 function init_hal_camera()
 {
-	[ -c /dev/video0 ] || modprobe vivi
+	return
 }
 
 function init_hal_gps()
