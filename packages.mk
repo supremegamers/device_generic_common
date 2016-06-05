@@ -47,6 +47,7 @@ PRODUCT_PACKAGES := \
     lights.default \
     make_ext4fs \
     parted \
+    power.x86 \
     powerbtnd \
     scp \
     sensors.hsb \

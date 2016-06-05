@@ -7,3 +7,5 @@
 
 # for bluetooth nodes
 /dev/uhid                 0660   bluetooth bluetooth
+
+/sys/devices/system/cpu/cpu*     online     0664   system     system
