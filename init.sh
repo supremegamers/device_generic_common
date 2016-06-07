@@ -137,6 +137,8 @@ function init_hal_gralloc()
 			init_uvesafb
 			;&
 		0*)
+			# FIXME: software rendering failed to pass the SetupWizard
+			set_property ro.setupwizard.mode DISABLED
 			;;
 	esac
 

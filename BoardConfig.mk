@@ -19,7 +19,6 @@ BOARD_MALLOC_ALIGNMENT := 16
 ifeq ($(HOST_OS),linux)
 WITH_DEXPREOPT := true
 WITH_DEXPREOPT_PIC := true
-TARGET_GCC_VERSION_EXP := 4.9
 endif
 
 # the following variables could be overridden

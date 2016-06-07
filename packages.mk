@@ -79,3 +79,4 @@ PRODUCT_PACKAGES += \
 # Third party apps
 PRODUCT_PACKAGES += \
     CMFileManager \
+    Eleven \
