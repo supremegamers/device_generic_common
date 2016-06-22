@@ -223,14 +223,10 @@ function init_hal_sensors()
 			;;
 		*Aspire1*25*)
 			modprobe lis3lv02d_i2c
-			hal_sensors=hdaps
 			echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
 			;;
 		*ThinkPad*Tablet*)
 			modprobe hdaps
-			hal_sensors=hdaps
-			;;
-		*HPPaviliong*)
 			hal_sensors=hdaps
 			;;
 		*i7Stylus*)
@@ -244,6 +240,8 @@ function init_hal_sensors()
 	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
 		busybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
 		lsmod | grep -q hid_sensor_accel_3d && hal_sensors=hsb || hal_sensors=iio
+	elif lsmod | grep -q lis3lv02d_i2c; then
+		hal_sensors=hdaps
 	fi
 
 	set_property ro.hardware.sensors $hal_sensors
