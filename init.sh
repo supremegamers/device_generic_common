@@ -171,6 +171,10 @@ function init_hal_power()
 
 function init_hal_sensors()
 {
+	# if we have sensor module for our hardware, use it
+	ro_hardware=$(getprop ro.hardware)
+	[ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
+
 	local hal_sensors=kbd
 	case "$(cat $DMIPATH/uevent)" in
 		*Lucid-MWE*)
