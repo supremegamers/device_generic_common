@@ -103,24 +103,15 @@ function set_drm_mode()
 function init_uvesafb()
 {
 	case "$PRODUCT" in
-		*Q550)
-			UVESA_MODE=${UVESA_MODE:-1280x800}
-			;;
 		ET2002*)
 			UVESA_MODE=${UVESA_MODE:-1600x900}
-			;;
-		T91*)
-			UVESA_MODE=${UVESA_MODE:-1024x600}
-			;;
-		VirtualBox*|Bochs*)
-			UVESA_MODE=${UVESA_MODE:-1024x768}
 			;;
 		*)
 			;;
 	esac
 
 	[ "$HWACCEL" = "0" ] && bpp=16 || bpp=32
-	modprobe uvesafb mode_option=${UVESA_MODE:-800x600}-$bpp ${UVESA_OPTION:-mtrr=3 scroll=redraw}
+	modprobe uvesafb mode_option=${UVESA_MODE:-1024x768}-$bpp ${UVESA_OPTION:-mtrr=3 scroll=redraw}
 }
 
 function init_hal_gralloc()
@@ -137,8 +128,6 @@ function init_hal_gralloc()
 			init_uvesafb
 			;&
 		0*)
-			# FIXME: software rendering failed to pass the SetupWizard
-			set_property ro.setupwizard.mode DISABLED
 			;;
 	esac
 
