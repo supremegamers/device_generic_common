@@ -44,6 +44,7 @@ fi
 
 cd $binfmt_misc_dir
 if [ -e register ]; then
+	[ -e /system/bin/houdini$1 ] && dest_dir=/system/bin
 	# register Houdini for arm binaries
 	if [ -z "$1" ]; then
 		echo ':arm_exe:M::\\x7f\\x45\\x4c\\x46\\x01\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\x28::'"$dest_dir/houdini:P" > register
