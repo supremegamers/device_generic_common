@@ -236,7 +236,7 @@ function init_hal_sensors()
 	elif lsmod | grep -q lis3lv02d_i2c; then
 		hal_sensors=hdaps
 	fi
-
+	set_property persist.sys.sensors.iio.present 1
 	set_property ro.hardware.sensors $hal_sensors
 }
 
