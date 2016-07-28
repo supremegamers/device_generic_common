@@ -35,7 +35,6 @@ on post-fs-data
 
 on boot
     setprop ro.radio.use-ppp yes
-    setprop ro.radio.noril no
     setprop status.battery.state Slow
     setprop status.battery.level 5
     setprop status.battery.level_raw  50
