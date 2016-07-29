@@ -14,9 +14,6 @@ on init
     symlink /sdcard /mnt/sdcard
     symlink /sdcard /storage/sdcard0
 
-    # Backward compatibility
-    symlink system/lib /lib
-
 on fs
     mount_all /fstab.${ro.hardware}
 
