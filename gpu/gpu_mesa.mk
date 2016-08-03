@@ -9,7 +9,6 @@
 #
 
 PRODUCT_PACKAGES := \
-    hwcomposer.drm  \
     gralloc.drm     \
     libGLES_mesa    \
     libtxc_dxtn     \
