@@ -395,6 +395,8 @@ function do_bootcomplete()
 			alsa_amixer -c $c set 'Internal Mic Boost' 3
 		fi
 	done
+
+	post_bootcomplete
 }
 
 function do_hci()
