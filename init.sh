@@ -340,10 +340,6 @@ function do_bootcomplete()
 	lsmod | grep -e brcmfmac && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
-		T10*TA)
-			rmmod soc_button_array
-			modprobe soc_button_array
-			;;
 		1866???|1867???|1869???) # ThinkPad X41 Tablet
 			start tablet-mode
 			start wacom-input
