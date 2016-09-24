@@ -232,6 +232,9 @@ function init_hal_sensors()
 		*ST70416-6*)
 			set_property hal.sensors.iio.accel.matrix 0,-1,0,-1,0,0,0,0,-1
 			;;
+		*ONDATablet*)
+			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
+			;;
 		*)
 			;;
 	esac
