@@ -229,6 +229,12 @@ function init_hal_sensors()
 		*i7Stylus*)
 			set_property hal.sensors.iio.accel.matrix 1,0,0,0,-1,0,0,0,-1
 			;;
+		*ST70416-6*)
+			set_property hal.sensors.iio.accel.matrix 0,-1,0,-1,0,0,0,0,-1
+			;;
+		*ONDATablet*)
+			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
+			;;
 		*)
 			;;
 	esac
@@ -340,10 +346,6 @@ function do_bootcomplete()
 	lsmod | grep -e brcmfmac && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
-		T10*TA)
-			rmmod soc_button_array
-			modprobe soc_button_array
-			;;
 		1866???|1867???|1869???) # ThinkPad X41 Tablet
 			start tablet-mode
 			start wacom-input
