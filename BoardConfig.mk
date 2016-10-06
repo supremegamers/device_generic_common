@@ -6,6 +6,7 @@ TARGET_BOARD_PLATFORM := android-x86
 
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_LINUX := true
 
 BOARD_USE_LEGACY_UI := true
 
