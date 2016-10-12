@@ -80,6 +80,11 @@ PRODUCT_PACKAGES += \
     resize2fs \
     tune2fs \
 
+PRODUCT_PACKAGES += \
+    btattach \
+    hciconfig \
+    hcitool \
+
 # Third party apps
 PRODUCT_PACKAGES += \
     CMFileManager \

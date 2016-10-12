@@ -1,4 +1,3 @@
-import /init.bluetooth.rc
 import /init.superuser.rc
 
 on early-init
@@ -101,7 +100,7 @@ service powerbtnd /system/bin/powerbtnd
 service logcat /system/bin/logcat -v threadtime -f /data/log.txt
     class debug
 
-service btattach /system/bin/btattach -Pbcm
+service btattach /system/bin/btattach
     class main
     disabled
     oneshot
@@ -126,12 +125,6 @@ on property:system_init.startsurfaceflinger=0
 on property:sys.boot_completed=1
     write /proc/sys/kernel/ctrl-alt-del 0
     exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh bootcomplete
-
-on property:init.svc.bluetoothd=running
-    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh hci
-
-on property:init.svc.bluetoothd=stopped
-    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh hci
 
 on property:net.dns1=*
     exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh netconsole

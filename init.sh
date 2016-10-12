@@ -48,6 +48,7 @@ function init_hal_bluetooth()
 	case "$PRODUCT" in
 		T10*TA|HP*Omni*)
 			BTUART_PORT=/dev/ttyS1
+			set_property hal.bluetooth.uart.proto bcm
 			;;
 		MacBookPro8*)
 			rmmod b43
@@ -68,15 +69,13 @@ function init_hal_bluetooth()
 			for bt in $(lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
 				chown 1002.1002 $bt && chmod 660 $bt
 			done
-			modprobe btusb
 			;;
 	esac
 
 	if [ -n "$BTUART_PORT" ]; then
 		set_property hal.bluetooth.uart $BTUART_PORT
 		chown bluetooth.bluetooth $BTUART_PORT
-		start btattach:-B$BTUART_PORT
-		log -t hciconfig -p i "`hciconfig`"
+		start btattach
 	fi
 }
 
@@ -405,16 +404,6 @@ function do_bootcomplete()
 	post_bootcomplete
 }
 
-function do_hci()
-{
-	local hci=`hciconfig | grep ^hci | cut -d: -f1`
-	local btd="`getprop init.svc.bluetoothd`"
-	log -t bluetoothd -p i "$btd ($hci)"
-	if [ -n "`getprop hal.bluetooth.uart`" ]; then
-		[ "`getprop init.svc.bluetoothd`" = "running" ] && hciconfig $hci up
-	fi
-}
-
 PATH=/sbin:/system/bin:/system/xbin
 
 DMIPATH=/sys/class/dmi/id
@@ -454,9 +443,6 @@ case "$1" in
 		;;
 	bootcomplete)
 		do_bootcomplete
-		;;
-	hci)
-		do_hci
 		;;
 	init|"")
 		do_init
