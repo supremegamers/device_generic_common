@@ -168,6 +168,7 @@ function init_hal_sensors()
 	[ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
 
 	local hal_sensors=kbd
+	local has_sensors=true
 	case "$(cat $DMIPATH/uevent)" in
 		*Lucid-MWE*)
 			set_property ro.ignore_atkbd 1
@@ -235,6 +236,7 @@ function init_hal_sensors()
 			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
 			;;
 		*)
+			has_sensors=false
 			;;
 	esac
 
@@ -247,6 +249,8 @@ function init_hal_sensors()
 	fi
 
 	set_property ro.hardware.sensors $hal_sensors
+	[ "$hal_sensors" != "kbd" ] && has_sensors=true
+	set_property config.override_forced_orient $has_sensors
 }
 
 function create_pointercal()
