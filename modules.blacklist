@@ -2,3 +2,4 @@ blacklist evbug
 deferred  amdgpu
 deferred  nouveau
 deferred  radeon
+deferred  soc_button_array
