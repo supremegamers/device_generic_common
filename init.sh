@@ -66,7 +66,7 @@ function init_hal_bluetooth()
 			modprobe btusb
 			;;
 		*)
-			for bt in $(lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
+			for bt in $(busybox lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
 				chown 1002.1002 $bt && chmod 660 $bt
 			done
 			;;
