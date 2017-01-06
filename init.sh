@@ -344,7 +344,7 @@ function do_bootcomplete()
 
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
 
-	lsmod | grep -e brcmfmac && setprop wlan.no-unload-driver 1
+	lsmod | grep -Ehq "brcmfmac|rtl8723be" && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
 		1866???|1867???|1869???) # ThinkPad X41 Tablet
