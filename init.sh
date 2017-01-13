@@ -21,6 +21,9 @@ function init_misc()
 
 	# in case no cpu governor driver autoloads
 	[ -d /sys/devices/system/cpu/cpu0/cpufreq ] || modprobe acpi-cpufreq
+
+	# for vold f2fs support
+	modprobe f2fs
 }
 
 function init_hal_audio()
@@ -236,7 +239,7 @@ function init_hal_sensors()
 			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
 			;;
 		*)
-			has_sensors=false
+			#has_sensors=false
 			;;
 	esac
 
@@ -343,10 +346,7 @@ function do_bootcomplete()
 
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
 
-	# FIXME: autosleep works better on i965?
-	[ "$(getprop debug.mesa.driver)" = "i965" ] && setprop debug.autosleep 1
-
-	lsmod | grep -e brcmfmac && setprop wlan.no-unload-driver 1
+	lsmod | grep -Ehq "brcmfmac|rtl8723be" && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
 		1866???|1867???|1869???) # ThinkPad X41 Tablet
