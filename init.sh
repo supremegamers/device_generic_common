@@ -21,6 +21,9 @@ function init_misc()
 
 	# in case no cpu governor driver autoloads
 	[ -d /sys/devices/system/cpu/cpu0/cpufreq ] || modprobe acpi-cpufreq
+
+	# for vold f2fs support
+	modprobe f2fs
 }
 
 function init_hal_audio()
