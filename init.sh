@@ -36,7 +36,7 @@ function init_hal_audio()
 			;;
 	esac
 
-	if [ "`cat /proc/asound/card0/id`" = "IntelHDMI" ]; then
+	if grep -qi "IntelHDMI" /proc/asound/card0/id; then
 		[ -d /proc/asound/card1 ] || set_property ro.hardware.audio.primary hdmi
 	fi
 }
