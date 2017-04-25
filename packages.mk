@@ -85,6 +85,13 @@ PRODUCT_PACKAGES += \
     hciconfig \
     hcitool \
 
+# Stagefright FFMPEG plugins
+PRODUCT_PACKAGES += \
+    i965_drv_video \
+    libffmpeg_extractor \
+    libffmpeg_omx \
+    media_codecs_ffmpeg.xml
+
 # Third party apps
 PRODUCT_PACKAGES += \
     CMFileManager \
