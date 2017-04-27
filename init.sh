@@ -124,7 +124,7 @@ function init_hal_gralloc()
 		*virtiodrmfb)
 #			set_property ro.hardware.hwcomposer drm
 			;&
-		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb)
+		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb|0*amdgpudrmfb)
 			set_property ro.hardware.gralloc drm
 			set_drm_mode
 			;;
