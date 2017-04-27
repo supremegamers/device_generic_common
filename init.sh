@@ -21,9 +21,6 @@ function init_misc()
 
 	# in case no cpu governor driver autoloads
 	[ -d /sys/devices/system/cpu/cpu0/cpufreq ] || modprobe acpi-cpufreq
-
-	# for vold f2fs support
-	modprobe f2fs
 }
 
 function init_hal_audio()
@@ -36,7 +33,7 @@ function init_hal_audio()
 			;;
 	esac
 
-	if [ "`cat /proc/asound/card0/id`" = "IntelHDMI" ]; then
+	if grep -qi "IntelHDMI" /proc/asound/card0/id; then
 		[ -d /proc/asound/card1 ] || set_property ro.hardware.audio.primary hdmi
 	fi
 }
@@ -126,7 +123,7 @@ function init_hal_gralloc()
 		*virtiodrmfb)
 #			set_property ro.hardware.hwcomposer drm
 			;&
-		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb)
+		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb|0*amdgpudrmfb)
 			set_property ro.hardware.gralloc drm
 			set_drm_mode
 			;;
