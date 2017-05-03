@@ -21,6 +21,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.ril.gprsclass=10 \
     keyguard.no_require_sim=true \
     ro.com.android.dataroaming=true \
+    media.sf.hwaccel=1 \
     media.sf.omx-plugin=libffmpeg_omx.so \
     media.sf.extractor-plugin=libffmpeg_extractor.so
 
