@@ -94,9 +94,6 @@ service nativebridge /system/bin/enable_nativebridge
     disabled
     oneshot
 
-service powerbtnd /system/bin/powerbtnd
-    class late_start
-
 service logcat /system/bin/logcat -v threadtime -f /data/log.txt
     class debug
 
