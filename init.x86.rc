@@ -102,6 +102,11 @@ service btattach /system/bin/btattach
     disabled
     oneshot
 
+service rtk_hciattach /vendor/bin/rtk_hciattach -n -s 115200 /dev/rtk_h5 rtk_h5
+    class main
+    disabled
+    oneshot
+
 service wacom-input /system/bin/wacom-input
     disabled
     oneshot

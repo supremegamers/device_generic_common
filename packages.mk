@@ -48,6 +48,7 @@ PRODUCT_PACKAGES := \
     make_ext4fs \
     parted \
     power.x86 \
+    rtk_hciattach \
     scp \
     sensors.hsb \
     sftp \
