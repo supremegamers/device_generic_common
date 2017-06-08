@@ -17,10 +17,12 @@
 # Common packages for Android-x86 platform.
 
 PRODUCT_PACKAGES := \
+    AnalyticsService \
     BasicSmsReceiver \
     Development \
     Galaxy4 \
     GlobalTime \
+    HardwareCollector \
     HoloSpiralWallpaper \
     Launcher3 \
     LiveWallpapers \
@@ -32,6 +34,7 @@ PRODUCT_PACKAGES := \
     Provision \
     RSSReader \
     VisualizationWallpapers \
+    WallpaperPicker \
     camera.x86 \
     chat \
     com.android.future.usb.accessory \
@@ -94,5 +97,4 @@ PRODUCT_PACKAGES += \
 
 # Third party apps
 PRODUCT_PACKAGES += \
-    CMFileManager \
     Eleven \
