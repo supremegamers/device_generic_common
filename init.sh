@@ -49,6 +49,7 @@ function init_hal_bluetooth()
 		T10*TA|HP*Omni*)
 			BTUART_PORT=/dev/ttyS1
 			set_property hal.bluetooth.uart.proto bcm
+			[ -z "$(getprop sleep.state)" ] && set_property sleep.state none
 			;;
 		MacBookPro8*)
 			rmmod b43
