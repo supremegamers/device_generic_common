@@ -74,4 +74,19 @@
          orientation. Activities that desire to run in a non-compatible orientation will be run
          from an emulated display within the physical display. -->
     <bool name="config_forceDefaultOrientation">true</bool>
+
+    <!-- The device supports freeform window management. Windows have title bars and can be moved
+         and resized. If you set this to true, you also need to add
+         PackageManager.FEATURE_FREEFORM_WINDOW_MANAGEMENT feature to your device specification.
+         The duplication is necessary, because this information is used before the features are
+         available to the system.-->
+    <bool name="config_freeformWindowManagement">true</bool>
+
+    <!-- Controls the opacity of the navigation bar depending on the visibility of the
+         various workspace stacks.
+         0 - Nav bar is always opaque when either the freeform stack or docked stack is visible.
+         1 - Nav bar is always translucent when the freeform stack is visible, otherwise always
+         opaque.
+         -->
+    <integer name="config_navBarOpacityMode">1</integer>
 </resources>
