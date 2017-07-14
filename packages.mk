@@ -33,6 +33,7 @@ PRODUCT_PACKAGES := \
     PinyinIME \
     Provision \
     RSSReader \
+    Taskbar \
     VisualizationWallpapers \
     WallpaperPicker \
     camera.x86 \
