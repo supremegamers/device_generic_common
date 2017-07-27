@@ -107,6 +107,9 @@ function set_drm_mode()
 		ET1602*)
 			drm_mode=1366x768
 			;;
+		VMware*)
+			[ -n "$video" ] && drm_mode=$video
+			;;
 		*)
 			;;
 	esac
