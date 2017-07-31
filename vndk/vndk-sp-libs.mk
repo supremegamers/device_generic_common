@@ -7,21 +7,26 @@ VNDK_SP_LIBRARIES := \
     libRSCpuRef \
     libRSDriver \
     libRS_internal \
-    libbacktrace \
-    libbase \
     libbcinfo \
     libblas \
-    libc++ \
     libcompiler_rt \
-    libcutils \
     libft2 \
-    libhardware \
     libhidlbase \
     libhidlmemory \
     libhidltransport \
+    libpng \
+
+ifndef BOARD_VNDK_VERSION
+VNDK_SP_LIBRARIES += \
+    libbacktrace \
+    libbase \
+    libc++ \
+    libcutils \
+    libhardware \
     libhwbinder \
     libion \
     liblzma \
-    libpng \
     libunwind \
     libutils \
+
+endif
