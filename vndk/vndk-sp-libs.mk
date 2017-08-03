@@ -27,6 +27,7 @@ VNDK_SP_LIBRARIES += \
     libion \
     liblzma \
     libunwind \
+    libunwindstack \
     libutils \
 
 endif
