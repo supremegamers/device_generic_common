@@ -29,5 +29,6 @@ VNDK_SP_LIBRARIES += \
     libhidlbase \
     libhidlmemory \
     libhidltransport \
+    libz \
 
 endif
