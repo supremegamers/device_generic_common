@@ -1,13 +1,3 @@
-VNDK_SP_LIBRARIES := \
-    libRSCpuRef \
-    libRSDriver \
-    libRS_internal \
-    libbcinfo \
-    libblas \
-    libcompiler_rt \
-    libft2 \
-    libpng \
-
 ifndef BOARD_VNDK_VERSION
 VNDK_SP_LIBRARIES += \
     android.hardware.graphics.allocator@2.0 \
@@ -19,6 +9,14 @@ VNDK_SP_LIBRARIES += \
     libbase \
     libc++ \
     libcutils \
+    libRSCpuRef \
+    libRSDriver \
+    libRS_internal \
+    libbcinfo \
+    libblas \
+    libcompiler_rt \
+    libft2 \
+    libpng \
     libhardware \
     libhwbinder \
     libion \
