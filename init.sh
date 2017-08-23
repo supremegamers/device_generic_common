@@ -251,7 +251,7 @@ function init_hal_sensors()
 			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
 			;;
 		*)
-			#has_sensors=false
+			has_sensors=false
 			;;
 	esac
 
