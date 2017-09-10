@@ -85,6 +85,9 @@ PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
+# Get Android 8.0 HIDL HALs
+$(call inherit-product,$(LOCAL_PATH)/treble.mk)
+
 # Get the firmwares
 $(call inherit-product,device/generic/firmware/firmware.mk)
 
