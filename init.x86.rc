@@ -10,8 +10,6 @@ on early-init
 #   export EGL_DRIVERS egl_dri2
 
 on init
-    symlink /sdcard /mnt/sdcard
-    symlink /sdcard /storage/sdcard0
 
 on fs
     mount_all /fstab.${ro.hardware}
