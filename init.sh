@@ -127,20 +127,23 @@ function init_uvesafb()
 			;;
 	esac
 
-	[ "$HWACCEL" = "0" ] && bpp=16 || bpp=32
-	modprobe uvesafb mode_option=${UVESA_MODE:-1024x768}-$bpp ${UVESA_OPTION:-mtrr=3 scroll=redraw}
+	modprobe uvesafb mode_option=${UVESA_MODE:-1024x768}-32 ${UVESA_OPTION:-mtrr=3 scroll=redraw}
 }
 
 function init_hal_gralloc()
 {
 	case "$(cat /proc/fb | head -1)" in
 		*virtiodrmfb)
-			set_property ro.hardware.hwcomposer drm
-			set_property ro.hardware.gralloc gbm
+			if [ "$HWACCEL" != "0" ]; then
+				set_property ro.hardware.hwcomposer drm
+				set_property ro.hardware.gralloc gbm
+			fi
 			;;
 		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb|0*amdgpudrmfb)
-			set_property ro.hardware.gralloc drm
-			set_drm_mode
+			if [ "$HWACCEL" != "0" ]; then
+				set_property ro.hardware.gralloc drm
+				set_drm_mode
+			fi
 			;;
 		"")
 			init_uvesafb
