@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011 The Android-x86 Open Source Project
+# Copyright (C) 2011-2017 The Android-x86 Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,6 +14,11 @@ PRODUCT_PACKAGES := \
     gralloc.gbm     \
     libGLES_mesa    \
     libtxc_dxtn     \
+
+PRODUCT_PACKAGES += \
+    libEGL_swiftshader \
+    libGLESv1_CM_swiftshader \
+    libGLESv2_swiftshader \
 
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version = 196608

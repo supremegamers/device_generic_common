@@ -10,8 +10,6 @@ on early-init
 #   export EGL_DRIVERS egl_dri2
 
 on init
-    symlink /sdcard /mnt/sdcard
-    symlink /sdcard /storage/sdcard0
 
 on fs
     mount_all /fstab.${ro.hardware}
@@ -107,6 +105,3 @@ on property:persist.sys.nativebridge=1
 
 on property:persist.sys.nativebridge=0
     stop nativebridge
-
-on property:debug.egl.hw=0
-    setprop ro.kernel.qemu 1
