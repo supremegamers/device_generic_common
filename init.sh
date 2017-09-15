@@ -439,9 +439,6 @@ for c in `cat /proc/cmdline`; do
 			eval $c
 			if [ -z "$1" ]; then
 				case $c in
-					HWACCEL=*)
-						set_property debug.egl.hw $HWACCEL
-						;;
 					DEBUG=*)
 						[ -n "$DEBUG" ] && set_property debug.logcat 1
 						;;
