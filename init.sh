@@ -21,6 +21,10 @@ function init_misc()
 
 	# in case no cpu governor driver autoloads
 	[ -d /sys/devices/system/cpu/cpu0/cpufreq ] || modprobe acpi-cpufreq
+
+	# enable sdcardfs if /data is not mounted on tmpfs or 9p
+	mount | grep /data\ | grep -qE 'tmpfs|9p'
+	[ $? -ne 0 ] && modprobe sdcardfs
 }
 
 function init_hal_audio()
