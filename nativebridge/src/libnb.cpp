@@ -27,13 +27,11 @@ static NativeBridgeCallbacks *get_callbacks()
     static NativeBridgeCallbacks *callbacks = nullptr;
 
     if (!callbacks) {
-        const char *libnb = "/system/"
+        const char *libnb = "/system/lib"
 #ifdef __LP64__
-                "lib64/arm64/"
-#else
-                "lib/arm/"
+                "64"
 #endif
-                "libhoudini.so";
+                "/libhoudini.so";
         if (!native_handle) {
             native_handle = dlopen(libnb, RTLD_LAZY);
             if (!native_handle) {
