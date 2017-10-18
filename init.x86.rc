@@ -100,7 +100,6 @@ on property:debug.logcat=1
     class_start debug
 
 on property:persist.sys.nativebridge=1
-    mkdir /data/arm 0775 system system
     start nativebridge
 
 on property:persist.sys.nativebridge=0

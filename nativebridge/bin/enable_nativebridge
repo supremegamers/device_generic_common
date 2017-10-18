@@ -6,35 +6,41 @@ houdini_bin=0
 dest_dir=/system/lib$1/arm$1
 binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 
-cd /data/arm
-if [ -e /system/lib$1/libhoudini.so ]; then
+if [ -z "$1" ]; then
+	if [ "`uname -m`" = "x86_64" ]; then
+		v=7_y
+		url=http://goo.gl/SBU3is
+	else
+		v=7_x
+		url=http://goo.gl/0IJs40
+	fi
+else
+	v=7_z
+	url=http://goo.gl/FDrxVN
+fi
+
+if [ -s /system/lib$1/libhoudini.so ]; then
 	log -pi -thoudini "found /system/lib$1/libhoudini.so"
-elif [ -e /system/etc/houdini$1.sfs ]; then
-	busybox mount /system/etc/houdini$1.sfs $dest_dir
+elif [ -e /system/etc/houdini$v.sfs ]; then
+	mount /system/etc/houdini$v.sfs $dest_dir
 else
 	if mountpoint -q $dest_dir; then
 		kill -9 `fuser -m $dest_dir`
 		umount -f $dest_dir
 	fi
-	while ! busybox mount houdini$1.sfs $dest_dir; do
+	mkdir -p /data/arm
+	cd /data/arm
+	while ! mount houdini$v.sfs $dest_dir; do
 		while [ "$(getprop net.dns1)" = "" ]; do
 			sleep 10
 		done
-		if [ -z "$1" ]; then
-			[ "`uname -m`" = "x86_64" ] && url=http://goo.gl/Knnmyl || url=http://goo.gl/JsoX2C
-		else
-			url=http://goo.gl/n6KtQa
-		fi
-		wget $url -cO houdini$1.sfs && continue
-		rm -f houdini$1.sfs
+		wget $url -cO houdini$v.sfs && continue
+		rm -f houdini$v.sfs
 		sleep 30
 	done
 fi
 
-
-# if you don't see the files 'register' and 'status' in /proc/sys/fs/binfmt_misc
-# then run the following command:
-# mount -t binfmt_misc none /proc/sys/fs/binfmt_misc
+[ -s /system/lib$1/libhoudini.so ] || mount --bind $dest_dir/libhoudini.so /system/lib$1/libhoudini.so
 
 # this is to add the supported binary formats via binfmt_misc
 
