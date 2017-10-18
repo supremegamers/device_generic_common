@@ -22,7 +22,6 @@ PRODUCT_PACKAGES := \
     Development \
     Galaxy4 \
     GlobalTime \
-    HardwareCollector \
     HoloSpiralWallpaper \
     Launcher3 \
     LiveWallpapers \
