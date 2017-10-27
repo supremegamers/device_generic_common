@@ -1,4 +1,4 @@
-ifneq ($(filter generic_%,$(TARGET_DEVICE)),)
+ifneq ($(filter generic%,$(TARGET_DEVICE)),)
 
 LOCAL_PATH := $(call my-dir)
 
@@ -44,4 +44,4 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_REQUIRED_MODULES := $(addsuffix .vndk-sp-gen,$(VNDK_SP_LIBRARIES))
 include $(BUILD_PHONY_PACKAGE)
 
-endif # TARGET_DEVICE is generic_*
+endif # TARGET_DEVICE is generic*
