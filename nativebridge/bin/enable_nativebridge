@@ -8,15 +8,15 @@ binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 
 if [ -z "$1" ]; then
 	if [ "`uname -m`" = "x86_64" ]; then
-		v=7_y
-		url=http://goo.gl/SBU3is
+		v=8_y
+		url=http://goo.gl/v6c4Co
 	else
-		v=7_x
-		url=http://goo.gl/0IJs40
+		v=8_x
+		url=http://goo.gl/96BPKe
 	fi
 else
-	v=7_z
-	url=http://goo.gl/FDrxVN
+	v=8_z
+	url=http://goo.gl/CtKjxx
 fi
 
 if [ -s /system/lib$1/libhoudini.so ]; then
@@ -45,6 +45,7 @@ fi
 # this is to add the supported binary formats via binfmt_misc
 
 if [ ! -e $binfmt_misc_dir/register ]; then
+	modprobe binfmt_misc
 	mount -t binfmt_misc none $binfmt_misc_dir
 fi
 
