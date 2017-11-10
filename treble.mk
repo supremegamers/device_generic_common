@@ -25,6 +25,11 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
 #   android.hardware.camera.provider@2.4-service
 
+# DumpState HAL
+PRODUCT_PACKAGES += \
+    android.hardware.dumpstate@1.0-impl \
+    android.hardware.dumpstate@1.0-service
+
 # Gatekeeper HAL
 #PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-impl
@@ -49,9 +54,18 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.power@1.0-impl
 
+# RenderScript HAL
+PRODUCT_PACKAGES += \
+    android.hardware.renderscript@1.0-impl
+
 # Sensors HAL
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl
+
+# USB HAL
+PRODUCT_PACKAGES += \
+    android.hardware.usb@1.0-impl \
+    android.hardware.usb@1.0-service
 
 # Wifi HAL
 #PRODUCT_PACKAGES += \
