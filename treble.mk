@@ -68,5 +68,5 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-service
 
 # Wifi HAL
-#PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service

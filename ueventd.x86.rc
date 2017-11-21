@@ -5,7 +5,7 @@
 /dev/iio:device*          0660  system        system
 
 # for bluetooth nodes
-/dev/rfkill               0660  bluetooth     bluetooth
+/dev/rfkill               0660  bluetooth     wifi
 /dev/uhid                 0660  bluetooth     bluetooth
 
 /sys/devices/system/cpu/cpu*    online        0664   system     system

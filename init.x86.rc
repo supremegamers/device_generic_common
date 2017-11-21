@@ -45,8 +45,9 @@ on boot
     # workaround for h.265 slowness
     setprop sys.media.vdec.drop 0
 
-service wpa_supplicant /system/bin/wpa_supplicant -c/data/misc/wifi/wpa_supplicant.conf \
-    -iwlan0 -Dnl80211 \
+service wpa_supplicant /vendor/bin/hw/wpa_supplicant -dd \
+    -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
+    -I/system/etc/wifi/wpa_supplicant_overlay.conf \
     -O/data/misc/wifi/sockets \
     -e/data/misc/wifi/entropy.bin -g@android:wpa_wlan0
     #   we will start as root and wpa_supplicant will switch to user wifi
@@ -56,6 +57,7 @@ service wpa_supplicant /system/bin/wpa_supplicant -c/data/misc/wifi/wpa_supplica
     class main
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
+    oneshot
 
 service nativebridge /system/bin/enable_nativebridge
     class main
