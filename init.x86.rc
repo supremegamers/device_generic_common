@@ -85,6 +85,11 @@ service tablet-mode /system/bin/tablet-mode
     disabled
     oneshot
 
+service ctrl-alt-del /system/bin/input keyevent --longpress POWER
+    disabled
+    oneshot
+    keycodes 97 100 111
+
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking
     write /dev/tty0 "[?17;0;0c"
