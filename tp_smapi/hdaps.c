@@ -779,8 +779,12 @@ static int __init hdaps_init(void)
 			hdaps_invert = 0; /* default */
 
 	/* Init timer before platform_driver_register, in case of suspend */
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+	timer_setup(&hdaps_timer, hdaps_mousedev_poll, 0);
+#else
 	init_timer(&hdaps_timer);
 	hdaps_timer.function = hdaps_mousedev_poll;
+#endif
 	ret = platform_driver_register(&hdaps_driver);
 	if (ret)
 		goto out;
