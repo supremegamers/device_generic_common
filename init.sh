@@ -257,6 +257,13 @@ function init_hal_sensors()
 		*ONDATablet*)
 			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
 			;;
+		*Surface.3*|*svnOEMB*)
+			set_property ro.iio.accel.y.opt_scale -1
+			;&
+		*T10*TA*)
+			set_property ro.iio.accel.x.opt_scale -1
+			set_property ro.iio.accel.z.opt_scale -1
+			;;
 		*)
 			has_sensors=false
 			;;
@@ -265,7 +272,7 @@ function init_hal_sensors()
 	# has iio sensor-hub?
 	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
 		busybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
-		lsmod | grep -q hid_sensor_accel_3d && hal_sensors=hsb || hal_sensors=iio
+		hal_sensors=iio
 	elif lsmod | grep -q lis3lv02d_i2c; then
 		hal_sensors=hdaps
 	fi
