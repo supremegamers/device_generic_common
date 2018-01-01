@@ -53,7 +53,6 @@ PRODUCT_PACKAGES := \
     power.x86 \
     rtk_hciattach \
     scp \
-    sensors.hsb \
     sftp \
     ssh \
     sshd \
