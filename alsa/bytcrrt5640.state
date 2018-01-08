@@ -1783,7 +1783,7 @@ state.bytcrrt5640 {
 	control.154 {
 		iface MIXER
 		name 'Headphone Switch'
-		value false
+		value true
 		comment {
 			access 'read write'
 			type BOOLEAN
@@ -2504,7 +2504,7 @@ state.bytcrrt5640 {
 	control.224 {
 		iface MIXER
 		name 'HP L Playback Switch'
-		value false
+		value true
 		comment {
 			access 'read write'
 			type BOOLEAN
@@ -2514,7 +2514,7 @@ state.bytcrrt5640 {
 	control.225 {
 		iface MIXER
 		name 'HP R Playback Switch'
-		value false
+		value true
 		comment {
 			access 'read write'
 			type BOOLEAN
@@ -3178,7 +3178,7 @@ state.bytrt5640 {
 	control.25 {
 		iface MIXER
 		name 'Headphone Switch'
-		value false
+		value true
 		comment {
 			access 'read write'
 			type BOOLEAN
