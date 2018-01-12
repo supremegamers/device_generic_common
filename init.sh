@@ -273,13 +273,16 @@ function init_hal_sensors()
 	# has iio sensor-hub?
 	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
 		busybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+		[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
 		hal_sensors=iio
 	elif lsmod | grep -q lis3lv02d_i2c; then
 		hal_sensors=hdaps
+		has_sensors=true
+	elif [ "$hal_sensors" != "kbd" ]; then
+		has_sensors=${HAS_SENSORS:-true}
 	fi
 
 	set_property ro.hardware.sensors $hal_sensors
-	[ "$hal_sensors" != "kbd" ] && has_sensors=true
 	set_property config.override_forced_orient $has_sensors
 }
 
