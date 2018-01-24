@@ -258,7 +258,7 @@ function init_hal_sensors()
 		*ST70416-6*)
 			set_property ro.iio.accel.order 102
 			;&
-		*Surface*3*|*svnOEMB*|*T305CA*|*Venue11Pro5130*)
+		*Surface*3*|*svnOEMB*|*T305CA*|*Venue11Pro5130*|*20FQ*|*20FR*)
 			set_property ro.iio.accel.y.opt_scale -1
 			;&
 		*T10*TA*)
