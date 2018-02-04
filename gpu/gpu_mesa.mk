@@ -19,6 +19,13 @@ PRODUCT_PACKAGES += \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
+    vulkan.android-x86
 
 PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version = 196608
+    ro.opengles.version = 196608 \
+    ro.hardware.vulkan.level = 1 \
+    ro.hardware.vulkan.version = 4194307
+
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:system/etc/permissions/android.hardware.vulkan.level.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.version-1_0_3.xml:system/etc/permissions/android.hardware.vulkan.version.xml

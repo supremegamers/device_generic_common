@@ -170,6 +170,17 @@ function init_hal_hwcomposer()
 	return
 }
 
+function init_hal_vulkan()
+{
+	case "$(cat /proc/fb | head -1)" in
+		0*inteldrmfb)
+			set_property ro.hardware.vulkan android-x86
+			;;
+		*)
+			;;
+	esac
+}
+
 function init_hal_lights()
 {
 	chown 1000.1000 /sys/class/backlight/*/brightness
@@ -362,6 +373,7 @@ function do_init()
 	init_hal_gps
 	init_hal_gralloc
 	init_hal_hwcomposer
+	init_hal_vulkan
 	init_hal_lights
 	init_hal_power
 	init_hal_sensors
