@@ -97,3 +97,4 @@ PRODUCT_PACKAGES += \
 # Third party apps
 PRODUCT_PACKAGES += \
     Eleven \
+    TSCalibration2 \
