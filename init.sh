@@ -434,13 +434,13 @@ function do_bootcomplete()
 			alsa_amixer -c $c set Headphone on
 			alsa_amixer -c $c set Headphone 100%
 			alsa_amixer -c $c set Speaker 100%
-			alsa_amixer -c $c set Capture 100%
+			alsa_amixer -c $c set Capture 80%
 			alsa_amixer -c $c set Capture cap
 			alsa_amixer -c $c set PCM 100 unmute
 			alsa_amixer -c $c set SPO unmute
 			alsa_amixer -c $c set IEC958 on
-			alsa_amixer -c $c set 'Mic Boost' 3
-			alsa_amixer -c $c set 'Internal Mic Boost' 3
+			alsa_amixer -c $c set 'Mic Boost' 1
+			alsa_amixer -c $c set 'Internal Mic Boost' 1
 		fi
 	done
 
