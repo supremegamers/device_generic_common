@@ -257,21 +257,18 @@ function init_hal_sensors()
 			hal_sensors=hdaps
 			;;
 		*i7Stylus*)
-			set_property ro.iio.accel.y.opt_scale -1
-			set_property ro.iio.accel.z.opt_scale -1
+			set_property ro.iio.accel.x.opt_scale -1
 			;;
 		*ONDATablet*)
 			set_property ro.iio.accel.order 102
+			set_property ro.iio.accel.x.opt_scale -1
+			set_property ro.iio.accel.y.opt_scale -1
 			;;
 		*ST70416-6*)
 			set_property ro.iio.accel.order 102
-			;&
-		*HPEliteBook*|*Surface*3*|*svnOEMB*|*T305CA*|*Venue11Pro5130*|*20FQ*|*20FR*)
-			set_property ro.iio.accel.y.opt_scale -1
-			;&
+			;;
 		*T10*TA*)
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.z.opt_scale -1
+			set_property ro.iio.accel.y.opt_scale -1
 			;;
 		*)
 			has_sensors=false
