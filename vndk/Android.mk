@@ -1,3 +1,6 @@
+# TODO(b/69526027): DEPRECATE USE OF THIS.
+# USE BOARD_VNDK_VERSION:=current instead.
+
 ifneq ($(filter generic%,$(TARGET_DEVICE)),)
 
 LOCAL_PATH := $(call my-dir)
