@@ -64,7 +64,7 @@ service nativebridge /system/bin/enable_nativebridge
     disabled
     oneshot
 
-service logcat /system/bin/logcat -v threadtime -f /data/log.txt
+service logcat /system/bin/logcat -b all -v threadtime -f /data/log.txt
     class debug
 
 service btattach /system/bin/btattach

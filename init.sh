@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2013-2015 The Android-x86 Open Source Project
+# Copyright (C) 2013-2018 The Android-x86 Open Source Project
 #
 # License: GNU Public License v2 or later
 #
@@ -8,6 +8,11 @@ function set_property()
 {
 	setprop "$1" "$2"
 	[ -n "$DEBUG" ] && echo "$1"="$2" >> /dev/x86.prop
+}
+
+function set_prop_if_empty()
+{
+	[ -z "$(getprop $1)" ] && set_property "$1" "$2"
 }
 
 function init_misc()
@@ -53,7 +58,6 @@ function init_hal_bluetooth()
 		T10*TA|HP*Omni*)
 			BTUART_PORT=/dev/ttyS1
 			set_property hal.bluetooth.uart.proto bcm
-			[ -z "$(getprop sleep.state)" ] && set_property sleep.state none
 			;;
 		MacBookPro8*)
 			rmmod b43
@@ -142,6 +146,7 @@ function init_hal_gralloc()
 				set_property ro.hardware.hwcomposer drm
 				set_property ro.hardware.gralloc gbm
 			fi
+			set_prop_if_empty sleep.state none
 			;;
 		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb|0*amdgpudrmfb)
 			if [ "$HWACCEL" != "0" ]; then
@@ -178,6 +183,9 @@ function init_hal_power()
 
 	# TODO
 	case "$PRODUCT" in
+		HP*Omni*|OEMB|Surface*3|T10*TA)
+			set_prop_if_empty sleep.state none
+			;;
 		*)
 			;;
 	esac
@@ -249,20 +257,18 @@ function init_hal_sensors()
 			hal_sensors=hdaps
 			;;
 		*i7Stylus*)
-			set_property hal.sensors.iio.accel.matrix 1,0,0,0,-1,0,0,0,-1
-			;;
-		*ST70416-6*)
-			set_property hal.sensors.iio.accel.matrix 0,-1,0,-1,0,0,0,0,-1
+			set_property ro.iio.accel.x.opt_scale -1
 			;;
 		*ONDATablet*)
-			set_property hal.sensors.iio.accel.matrix 0,1,0,1,0,0,0,0,-1
-			;;
-		*Surface.3*|*svnOEMB*)
-			set_property ro.iio.accel.y.opt_scale -1
-			;&
-		*T10*TA*)
+			set_property ro.iio.accel.order 102
 			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.z.opt_scale -1
+			set_property ro.iio.accel.y.opt_scale -1
+			;;
+		*ST70416-6*)
+			set_property ro.iio.accel.order 102
+			;;
+		*T10*TA*)
+			set_property ro.iio.accel.y.opt_scale -1
 			;;
 		*)
 			has_sensors=false
@@ -272,13 +278,16 @@ function init_hal_sensors()
 	# has iio sensor-hub?
 	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
 		busybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+		[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
 		hal_sensors=iio
 	elif lsmod | grep -q lis3lv02d_i2c; then
 		hal_sensors=hdaps
+		has_sensors=true
+	elif [ "$hal_sensors" != "kbd" ]; then
+		has_sensors=${HAS_SENSORS:-true}
 	fi
 
 	set_property ro.hardware.sensors $hal_sensors
-	[ "$hal_sensors" != "kbd" ] && has_sensors=true
 	set_property config.override_forced_orient $has_sensors
 }
 
@@ -422,13 +431,13 @@ function do_bootcomplete()
 			alsa_amixer -c $c set Headphone on
 			alsa_amixer -c $c set Headphone 100%
 			alsa_amixer -c $c set Speaker 100%
-			alsa_amixer -c $c set Capture 100%
+			alsa_amixer -c $c set Capture 80%
 			alsa_amixer -c $c set Capture cap
 			alsa_amixer -c $c set PCM 100 unmute
 			alsa_amixer -c $c set SPO unmute
 			alsa_amixer -c $c set IEC958 on
-			alsa_amixer -c $c set 'Mic Boost' 3
-			alsa_amixer -c $c set 'Internal Mic Boost' 3
+			alsa_amixer -c $c set 'Mic Boost' 1
+			alsa_amixer -c $c set 'Internal Mic Boost' 1
 		fi
 	done
 
