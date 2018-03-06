@@ -15,7 +15,7 @@ on fs
     mount_all /fstab.${ro.hardware}
 
 on post-fs
-    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
+    exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
 
 on post-fs-data
     mkdir /data/misc/wifi 0770 wifi wifi
@@ -61,6 +61,7 @@ service nativebridge /system/bin/enable_nativebridge
     class main
     disabled
     oneshot
+    seclabel u:r:zygote:s0
 
 service logcat /system/bin/logcat -b all -v threadtime -f /data/log.txt
     class debug
@@ -69,24 +70,29 @@ service btattach /system/bin/btattach
     class main
     disabled
     oneshot
+    seclabel u:r:bluetooth:s0
 
 service rtk_hciattach /vendor/bin/rtk_hciattach -n -s 115200 /dev/rtk_h5 rtk_h5
     class main
     disabled
     oneshot
+    seclabel u:r:bluetooth:s0
 
 service wacom-input /system/bin/wacom-input
     disabled
     oneshot
+    seclabel u:r:inputflinger:s0
 
 service tablet-mode /system/bin/tablet-mode
     disabled
     oneshot
+    seclabel u:r:inputflinger:s0
 
 service ctrl-alt-del /system/bin/input keyevent --longpress POWER
     disabled
     oneshot
     keycodes 97 100 111
+    seclabel u:r:init:s0
 
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking
@@ -96,10 +102,10 @@ on property:system_init.startsurfaceflinger=0
 
 on property:sys.boot_completed=1
     write /proc/sys/kernel/ctrl-alt-del 0
-    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh bootcomplete
+    exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh bootcomplete
 
 on property:net.dns1=*
-    exec -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh netconsole
+    exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh netconsole
 
 on property:debug.logcat=1
     class_start debug
