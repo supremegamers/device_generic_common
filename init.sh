@@ -55,7 +55,7 @@ function init_hal_bluetooth()
 	done
 
 	case "$PRODUCT" in
-		T10*TA|HP*Omni*)
+		T10*TA|M80TA|HP*Omni*)
 			BTUART_PORT=/dev/ttyS1
 			set_property hal.bluetooth.uart.proto bcm
 			;;
@@ -256,7 +256,7 @@ function init_hal_sensors()
 			modprobe hdaps
 			hal_sensors=hdaps
 			;;
-		*i7Stylus*)
+		*i7Stylus*|*M80TA*)
 			set_property ro.iio.accel.x.opt_scale -1
 			;;
 		*ONDATablet*)
@@ -377,6 +377,8 @@ function do_netconsole()
 
 function do_bootcomplete()
 {
+	hciconfig | grep -q hci || pm disable com.android.bluetooth
+
 	init_cpu_governor
 
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
