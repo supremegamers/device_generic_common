@@ -377,6 +377,8 @@ function do_netconsole()
 
 function do_bootcomplete()
 {
+	hciconfig | grep -q hci || pm disable com.android.bluetooth
+
 	init_cpu_governor
 
 	[ -z "$(getprop persist.sys.root_access)" ] && setprop persist.sys.root_access 3
