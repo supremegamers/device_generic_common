@@ -4,6 +4,6 @@ $(PRODUCT_OUT)/build.prop: $(INSTALLED_BUILD_PROP_TARGET)
 $(BUILT_SYSTEMIMAGE): $(PRODUCT_OUT)/build.prop
 
 ifneq ($(MKSQUASHFS),)
-$(PRODUCT_OUT)/system.sfs: $(BUILT_SYSTEMIMAGE) | $(SIMG2IMG)
-	$(hide) $(SIMG2IMG) $< $@
+$(systemimg): $(BUILT_SYSTEMIMAGE) | $(MKSQUASHFS)
+	$(call build-squashfs-target,$^,$@)
 endif
