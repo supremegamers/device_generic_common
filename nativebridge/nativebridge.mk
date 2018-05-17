@@ -13,7 +13,6 @@ WITH_NATIVE_BRIDGE := true
 
 # Native Bridge ABI List
 NATIVE_BRIDGE_ABI_LIST_32_BIT := armeabi-v7a armeabi
-NATIVE_BRIDGE_ABI_LIST_64_BIT := arm64-v8a
 
 LOCAL_SRC_FILES := bin/enable_nativebridge
 

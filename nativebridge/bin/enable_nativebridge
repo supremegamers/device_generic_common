@@ -7,13 +7,8 @@ dest_dir=/system/lib$1/arm$1
 binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 
 if [ -z "$1" ]; then
-	if [ "`uname -m`" = "x86_64" ]; then
-		v=8_y
-		url=http://goo.gl/v6c4Co
-	else
-		v=8_x
-		url=http://goo.gl/96BPKe
-	fi
+	v=8_y
+	url=http://goo.gl/v6c4Co
 else
 	v=8_z
 	url=http://goo.gl/CtKjxx
@@ -72,7 +67,5 @@ if [ $houdini_bin -eq 0 ]; then
 else
 	log -pi -thoudini "houdini$1 enabled"
 fi
-
-[ "$(getprop ro.zygote)" = "zygote64_32" -a -z "$1" ] && exec $0 64
 
 exit 0
