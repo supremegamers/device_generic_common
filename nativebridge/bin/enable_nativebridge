@@ -6,12 +6,19 @@ houdini_bin=0
 dest_dir=/system/lib$1/arm$1
 binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 
+urls[0]=http://t.cn/RBJ7mfG
+urls[1]=http://t.cn/RBJ7eml
+urls[2]=http://t.cn/RBJzLwu
+urls[3]=http://goo.gl/96BPKe
+urls[4]=http://goo.gl/v6c4Co
+urls[5]=http://goo.gl/CtKjxx
+
 if [ -z "$1" ]; then
 	v=8_y
-	url=http://goo.gl/v6c4Co
+	u=1
 else
 	v=8_z
-	url=http://goo.gl/CtKjxx
+	u=2
 fi
 
 if [ -s /system/lib$1/libhoudini.so ]; then
@@ -29,9 +36,10 @@ else
 		while [ "$(getprop net.dns1)" = "" ]; do
 			sleep 10
 		done
-		wget $url -cO houdini$v.sfs && continue
+		wget ${urls[$u%6]} -cO houdini$v.sfs && continue
 		rm -f houdini$v.sfs
 		sleep 30
+		let u+=3
 	done
 fi
 
