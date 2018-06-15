@@ -267,7 +267,7 @@ function init_hal_sensors()
 		*ST70416-6*)
 			set_property ro.iio.accel.order 102
 			;;
-		*T10*TA*)
+		*T10*TA*|*pnEZpad*)
 			set_property ro.iio.accel.y.opt_scale -1
 			;;
 		*)
@@ -284,11 +284,11 @@ function init_hal_sensors()
 		hal_sensors=hdaps
 		has_sensors=true
 	elif [ "$hal_sensors" != "kbd" ]; then
-		has_sensors=${HAS_SENSORS:-true}
+		has_sensors=true
 	fi
 
 	set_property ro.hardware.sensors $hal_sensors
-	set_property config.override_forced_orient $has_sensors
+	set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
 }
 
 function create_pointercal()
