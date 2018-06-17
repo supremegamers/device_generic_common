@@ -417,6 +417,9 @@ function do_bootcomplete()
 			setkeycodes 0x66 172
 			setkeycodes 0x6b 127
 			;;
+		VMware*)
+			pm disable com.android.bluetooth
+			;;
 		*)
 			;;
 	esac
