@@ -1,0 +1,5 @@
+# TODO (b/63631799) fix this access
+# Suppress denials to storage. Webview zygote should not be accessing.
+dontaudit webview_zygote mnt_expand_file:dir getattr;
+allow zygote self:process execmem;
+allow zygote self:capability sys_nice;

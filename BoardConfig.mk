@@ -84,3 +84,6 @@ PRC_COMPATIBILITY_PACKAGE := true
 ZIP_OPTIMIZATION_NO_INTEGRITY := true
 
 DEVICE_MANIFEST_FILE := device/generic/common/manifest.xml
+
+BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy \
+                       system/bt/vendor_libs/linux/sepolicy \
