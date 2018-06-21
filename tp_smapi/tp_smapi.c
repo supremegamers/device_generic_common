@@ -107,7 +107,7 @@ static struct { u8 rc; char *msg; int ret; } smapi_retcode[] =
 
 #define SMAPI_MAX_RETRIES 10
 #define SMAPI_PORT2 0x4F           /* fixed port, meaning unclear */
-static unsigned short smapi_port;  /* APM control port, normally 0xB2 */
+static u16 smapi_port;             /* APM control port, normally 0xB2 */
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,37)
 static DECLARE_MUTEX(smapi_mutex);
@@ -199,7 +199,7 @@ static int smapi_request(u32 inEBX, u32 inECX,
 			 "=m"(tmpEDI),
 			 "=m"(tmpESI)
 			:"m"(inEBX), "m"(inECX), "m"(inEDI), "m"(inESI),
-			 "m"((u16)smapi_port)
+			 "m"(smapi_port)
 			:"%eax", "%ebx", "%ecx", "%edx", "%edi",
 			 "%esi");
 
