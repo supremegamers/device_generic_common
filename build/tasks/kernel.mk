@@ -25,13 +25,18 @@ TARGET_KERNEL_CONFIG ?= goldfish_defconfig
 KERNEL_CONFIG_DIR := arch/arm/configs
 endif
 
+ifeq ($(BUILD_KERNEL_WITH_CLANG),true)
+CROSS_COMPILE := x86_64-linux-androidkernel-
+KERNEL_CLANG_CLAGS := CC=clang HOSTCC=clang CLANG_TRIPLE=x86_64-linux-gnu- PATH=$(abspath $(LLVM_PREBUILTS_BASE)/$(BUILD_OS)-x86/$(LLVM_PREBUILTS_VERSION)/bin):$$PATH
+else
 ifeq ($(TARGET_KERNEL_ARCH),x86_64)
 CROSS_COMPILE ?= $(abspath prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/bin)/x86_64-linux-
 else
 CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
 endif
+endif
 KBUILD_OUTPUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/kernel)
-mk_kernel := + $(hide) $(MAKE) -j$$(nproc) -l$$(($$(nproc)+2)) -C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1)
+mk_kernel := + $(hide) $(MAKE) -j$$(nproc) -l$$(($$(nproc)+2)) -C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) $(KERNEL_CLANG_CLAGS)
 
 KERNEL_CONFIG_FILE := $(if $(wildcard $(TARGET_KERNEL_CONFIG)),$(TARGET_KERNEL_CONFIG),$(KERNEL_DIR)/$(KERNEL_CONFIG_DIR)/$(TARGET_KERNEL_CONFIG))
 
