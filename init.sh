@@ -176,6 +176,9 @@ function init_hal_vulkan()
 		0*inteldrmfb)
 			set_property ro.hardware.vulkan android-x86
 			;;
+		0*amdgpudrmfb)
+			set_property ro.hardware.vulkan radv
+			;;
 		*)
 			;;
 	esac
