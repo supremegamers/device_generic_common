@@ -30,13 +30,18 @@ CROSS_COMPILE := x86_64-linux-androidkernel-
 KERNEL_CLANG_CLAGS := CC=clang HOSTCC=clang CLANG_TRIPLE=x86_64-linux-gnu- PATH=$(abspath $(LLVM_PREBUILTS_BASE)/$(BUILD_OS)-x86/$(LLVM_PREBUILTS_VERSION)/bin):$$PATH
 else
 ifeq ($(TARGET_KERNEL_ARCH),x86_64)
+ifeq ($(HOST_OS),darwin)
+CROSS_COMPILE ?= $(abspath prebuilts/gcc/darwin-x86/host/i686-apple-darwin-4.2.1/bin)/i686-apple-darwin11-
+else
 CROSS_COMPILE ?= $(abspath prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/bin)/x86_64-linux-
+endif
 else
 CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
 endif
 endif
+
 KBUILD_OUTPUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/kernel)
-mk_kernel := + $(hide) $(MAKE) $(if $(filter darwin,$(HOST_OS)),,-j$$(nproc) -l$$(($$(nproc)+2))) -C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) $(KERNEL_CLANG_CLAGS)
+mk_kernel := + $(hide) $(MAKE) $(if $(filter darwin,$(HOST_OS)),-j$$(sysctl -n hw.ncpu) -l$$(($$(sysctl -n hw.ncpu)+2)),-j$$(nproc) -l$$(($$(nproc)+2))) -C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) $(KERNEL_CLANG_CLAGS)
 
 KERNEL_CONFIG_FILE := $(if $(wildcard $(TARGET_KERNEL_CONFIG)),$(TARGET_KERNEL_CONFIG),$(KERNEL_DIR)/$(KERNEL_CONFIG_DIR)/$(TARGET_KERNEL_CONFIG))
 
