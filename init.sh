@@ -55,6 +55,9 @@ function init_hal_bluetooth()
 	done
 
 	case "$PRODUCT" in
+		T100TAF)
+			set_property bluetooth.interface hci1
+			;;
 		T10*TA|M80TA|HP*Omni*)
 			BTUART_PORT=/dev/ttyS1
 			set_property hal.bluetooth.uart.proto bcm
