@@ -22,5 +22,6 @@
 #define BLUETOOTH_HCI_USE_USB          TRUE
 // Bluetooth Low Power Mode is supported on BT4.0
 #define HCILP_INCLUDED                 FALSE
+#define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE
 
 #endif
