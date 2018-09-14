@@ -41,7 +41,10 @@ endif
 endif
 
 KBUILD_OUTPUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/kernel)
-mk_kernel := + $(hide) $(MAKE) $(if $(filter darwin,$(HOST_OS)),-j$$(sysctl -n hw.ncpu) -l$$(($$(sysctl -n hw.ncpu)+2)),-j$$(nproc) -l$$(($$(nproc)+2))) -C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) $(KERNEL_CLANG_CLAGS)
+mk_kernel := + $(hide) $(MAKE) $(if $(filter darwin,$(HOST_OS)),-j$$(sysctl -n hw.ncpu) -l$$(($$(sysctl -n hw.ncpu)+2)),-j$$(nproc) -l$$(($$(nproc)+2))) \
+	-C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) \
+	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) \
+	$(KERNEL_CLANG_CLAGS)
 
 KERNEL_CONFIG_FILE := $(if $(wildcard $(TARGET_KERNEL_CONFIG)),$(TARGET_KERNEL_CONFIG),$(KERNEL_DIR)/$(KERNEL_CONFIG_DIR)/$(TARGET_KERNEL_CONFIG))
 
@@ -58,11 +61,8 @@ $(KERNEL_DOTCONFIG_FILE): $(KERNEL_CONFIG_FILE) $(wildcard $(TARGET_KERNEL_DIFFC
 	$(hide) ln -sf ../../../../../../external $(@D)
 	$(mk_kernel) oldnoconfig
 
-# bison is needed to build kernel and external modules from source
-BISON := $(HOST_OUT_EXECUTABLES)/bison$(HOST_EXECUTABLE_SUFFIX)
-
 BUILT_KERNEL_TARGET := $(KBUILD_OUTPUT)/arch/$(TARGET_ARCH)/boot/$(KERNEL_TARGET)
-$(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE) | $(BISON)
+$(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE)
 	$(mk_kernel) $(KERNEL_TARGET) $(if $(MOD_ENABLED),modules)
 	$(if $(FIRMWARE_ENABLED),$(mk_kernel) INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) firmware_install)
 
