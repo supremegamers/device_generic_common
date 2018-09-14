@@ -59,7 +59,7 @@ KERNEL_ARCH_CHANGED := $(if $(filter 0,$(shell grep -s ^$(if $(filter x86,$(TARG
 $(KERNEL_DOTCONFIG_FILE): $(KERNEL_CONFIG_FILE) $(wildcard $(TARGET_KERNEL_DIFFCONFIG)) $(KERNEL_ARCH_CHANGED)
 	$(hide) mkdir -p $(@D) && cat $(wildcard $^) > $@
 	$(hide) ln -sf ../../../../../../external $(@D)
-	$(mk_kernel) oldnoconfig
+	$(mk_kernel) olddefconfig
 
 BUILT_KERNEL_TARGET := $(KBUILD_OUTPUT)/arch/$(TARGET_ARCH)/boot/$(KERNEL_TARGET)
 $(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE)
