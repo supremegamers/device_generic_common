@@ -118,10 +118,8 @@ function set_drm_mode()
 		ET1602*)
 			drm_mode=1366x768
 			;;
-		VMware*)
-			[ -n "$video" ] && drm_mode=$video
-			;;
 		*)
+			[ -n "$video" ] && drm_mode=$video
 			;;
 	esac
 
@@ -148,6 +146,7 @@ function init_hal_gralloc()
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer drm
 				set_property ro.hardware.gralloc gbm
+				set_property debug.drm.mode.force ${video:-1280x800}
 			fi
 			set_prop_if_empty sleep.state none
 			;;
