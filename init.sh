@@ -128,6 +128,8 @@ function set_drm_mode()
 
 function init_uvesafb()
 {
+	UVESA_MODE=${UVESA_MODE:-${video%@*}}
+
 	case "$PRODUCT" in
 		ET2002*)
 			UVESA_MODE=${UVESA_MODE:-1600x900}
