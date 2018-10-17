@@ -3,4 +3,3 @@ blacklist hid_hyperv
 deferred  amdgpu
 deferred  nouveau
 deferred  radeon
-deferred  soc_button_array
