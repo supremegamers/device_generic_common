@@ -421,6 +421,9 @@ function do_bootcomplete()
 			setkeycodes 0x66 172
 			setkeycodes 0x6b 127
 			;;
+		Surface*Go)
+			echo on > /sys/devices/pci0000:00/0000:00:15.1/i2c_designware.1/power/control
+			;;
 		*)
 			;;
 	esac
