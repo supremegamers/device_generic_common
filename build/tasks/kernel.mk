@@ -76,7 +76,7 @@ ALL_EXTRA_MODULES := $(patsubst %,$(TARGET_OUT_INTERMEDIATES)/kmodule/%,$(TARGET
 $(ALL_EXTRA_MODULES): $(TARGET_OUT_INTERMEDIATES)/kmodule/%: $(BUILT_KERNEL_TARGET) | $(ACP)
 	@echo Building additional kernel module $*
 	$(hide) mkdir -p $(@D) && $(ACP) -fr $(EXTRA_KERNEL_MODULE_PATH_$*) $(@D)
-	$(mk_kernel) M=$(abspath $@) modules
+	$(mk_kernel) M=$(abspath $@) modules || ( rm -rf $@ && exit 1 )
 
 $(KERNEL_MODULES_DEP): $(BUILT_KERNEL_TARGET) $(ALL_EXTRA_MODULES)
 	$(hide) rm -rf $(TARGET_OUT)/lib/modules
