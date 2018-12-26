@@ -1,0 +1,1 @@
+cursor.orientationAware = 1
