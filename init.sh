@@ -140,17 +140,19 @@ function init_uvesafb()
 
 function init_hal_gralloc()
 {
+	[ "$VULKAN" = "1" ] && GRALLOC=gbm
+
 	case "$(cat /proc/fb | head -1)" in
 		*virtiodrmfb)
 			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer drm
-				set_property ro.hardware.gralloc gbm
+				set_property ro.hardware.hwcomposer ${HWC:-drm}
+				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
 				set_property debug.drm.mode.force ${video:-1280x800}
 			fi
 			;;
 		0*inteldrmfb|0*radeondrmfb|0*nouveaufb|0*svgadrmfb|0*amdgpudrmfb)
 			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.gralloc drm
+				set_property ro.hardware.gralloc ${GRALLOC:-drm}
 				set_drm_mode
 			fi
 			;;
