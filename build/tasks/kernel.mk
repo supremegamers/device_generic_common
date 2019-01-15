@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2014-2017 The Android-x86 Open Source Project
+# Copyright (C) 2014-2019 The Android-x86 Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -9,6 +9,7 @@
 #
 
 export LC_CTYPE := C
+export LC_MESSAGES := C
 
 ifneq ($(TARGET_NO_KERNEL),true)
 ifeq ($(TARGET_PREBUILT_KERNEL),)
