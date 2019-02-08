@@ -8,6 +8,10 @@ TARGET_BOARD_PLATFORM := android-x86
 USE_SQUASHFS := 0
 USE_EROFS := 1
 
+# Architecture
+TARGET_CPU_VARIANT := generic
+TARGET_2ND_CPU_VARIANT := generic
+
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
