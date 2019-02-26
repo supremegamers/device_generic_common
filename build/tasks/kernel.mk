@@ -8,9 +8,6 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
-export LC_CTYPE := C
-export LC_MESSAGES := C
-
 ifneq ($(TARGET_NO_KERNEL),true)
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 
