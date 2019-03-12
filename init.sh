@@ -190,6 +190,9 @@ function init_hal_power()
 		HP*Omni*|OEMB|Surface*3|T10*TA)
 			set_prop_if_empty sleep.state none
 			;;
+		e-tab*Pro)
+			set_prop_if_empty sleep.state force
+			;;
 		*)
 			;;
 	esac
