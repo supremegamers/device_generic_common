@@ -202,6 +202,9 @@ function init_hal_power()
 		HP*Omni*|OEMB|Standard*PC*|Surface*3|T10*TA|VMware*)
 			set_prop_if_empty sleep.state none
 			;;
+		e-tab*Pro)
+			set_prop_if_empty sleep.state force
+			;;
 		*)
 			;;
 	esac
@@ -272,6 +275,9 @@ function init_hal_sensors()
 			modprobe hdaps
 			hal_sensors=hdaps
 			;;
+		*e-tabPro*)
+			set_property ro.iio.accel.quirks no-trig
+			;&
 		*i7Stylus*|*M80TA*)
 			set_property ro.iio.accel.x.opt_scale -1
 			;;
