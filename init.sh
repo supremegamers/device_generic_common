@@ -103,7 +103,14 @@ function init_hal_bluetooth()
 
 function init_hal_camera()
 {
-	return
+	case "$PRODUCT" in
+		e-tab*Pro)
+			set_prop_if_empty hal.camera.0 0,270
+			set_prop_if_empty hal.camera.2 1,90
+			;;
+		*)
+			;;
+	esac
 }
 
 function init_hal_gps()
