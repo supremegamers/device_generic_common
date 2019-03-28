@@ -270,6 +270,9 @@ function init_hal_sensors()
 			modprobe hdaps
 			hal_sensors=hdaps
 			;;
+		*LINX1010B*)
+			set_property ro.iio.accel.z.opt_scale -1
+			;&
 		*i7Stylus*|*M80TA*)
 			set_property ro.iio.accel.x.opt_scale -1
 			;;
