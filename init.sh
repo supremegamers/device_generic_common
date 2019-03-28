@@ -100,7 +100,14 @@ function init_hal_bluetooth()
 
 function init_hal_camera()
 {
-	return
+	case "$PRODUCT" in
+		e-tab*Pro)
+			set_prop_if_empty hal.camera.0 0,270
+			set_prop_if_empty hal.camera.2 1,90
+			;;
+		*)
+			;;
+	esac
 }
 
 function init_hal_gps()
@@ -275,8 +282,8 @@ function init_hal_sensors()
 			modprobe hdaps
 			hal_sensors=hdaps
 			;;
-		*e-tabPro*)
-			set_property ro.iio.accel.quirks no-trig
+		*LINX1010B*)
+			set_property ro.iio.accel.z.opt_scale -1
 			;&
 		*i7Stylus*|*M80TA*)
 			set_property ro.iio.accel.x.opt_scale -1
@@ -289,7 +296,7 @@ function init_hal_sensors()
 		*ST70416-6*)
 			set_property ro.iio.accel.order 102
 			;;
-		*pnEZpad*)
+		*e-tabPro*|*pnEZpad*)
 			set_property ro.iio.accel.quirks no-trig
 			;&
 		*T*0*TA*)
