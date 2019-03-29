@@ -6,18 +6,18 @@ houdini_bin=0
 dest_dir=/system/lib$1/arm$1
 binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 
-urls[0]=http://t.cn/RBJ7mfG
-urls[1]=http://t.cn/RBJ7eml
-urls[2]=http://t.cn/RBJzLwu
-urls[3]=http://goo.gl/96BPKe
-urls[4]=http://goo.gl/v6c4Co
-urls[5]=http://goo.gl/CtKjxx
+urls[0]=http://t.cn/EJrmzZv
+urls[1]=http://t.cn/EJrmYMH
+urls[2]=http://t.cn/EJrmrA7
+urls[3]=http://tinyurl.com/y3nagyza
+urls[4]=http://tinyurl.com/y6azmjas
+urls[5]=http://tinyurl.com/y6g6cx27
 
 if [ -z "$1" ]; then
-	v=8_y
+	v=9_y
 	u=1
 else
-	v=8_z
+	v=9_z
 	u=2
 fi
 
