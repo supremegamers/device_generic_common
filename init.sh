@@ -440,6 +440,9 @@ function do_bootcomplete()
 		Surface*Go)
 			echo on > /sys/devices/pci0000:00/0000:00:15.1/i2c_designware.1/power/control
 			;;
+		X80*Power)
+			set_property power.nonboot-cpu-off 1
+			;;
 		*)
 			;;
 	esac
