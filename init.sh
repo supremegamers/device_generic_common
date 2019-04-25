@@ -456,6 +456,9 @@ function do_bootcomplete()
 		VMware*)
 			pm disable com.android.bluetooth
 			;;
+		X80*Power)
+			set_property power.nonboot-cpu-off 1
+			;;
 		*)
 			;;
 	esac
