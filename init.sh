@@ -44,6 +44,20 @@ function init_misc()
 		wifi=$(basename `readlink /sys/class/net/wlan0/device/driver`)
 		[ "$wifi" != "wl" ] && rmmod_if_exist wl
 	fi
+
+	# enable virt_wifi if needed
+	local eth=`getprop net.virt_wifi eth0`
+	if [ -d /sys/class/net/$eth -a "$VIRT_WIFI" != "0" ]; then
+		if [ -n "$wifi" -a "$VIRT_WIFI" = "1" ]; then
+			rmmod_if_exist iwlmvm $wifi
+		fi
+		if [ ! -d /sys/class/net/wlan0 ]; then
+			ifconfig $eth down
+			ip link set $eth name wifi_eth
+			ifconfig wifi_eth up
+			ip link add link wifi_eth name wlan0 type virt_wifi
+		fi
+	fi
 }
 
 function init_hal_audio()
