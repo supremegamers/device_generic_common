@@ -48,8 +48,10 @@ PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service
 
 # Memtrack HAL
-#PRODUCT_PACKAGES += \
-    android.hardware.memtrack@1.0-impl
+PRODUCT_PACKAGES += \
+    memtrack.default \
+    android.hardware.memtrack@1.0-impl \
+    android.hardware.memtrack@1.0-service
 
 # Power HAL
 PRODUCT_PACKAGES += \

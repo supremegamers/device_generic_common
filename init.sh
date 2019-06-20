@@ -15,6 +15,13 @@ function set_prop_if_empty()
 	[ -z "$(getprop $1)" ] && set_property "$1" "$2"
 }
 
+function rmmod_if_exist()
+{
+	for m in $*; do
+		[ -d /sys/module/$m ] && rmmod $m
+	done
+}
+
 function init_misc()
 {
 	# device information
@@ -30,6 +37,27 @@ function init_misc()
 	# enable sdcardfs if /data is not mounted on tmpfs or 9p
 	mount | grep /data\ | grep -qE 'tmpfs|9p'
 	[ $? -ne 0 ] && modprobe sdcardfs
+
+	# remove wl if it's not used
+	local wifi
+	if [ -d /sys/class/net/wlan0 ]; then
+		wifi=$(basename `readlink /sys/class/net/wlan0/device/driver`)
+		[ "$wifi" != "wl" ] && rmmod_if_exist wl
+	fi
+
+	# enable virt_wifi if needed
+	local eth=`getprop net.virt_wifi eth0`
+	if [ -d /sys/class/net/$eth -a "$VIRT_WIFI" != "0" ]; then
+		if [ -n "$wifi" -a "$VIRT_WIFI" = "1" ]; then
+			rmmod_if_exist iwlmvm $wifi
+		fi
+		if [ ! -d /sys/class/net/wlan0 ]; then
+			ifconfig $eth down
+			ip link set $eth name wifi_eth
+			ifconfig wifi_eth up
+			ip link add link wifi_eth name wlan0 type virt_wifi
+		fi
+	fi
 }
 
 function init_hal_audio()
@@ -288,7 +316,7 @@ function init_hal_sensors()
 		*i7Stylus*|*M80TA*)
 			set_property ro.iio.accel.x.opt_scale -1
 			;;
-		*ONDATablet*)
+		*LenovoMIIX320*|*ONDATablet*)
 			set_property ro.iio.accel.order 102
 			set_property ro.iio.accel.x.opt_scale -1
 			set_property ro.iio.accel.y.opt_scale -1
