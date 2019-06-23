@@ -9,9 +9,9 @@
 #
 
 PRODUCT_PACKAGES := \
-    hwcomposer.drm  \
+    hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
     gralloc.drm     \
-    gralloc.gbm     \
+    gralloc.gbm gralloc.minigbm gralloc.intel \
     libGLES_mesa    \
     libtxc_dxtn     \
 
