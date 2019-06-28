@@ -23,6 +23,7 @@ on post-fs-data
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
     mkdir /data/system 0775 system system
+    chown wifi wifi /data/misc/wifi/wpa_supplicant.conf
 
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
