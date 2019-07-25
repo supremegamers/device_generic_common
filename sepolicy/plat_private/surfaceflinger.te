@@ -1,0 +1,24 @@
+allow surfaceflinger surfaceflinger_tmpfs:file { map };
+allow surfaceflinger tmpfs:lnk_file { read };
+allow surfaceflinger self:capability { sys_tty_config };
+
+allowxperm surfaceflinger gpu_device:chr_file ioctl {
+	0x5605
+	0x6409
+	0x640a
+	0x640b
+	0x641e
+	0x641f
+	0x6457
+	0x6458
+	0x645b
+	0x645e
+	0x645f
+	0x6461
+	0x6462
+	0x6469
+	0x6466
+	0x646c
+	0x64a2
+	0x64b0
+};
