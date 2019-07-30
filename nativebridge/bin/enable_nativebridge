@@ -13,6 +13,11 @@ urls[3]=http://goo.gl/96BPKe
 urls[4]=http://goo.gl/v6c4Co
 urls[5]=http://goo.gl/CtKjxx
 
+mount_sfs()
+{
+	mount -o 'context="u:object_r:system_file:s0"' $1 $2
+}
+
 if [ -z "$1" ]; then
 	v=8_y
 	u=1
@@ -24,7 +29,7 @@ fi
 if [ -s /system/lib$1/libhoudini.so ]; then
 	log -pi -thoudini "found /system/lib$1/libhoudini.so"
 elif [ -e /system/etc/houdini$v.sfs ]; then
-	mount /system/etc/houdini$v.sfs $dest_dir
+	mount_sfs /system/etc/houdini$v.sfs $dest_dir
 else
 	if mountpoint -q $dest_dir; then
 		kill -9 `fuser -m $dest_dir`
@@ -32,7 +37,7 @@ else
 	fi
 	mkdir -p /data/arm
 	cd /data/arm
-	while ! mount houdini$v.sfs $dest_dir; do
+	while ! mount_sfs houdini$v.sfs $dest_dir; do
 		while [ "$(getprop net.dns1)" = "" ]; do
 			sleep 10
 		done
