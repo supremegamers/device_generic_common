@@ -40,9 +40,9 @@ CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
 endif
 endif
 
-KBUILD_OUTPUT := $(abspath $(TARGET_OUT_INTERMEDIATES)/kernel)
+KBUILD_OUTPUT := $(TARGET_OUT_INTERMEDIATES)/kernel
 mk_kernel := + $(hide) $(MAKE) $(if $(filter darwin,$(HOST_OS)),-j$$(sysctl -n hw.ncpu) -l$$(($$(sysctl -n hw.ncpu)+2)),-j$$(nproc) -l$$(($$(nproc)+2))) \
-	-C $(KERNEL_DIR) O=$(KBUILD_OUTPUT) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) \
+	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) \
 	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) \
 	$(KERNEL_CLANG_CLAGS)
 
