@@ -55,11 +55,16 @@ FIRMWARE_ENABLED := $(shell grep ^CONFIG_FIRMWARE_IN_KERNEL=y $(KERNEL_CONFIG_FI
 # but I don't want to write a complex Android.mk to build kernel.
 # This is the simplest way I can think.
 KERNEL_DOTCONFIG_FILE := $(KBUILD_OUTPUT)/.config
-KERNEL_ARCH_CHANGED := $(if $(filter 0,$(shell grep -s ^$(if $(filter x86,$(TARGET_KERNEL_ARCH)),\#.)CONFIG_64BIT $(KERNEL_DOTCONFIG_FILE) | wc -l)),FORCE)
+ifneq ($(filter 0,$(shell grep -s ^$(if $(filter x86,$(TARGET_KERNEL_ARCH)),\#.)CONFIG_64BIT $(KERNEL_DOTCONFIG_FILE) | wc -l)),)
+KERNEL_ARCH_CHANGED := $(KERNEL_DOTCONFIG_FILE)-
+$(KERNEL_ARCH_CHANGED):
+		@touch $@
+endif
 $(KERNEL_DOTCONFIG_FILE): $(KERNEL_CONFIG_FILE) $(wildcard $(TARGET_KERNEL_DIFFCONFIG)) $(KERNEL_ARCH_CHANGED)
 	$(hide) mkdir -p $(@D) && cat $(wildcard $^) > $@
 	$(hide) ln -sf ../../../../../../prebuilts $(@D)
 	$(mk_kernel) olddefconfig
+	$(hide) rm -f $(KERNEL_ARCH_CHANGED)
 
 BUILT_KERNEL_TARGET := $(KBUILD_OUTPUT)/arch/$(TARGET_ARCH)/boot/$(KERNEL_TARGET)
 $(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE)
@@ -100,7 +105,7 @@ installclean: FILES += $(KBUILD_OUTPUT) $(INSTALLED_KERNEL_TARGET)
 
 TARGET_PREBUILT_KERNEL := $(BUILT_KERNEL_TARGET)
 
-.PHONY: kernel $(if $(KERNEL_ARCH_CHANGED),$(KERNEL_HEADERS_COMMON)/linux/binder.h)
+.PHONY: kernel
 kernel: $(INSTALLED_KERNEL_TARGET) $(KERNEL_MODULES_DEP)
 
 endif # TARGET_PREBUILT_KERNEL
