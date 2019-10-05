@@ -3,6 +3,7 @@
 /dev/ttyUSB*              0660  radio         radio
 /dev/video*               0660  cameraserver  system
 /dev/iio:device*          0660  system        system
+/dev/ion                  0664  system        system
 
 # for bluetooth nodes
 /dev/rfkill               0660  bluetooth     wifi
