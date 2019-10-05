@@ -19,6 +19,10 @@ on fs
 on post-fs
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh
 
+on post-fs
+    chmod 0664 /dev/ion
+    chown system system /dev/ion
+
 on post-fs-data
     # Create the directories used by the Wireless subsystem
     mkdir /data/vendor/wifi 0771 wifi wifi
