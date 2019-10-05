@@ -91,3 +91,5 @@ BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
                        system/bt/vendor_libs/linux/sepolicy \
 
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
+
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
