@@ -1,0 +1,2 @@
+allow zygote surfaceflinger:binder call;
+allow zygote surfaceflinger:unix_stream_socket { read };
