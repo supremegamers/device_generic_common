@@ -93,4 +93,5 @@ BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+BUILD_BROKEN_USES_NETWORK := true
 USE_XML_AUDIO_POLICY_CONF := 1
