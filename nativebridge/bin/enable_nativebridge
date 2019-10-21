@@ -9,14 +9,14 @@ binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 if [ -z "$1" ]; then
 	if [ "`uname -m`" = "x86_64" ]; then
 		v=7_y
-		url=http://goo.gl/SBU3is
+		url=http://mrw.so/4HMwO9
 	else
 		v=7_x
-		url=http://goo.gl/0IJs40
+		url=http://mrw.so/4Pige8
 	fi
 else
 	v=7_z
-	url=http://goo.gl/FDrxVN
+	url=http://mrw.so/5jn810
 fi
 
 if [ -s /system/lib$1/libhoudini.so ]; then
