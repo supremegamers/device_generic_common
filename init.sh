@@ -178,7 +178,7 @@ function init_hal_gralloc()
 	[ "$VULKAN" = "1" ] && GRALLOC=gbm
 
 	case "$(cat /proc/fb | head -1)" in
-		*virtiodrmfb)
+		*virtiodrmfb|*DRM*emulated)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC:-drm}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
