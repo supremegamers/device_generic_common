@@ -11,8 +11,6 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/generic/common/bluetooth
 
 BOARD_USE_LEGACY_UI := true
 
-BOARD_SYSTEMIMAGE_PARTITION_SIZE = $(if $(MKSQUASHFS),0,1610612736)
-
 # customize the malloced address to be 16-byte aligned
 BOARD_MALLOC_ALIGNMENT := 16
 
@@ -93,5 +91,7 @@ BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
+BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 33554432
+BOARD_USES_OEMIMAGE := true
 BUILD_BROKEN_USES_NETWORK := true
 USE_XML_AUDIO_POLICY_CONF := 1
