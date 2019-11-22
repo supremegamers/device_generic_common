@@ -1,5 +1,6 @@
-$(PRODUCT_OUT)/build.prop: $(INSTALLED_BUILD_PROP_TARGET)
-	sed -E '/ro.product.manufacturer|ro.product.model/d' $< > $@ && cat $@ > $<
+$(PRODUCT_OUT)/build.prop: $(INSTALLED_BUILD_PROP_TARGET) $(INSTALLED_VENDOR_BUILD_PROP_TARGET)
+	ln -sf ../system/bin/modprobe $(TARGET_ROOT_OUT_SBIN) && \
+	sed -i -E '/ro.product.*manufacturer|ro.product.*model/d' $^ && touch $@
 
 $(BUILT_SYSTEMIMAGE): $(PRODUCT_OUT)/build.prop
 
