@@ -78,7 +78,7 @@ ifneq ($(strip $(BOARD_GPU_DRIVERS)),)
 TARGET_HARDWARE_3D := true
 endif
 
-BOARD_KERNEL_CMDLINE := root=/dev/ram0 androidboot.selinux=permissive$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
+BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
 TARGET_KERNEL_DIFFCONFIG := device/generic/common/selinux_diffconfig
 
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
