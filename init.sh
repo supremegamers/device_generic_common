@@ -198,6 +198,7 @@ function init_hal_gralloc()
 			;;
 	esac
 
+	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl swiftshader
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
