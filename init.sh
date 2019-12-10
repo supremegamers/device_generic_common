@@ -299,9 +299,13 @@ function init_hal_sensors()
 			hal_sensors=hdaps
 			;;
 		*LINX1010B*)
+			set_property ro.iio.accel.x.opt_scale -1
 			set_property ro.iio.accel.z.opt_scale -1
+			;;
+		*i7-WN*)
+			set_property ro.iio.accel.quirks no-trig
 			;&
-		*i7Stylus*|*M80TA*)
+		*i7Stylus*)
 			set_property ro.iio.accel.x.opt_scale -1
 			;;
 		*LenovoMIIX320*|*ONDATablet*)
@@ -318,7 +322,7 @@ function init_hal_sensors()
 		*e-tabPro*|*pnEZpad*)
 			set_property ro.iio.accel.quirks no-trig
 			;&
-		*T*0*TA*)
+		*T*0*TA*|*M80TA*)
 			set_property ro.iio.accel.y.opt_scale -1
 			;;
 		*)
