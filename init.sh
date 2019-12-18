@@ -509,6 +509,9 @@ function init_hal_sensors()
             *T*0*TA*|*M80TA*)
                 set_property ro.iio.accel.y.opt_scale -1
                 ;;
+			*Akoya*P2213T*)
+				set_property ro.iio.accel.order 102
+				;;
             *TECLAST*X4*)
                 set_property ro.iio.accel.order 102
                 set_property ro.iio.accel.x.opt_scale -1
