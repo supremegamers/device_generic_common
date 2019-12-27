@@ -541,11 +541,13 @@ for c in `cat /proc/cmdline`; do
 				case $c in
 					DEBUG=*)
 						[ -n "$DEBUG" ] && set_property debug.logcat 1
+						[ "$DEBUG" = "0" ] || SETUPWIZARD=${SETUPWIZARD:-0}
 						;;
 					DPI=*)
 						set_property ro.sf.lcd_density "$DPI"
 						;;
 				esac
+				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
 			;;
 	esac
