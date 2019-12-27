@@ -542,6 +542,9 @@ for c in `cat /proc/cmdline`; do
 					DEBUG=*)
 						[ -n "$DEBUG" ] && set_property debug.logcat 1
 						;;
+					DPI=*)
+						set_property ro.sf.lcd_density "$DPI"
+						;;
 				esac
 			fi
 			;;
