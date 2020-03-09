@@ -319,7 +319,7 @@ function init_hal_sensors()
 		*ST70416-6*)
 			set_property ro.iio.accel.order 102
 			;;
-		*e-tabPro*|*pnEZpad*)
+		*e-tabPro*|*pnEZpad*|*TECLAST:rntPAD*)
 			set_property ro.iio.accel.quirks no-trig
 			;&
 		*T*0*TA*|*M80TA*)
