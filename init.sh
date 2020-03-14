@@ -179,12 +179,10 @@ function init_hal_gralloc()
 
 	case "$(cat /proc/fb | head -1)" in
 		*virtiodrmfb|*DRM*emulated)
-			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC:-drm}
-				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
-				set_property debug.drm.mode.force ${video:-1280x800}
-			fi
-			;;
+			HWC=${HWC:-drm}
+			GRALLOC=${GRALLOC:-gbm}
+			video=${video:-1280x768}
+			;&
 		0*i915drmfb|0*inteldrmfb|0*radeondrmfb|0*nouveau*|0*svgadrmfb|0*amdgpudrmfb)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC:-}
