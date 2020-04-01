@@ -174,7 +174,7 @@ function init_uvesafb()
 			;;
 	esac
 
-	modprobe uvesafb mode_option=${UVESA_MODE:-1024x768}-32 ${UVESA_OPTION:-mtrr=3 scroll=redraw}
+	modprobe uvesafb mode_option=${UVESA_MODE:-1024x768}-32 ${UVESA_OPTION:-mtrr=3 scroll=redraw} v86d=/system/bin/v86d
 }
 
 function init_hal_gralloc()

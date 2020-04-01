@@ -17,7 +17,7 @@ LOCAL_SRC_FILES := src/libnb.cpp
 LOCAL_CFLAGS := -Werror -Wall
 LOCAL_CPPFLAGS := -std=c++11
 LOCAL_SHARED_LIBRARIES := libcutils libdl liblog
-LOCAL_C_INCLUDES := system/core/libnativebridge/include
+LOCAL_C_INCLUDES := art/libnativebridge/include
 LOCAL_MULTILIB := both
 LOCAL_POST_INSTALL_CMD := $(hide) \
     rm -rf $(TARGET_OUT)/{bin,lib}/{arm*,*houdini*} {$(TARGET_OUT),$(PRODUCT_OUT)}/vendor/{bin,lib}/{arm*,*houdini*}; \

@@ -41,7 +41,8 @@ PRODUCT_PACKAGES += \
 
 # Health HAL
 PRODUCT_PACKAGES += \
-    android.hardware.health@1.0-impl
+    android.hardware.health@2.1-impl \
+    android.hardware.health@2.1-service
 
 # Keymaster HAL
 PRODUCT_PACKAGES += \
@@ -90,3 +91,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.gnss@1.0-impl \
     android.hardware.gnss@1.0-service
+
+# ConfigStore HAL
+PRODUCT_PACKAGES += \
+    android.hardware.configstore@1.1-service

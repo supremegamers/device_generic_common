@@ -90,6 +90,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
+PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 PRODUCT_CHARACTERISTICS := tablet
 
 PRODUCT_AAPT_CONFIG := normal large xlarge mdpi hdpi
