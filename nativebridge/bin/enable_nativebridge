@@ -36,16 +36,17 @@ else
 		kill -9 `fuser -m $dest_dir`
 		umount -f $dest_dir
 	fi
-	mkdir -p /data/arm
-	cd /data/arm
+	if [ ! -d /data/media/0/arm ]; then
+		mkdir -p /data/media/0/arm
+		chown 1023.1023 /data/media/0/arm
+	fi
+	cd /data/media/0/arm
+	[ -s /data/arm/houdini$v.sfs ] && mv /data/arm/houdini$v.sfs .
 	while ! mount_sfs houdini$v.sfs $dest_dir; do
 		while [ "$(getprop net.dns1)" = "" ]; do
 			sleep 10
 		done
-		wget ${urls[$u%6]} -cO houdini$v.sfs && continue
-		rm -f houdini$v.sfs
-		sleep 30
-		let u+=3
+		[ -s houdini$v.sfs ] && sleep 10 || sleep 30
 	done
 fi
 

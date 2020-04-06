@@ -179,12 +179,10 @@ function init_hal_gralloc()
 
 	case "$(cat /proc/fb | head -1)" in
 		*virtiodrmfb|*DRM*emulated)
-			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC:-drm}
-				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
-				set_property debug.drm.mode.force ${video:-1280x800}
-			fi
-			;;
+			HWC=${HWC:-drm}
+			GRALLOC=${GRALLOC:-gbm}
+			video=${video:-1280x768}
+			;&
 		0*i915drmfb|0*inteldrmfb|0*radeondrmfb|0*nouveau*|0*svgadrmfb|0*amdgpudrmfb)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC:-}
@@ -255,7 +253,7 @@ function init_hal_sensors()
 
 	local hal_sensors=kbd
 	local has_sensors=true
-	case "$(cat $DMIPATH/uevent)" in
+	case "$UEVENT" in
 		*Lucid-MWE*)
 			set_property ro.ignore_atkbd 1
 			hal_sensors=hdaps
@@ -333,7 +331,7 @@ function init_hal_sensors()
 		*ST70416-6*)
 			set_property ro.iio.accel.order 102
 			;;
-		*e-tabPro*|*pnEZpad*)
+		*e-tabPro*|*pnEZpad*|*TECLAST:rntPAD*)
 			set_property ro.iio.accel.quirks no-trig
 			;&
 		*T*0*TA*|*M80TA*)
@@ -373,11 +371,11 @@ function create_pointercal()
 
 function init_tscal()
 {
-	case "$PRODUCT" in
-		ST70416-6*)
+	case "$UEVENT" in
+		*ST70416-6*)
 			modprobe gslx680_ts_acpi
 			;&
-		T91|T101|ET2002|74499FU|945GSE-ITE8712|CF-19[CDYFGKLP]*)
+		*T91*|*T101*|*ET2002*|*74499FU*|*945GSE-ITE8712*|*CF-19[CDYFGKLP]*|*TECLAST:rntPAD*)
 			create_pointercal
 			return
 			;;
@@ -399,7 +397,7 @@ function init_tscal()
 
 function init_ril()
 {
-	case "$(cat $DMIPATH/uevent)" in
+	case "$UEVENT" in
 		*TEGA*|*2010:svnIntel:*|*Lucid-MWE*)
 			set_property rild.libpath /system/lib/libhuaweigeneric-ril.so
 			set_property rild.libargs "-d /dev/ttyUSB2 -v /dev/ttyUSB1"
@@ -530,6 +528,7 @@ PATH=/sbin:/system/bin:/system/xbin
 DMIPATH=/sys/class/dmi/id
 BOARD=$(cat $DMIPATH/board_name)
 PRODUCT=$(cat $DMIPATH/product_name)
+UEVENT=$(cat $DMIPATH/uevent)
 
 # import cmdline variables
 for c in `cat /proc/cmdline`; do
