@@ -178,7 +178,7 @@ function init_hal_gralloc()
 	[ "$VULKAN" = "1" ] && GRALLOC=gbm
 
 	case "$(cat /proc/fb | head -1)" in
-		*virtiodrmfb|*DRM*emulated)
+		*virtio*drmfb|*DRM*emulated)
 			HWC=${HWC:-drm}
 			GRALLOC=${GRALLOC:-gbm}
 			video=${video:-1280x768}
