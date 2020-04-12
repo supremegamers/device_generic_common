@@ -128,9 +128,13 @@ function init_hal_bluetooth()
 
 function init_hal_camera()
 {
-	case "$PRODUCT" in
-		e-tab*Pro)
+	case "$UEVENT" in
+		*e-tabPro*)
 			set_prop_if_empty hal.camera.0 0,270
+			set_prop_if_empty hal.camera.2 1,90
+			;;
+		*LenovoideapadD330*)
+			set_prop_if_empty hal.camera.0 0,90
 			set_prop_if_empty hal.camera.2 1,90
 			;;
 		*)
@@ -178,7 +182,7 @@ function init_hal_gralloc()
 	[ "$VULKAN" = "1" ] && GRALLOC=gbm
 
 	case "$(cat /proc/fb | head -1)" in
-		*virtiodrmfb|*DRM*emulated)
+		*virtio*drmfb|*DRM*emulated)
 			HWC=${HWC:-drm}
 			GRALLOC=${GRALLOC:-gbm}
 			video=${video:-1280x768}
@@ -310,6 +314,10 @@ function init_hal_sensors()
 			modprobe hdaps
 			hal_sensors=hdaps
 			;;
+		*LenovoideapadD330*)
+			set_property ro.iio.accel.quirks no-trig
+			set_property ro.iio.accel.order 102
+			;&
 		*LINX1010B*)
 			set_property ro.iio.accel.x.opt_scale -1
 			set_property ro.iio.accel.z.opt_scale -1
