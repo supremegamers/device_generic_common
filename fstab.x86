@@ -10,3 +10,4 @@ none			/cache		tmpfs	nosuid,nodev,noatime	defaults
 /devices/*/PNP0FFF:00/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/*/*/sd*		auto	auto	defaults,uid=1000,gid=1000		voldmanaged=usb
 /devices/*/*/nvme*		auto	auto	defaults,uid=1000,gid=1000		voldmanaged=usb
+/dev/block/zram0        none    swap    defaults	        zramsize=52%,max_comp_streams=4,swapprio=10,notrim
