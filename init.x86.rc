@@ -9,6 +9,8 @@ on early-init
     export EGL_LOG_LEVEL info
 #   export EGL_DRIVERS egl_dri2
 
+    exec u:r:init:s0 -- /sbin/modprobe sdcardfs
+
 on init
 
 on fs
