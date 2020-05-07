@@ -74,3 +74,8 @@ PRODUCT_PACKAGES += \
 # Wifi HAL
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service
+
+# GPS HAL
+PRODUCT_PACKAGES += \
+    android.hardware.gnss@1.0-impl \
+    android.hardware.gnss@1.0-service
