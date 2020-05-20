@@ -1,4 +1,4 @@
 blacklist evbug
 deferred  amdgpu
-deferred  nouveau
+blacklist nouveau
 deferred  radeon
