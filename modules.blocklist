@@ -1,0 +1,4 @@
+blocklist evbug
+blocklist nouveau
+deferred amdgpu
+deferred radeon
