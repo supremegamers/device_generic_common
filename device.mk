@@ -98,6 +98,9 @@ PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
+# Get emulated storage settings
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
 # Get Android 8.0 HIDL HALs
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
 
