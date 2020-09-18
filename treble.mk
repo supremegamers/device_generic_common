@@ -33,7 +33,7 @@ PRODUCT_PACKAGES += \
 # DumpState HAL
 PRODUCT_PACKAGES += \
     android.hardware.dumpstate@1.0-impl \
-    android.hardware.dumpstate@1.0-service
+    android.hardware.dumpstate@1.0-service.example
 
 # Gatekeeper HAL
 #PRODUCT_PACKAGES += \
