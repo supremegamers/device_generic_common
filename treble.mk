@@ -77,10 +77,6 @@ PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-impl \
     android.hardware.usb@1.0-service
 
-# Wifi HAL
-PRODUCT_PACKAGES += \
-    android.hardware.wifi@1.0-service
-
 # Drm HAL
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
