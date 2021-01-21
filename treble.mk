@@ -109,3 +109,6 @@ PRODUCT_PACKAGES += \
 # Thermal HAL
 PRODUCT_PACKAGES += \
     android.hardware.thermal@2.0-service.intel
+
+# vndservicemanager
+PRODUCT_PACKAGES += vndservicemanager
