@@ -25,8 +25,9 @@ function rmmod_if_exist()
 function init_misc()
 {
 	# device information
-	setprop ro.product.manufacturer "$(cat $DMIPATH/sys_vendor)"
-	setprop ro.product.model "$PRODUCT"
+	VENDOR=$(cat $DMIPATH/sys_vendor)
+	[ -z "$VENDOR" ] ? setprop ro.product.manufacturer $(cat $DMIPATH/board_vendor) : setprop ro.product.manufacturer "$VENDOR"
+	[ -z "$PRODUCT" ] ? setprop ro.product.model "$BOARD" : setprop ro.product.model "$PRODUCT"
 
 	# a hack for USB modem
 	lsusb | grep 1a8d:1000 && eject
