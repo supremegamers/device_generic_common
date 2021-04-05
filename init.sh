@@ -74,9 +74,9 @@ function init_hal_audio()
 	
 	# choose the first connected HDMI port on card 0 or 1
 	pcm=$(alsa_ctl store -f - 0 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ "$pcm" -ge 0 ] 2>/dev/null && set_prop_if_empty hal.audio.out "pcmC0D${pcm}p"
+	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC0D${pcm}p"
 	pcm=$(alsa_ctl store -f - 1 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ "$pcm" -ge 0 ] 2>/dev/null && set_prop_if_empty hal.audio.out "pcmC1D${pcm}p"
+	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC1D${pcm}p"
 }
 
 function init_hal_bluetooth()
