@@ -37,7 +37,7 @@ static NativeBridgeCallbacks *get_callbacks()
 #ifdef __LP64__
                 "64"
 #endif
-                "/libhoudini.so";
+                "/libndk_translation.so";
         if (!native_handle) {
             native_handle = dlopen(libnb, RTLD_LAZY);
             if (!native_handle) {
@@ -188,6 +188,13 @@ static native_bridge_namespace_t *native_bridge4_getVendorNamespace()
     return cb ? cb->getVendorNamespace() : nullptr;
 }
 
+static native_bridge_namespace_t *native_bridge5_getExportedNamespace()
+{
+    LOGV("enter native_bridge5_getExportedNamespace");
+    NativeBridgeCallbacks *cb = get_callbacks();
+    return cb ? cb->getExportedNamespace() : nullptr;
+}
+
 static void __attribute__ ((destructor)) on_dlclose()
 {
     if (native_handle) {
@@ -200,7 +207,7 @@ extern "C" {
 
 NativeBridgeCallbacks NativeBridgeItf = {
     // v1
-    .version = 4,
+    .version = 5,
     .initialize = native_bridge2_initialize,
     .loadLibrary = native_bridge2_loadLibrary,
     .getTrampoline = native_bridge2_getTrampoline,
@@ -219,6 +226,8 @@ NativeBridgeCallbacks NativeBridgeItf = {
     .loadLibraryExt = native_bridge3_loadLibraryExt,
     // v4
     .getVendorNamespace = native_bridge4_getVendorNamespace,
+    // v5
+    .getExportedNamespace = native_bridge5_getExportedNamespace,
 };
 
 } // extern "C"

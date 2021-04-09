@@ -99,6 +99,15 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Eleven \
     TSCalibration2 \
+    native_bridge_stub_library_defaults \
+    libnativebridge-headers \
+    libnativeloader-headers \
+    libqemupipe \
+    libandroidemu
+
+PRODUCT_HOST_PACKAGES, += \
+    libnativebridge \
+    libnativeloader
 
 # Debug tools
 PRODUCT_PACKAGES_DEBUG := \

@@ -14,7 +14,7 @@ PRODUCT_PACKAGES := \
     gralloc.gbm gralloc.minigbm gralloc.intel \
     libGLES_mesa    \
     libtxc_dxtn     \
-
+    modetest
 PRODUCT_PACKAGES += \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \

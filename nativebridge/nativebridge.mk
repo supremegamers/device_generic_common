@@ -13,6 +13,7 @@ WITH_NATIVE_BRIDGE := true
 
 # Native Bridge ABI List
 NATIVE_BRIDGE_ABI_LIST_32_BIT := armeabi-v7a armeabi
+NATIVE_BRIDGE_ABI_LIST_64_BIT := arm64-v8a
 
 LOCAL_SRC_FILES := bin/enable_nativebridge
 
@@ -31,10 +32,13 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.enable.native.bridge.exec64=1
 endif
 
-ifneq ($(HOUDINI_PREINSTALL),intel)
+ifneq ($(NDK_TRANSLATION_PREINSTALL),google)
 PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libnb.so
 
 PRODUCT_PACKAGES := libnb
+else
+PRODUCT_PROPERTY_OVERRIDES += persist.sys.nativebridge=1
+PRODUCT_PROPERTY_OVERRIDES += ro.dalvik.vm.native.bridge=libndk_translation.so
 endif
 
-$(call inherit-product-if-exists,vendor/intel/houdini/houdini.mk)
+$(call inherit-product-if-exists,vendor/google/emu-x86/target/libndk_translation.mk)
