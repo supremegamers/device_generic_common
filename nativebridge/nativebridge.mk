@@ -11,11 +11,13 @@
 # Enable native bridge
 WITH_NATIVE_BRIDGE := true
 
+ifneq ($(DONT_SET_NB_ABI),true)
 # Native Bridge ABI List
 NATIVE_BRIDGE_ABI_LIST_32_BIT := armeabi-v7a armeabi
 NATIVE_BRIDGE_ABI_LIST_64_BIT := arm64-v8a
+endif
 
-LOCAL_SRC_FILES := bin/enable_nativebridge
+#~ LOCAL_SRC_FILES := bin/enable_nativebridge
 
 PRODUCT_COPY_FILES := $(foreach f,$(LOCAL_SRC_FILES),$(LOCAL_PATH)/$(f):system/$(f)) \
     $(LOCAL_PATH)/OEMBlackList:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.OEMBlackList \
@@ -35,10 +37,17 @@ endif
 ifneq ($(NDK_TRANSLATION_PREINSTALL),google)
 PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libnb.so
 
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
+    ro.dalvik.vm.native.bridge=libnb.so
+
 PRODUCT_PACKAGES := libnb
 else
+PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libndk_translation.so
+
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
+    ro.dalvik.vm.native.bridge=libndk_translation.so
+    
 PRODUCT_PROPERTY_OVERRIDES += persist.sys.nativebridge=1
-PRODUCT_PROPERTY_OVERRIDES += ro.dalvik.vm.native.bridge=libndk_translation.so
 endif
 
-$(call inherit-product-if-exists,vendor/google/emu-x86/target/libndk_translation.mk)
+$(call inherit-product-if-exists,vendor/google/ndk_translation/ndk_translation.mk)
