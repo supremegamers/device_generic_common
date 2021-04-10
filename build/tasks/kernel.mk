@@ -62,7 +62,7 @@ else
 KBUILD_JOBS := $(shell echo $$((1-(`cat /sys/devices/system/cpu/present`))))
 endif
 
-mk_kernel := + $(hide) prebuilts/build-tools/$(HOST_PREBUILT_TAG)/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \
+mk_kernel := + $(hide) /usr/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \
 	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) \
 	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) M4=$(abspath $(M4)) DEPMOD=/sbin/depmod \
 	$(KERNEL_CLANG_CLAGS)
