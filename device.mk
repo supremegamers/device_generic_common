@@ -26,7 +26,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
     media.sf.extractor-plugin=libffmpeg_extractor.so \
     debug.stagefright.ccodec=0 \
     debug.stagefright.omx_default_rank.sw-audio=1 \
-    debug.stagefright.omx_default_rank=0
+    debug.stagefright.omx_default_rank=0 \
+    ro.lmk.kill_timeout_ms=100
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
     ro.arch=x86 \
