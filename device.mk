@@ -29,7 +29,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     debug.stagefright.omx_default_rank=0 \
     ro.lmk.kill_timeout_ms=100 \
     ro.arch=x86 \
-    persist.rtc_local_time=1 \
+    persist.rtc_local_time=1
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
