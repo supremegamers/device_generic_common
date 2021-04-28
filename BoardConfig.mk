@@ -102,14 +102,14 @@ ZIP_OPTIMIZATION_NO_INTEGRITY := true
 
 DEVICE_MANIFEST_FILE := device/generic/common/manifest.xml
 
-BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
-                       system/bt/vendor_libs/linux/sepolicy \
-                       device/generic/common/sepolicy/celadon/graphics/mesa \
-                       device/generic/common/sepolicy/celadon/thermal \
-                       vendor/intel/proprietary/houdini/sepolicy \
-                       vendor/google/proprietary/widevine-prebuilt/sepolicy
-
-BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
+#BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
+#                       system/bt/vendor_libs/linux/sepolicy \
+#                       device/generic/common/sepolicy/celadon/graphics/mesa \
+#                       device/generic/common/sepolicy/celadon/thermal \
+#                       vendor/intel/proprietary/houdini/sepolicy \
+#                       vendor/google/proprietary/widevine-prebuilt/sepolicy
+#
+#BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 41000000
