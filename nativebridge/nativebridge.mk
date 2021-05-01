@@ -28,26 +28,15 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.dalvik.vm.isa.arm=x86 \
     ro.enable.native.bridge.exec=1 \
 
-ifeq ($(TARGET_SUPPORTS_64_BIT_APPS),true)
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.dalvik.vm.isa.arm64=x86_64 \
     ro.enable.native.bridge.exec64=1
-endif
 
-ifneq ($(NDK_TRANSLATION_PREINSTALL),google)
-PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libnb.so
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
-    ro.dalvik.vm.native.bridge=libnb.so
-
-PRODUCT_PACKAGES := libnb
-else
 PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libndk_translation.so
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
     ro.dalvik.vm.native.bridge=libndk_translation.so
     
 PRODUCT_PROPERTY_OVERRIDES += persist.sys.nativebridge=1
-endif
 
 $(call inherit-product-if-exists,vendor/google/ndk_translation/ndk_translation.mk)
