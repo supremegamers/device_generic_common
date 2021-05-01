@@ -134,5 +134,25 @@ $(call inherit-product-if-exists,$(if $(wildcard vendor/google/products/gms.mk),
 # Get native bridge settings
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/libndk_translation.mk)
+$(call inherit-product-if-exists, vendor/google/emu-x86/target/native_bridge_arm_on_x86.mk)
+NDK_TRANSLATION_PREINSTALL := google
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 
 $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)packages.mk)
+
+
+# Widevine addons
+$(call inherit-product-if-exists, vendor/google/emu-x86/target/widevine.mk)
+
+
+ifeq ($(USE_EMU_GAPPS),true)
+
+$(call inherit-product-if-exists, vendor/google/emu-x86/target/gapps.mk)
+
+endif
+
+# Boringdroid
+$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
+
+# foss apps
+$(call inherit-product-if-exists, vendor/foss/foss.mk)
