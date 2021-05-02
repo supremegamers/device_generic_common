@@ -189,33 +189,6 @@ function init_hal_gralloc()
 	[ "$VULKAN" = "1" ] && GRALLOC=gbm
 	
 	case "$(cat /proc/fb | head -1)" in
-		0*amdgpudrmfb)
-			if [ "$AMDGPU_MODESET" != "0" ]; then
-				modprobe amdgpu
-			fi			
-			;;
-		0*radeondrmfb)
-			if [ "$RADEON_MODESET" != "0" ]; then
-				modprobe radeon
-			fi			
-			;;
-		0*nouveau*)
-			if [ "$NOUVEAU_MODESET" != "0" ]; then
-				modprobe nouveau
-			fi			
-			;;
-		0*i915drmfb|0*inteldrmfb)
-			if [ "$I915_MODESET" != "0" ]; then
-				modprobe i915
-			fi
-			;;
-		"")
-			;;
-		0*)
-			;;
-	esac
-
-	case "$(cat /proc/fb | head -1)" in
 		*virtio*drmfb|*DRM*emulated)
 			HWC=${HWC:-drm}
 			GRALLOC=${GRALLOC:-gbm}
@@ -636,18 +609,6 @@ for c in `cat /proc/cmdline`; do
 						;;
 					DPI=*)
 						set_property ro.sf.lcd_density "$DPI"
-						;;
-					nouveau.modeset=0)
-						NOUVEAU_MODESET=0
-						;;
-					amdgpu.modeset=0)
-						AMDGPU_MODESET=0
-						;;
-					radeon.modeset=0)
-						RADEON_MODESET=0
-						;;
-					i915.modeset=0)
-						I915_MODESET=0
 						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
