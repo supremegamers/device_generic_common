@@ -117,6 +117,10 @@ PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
+# Copy any Permissions files, overriding anything if needed
+$(foreach f,$(wildcard $(LOCAL_PATH)/permissions/*.xml),\
+    $(eval PRODUCT_COPY_FILES += $(f):$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/$(notdir $f)))
+
 # Get emulated storage settings
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
