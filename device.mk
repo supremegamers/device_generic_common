@@ -182,3 +182,8 @@ $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
 # foss apps
 $(call inherit-product-if-exists, vendor/foss/foss.mk)
+
+# Enable MultiWindow
+PRODUCT_PROPERTY_OVERRIDES += \
+    persist.sys.debug.multi_window=true
+    persist.sys.debug.desktop_mode=true
