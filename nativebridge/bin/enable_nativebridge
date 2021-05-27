@@ -2,7 +2,7 @@
 
 PATH=/system/bin:/system/xbin
 
-ndk_translation_bin=0
+houdini_bin=0
 dest_dir=/system/lib$1/arm$1
 binfmt_misc_dir=/proc/sys/fs/binfmt_misc
 
@@ -15,8 +15,7 @@ urls[5]=http://tinyurl.com/y6g6cx27
 
 mount_sfs()
 {
-	lodevice=`losetup -r -f -s $1`
-	[ -n "$lodevice" ] && mount -o 'context="u:object_r:system_file:s0"' $lodevice $2
+	mount -o 'ro,context="u:object_r:system_file:s0"' $1 $2
 }
 
 if [ -z "$1" ]; then
@@ -27,10 +26,10 @@ else
 	u=2
 fi
 
-if [ -s /system/lib$1/libndk_translation.so ]; then
-	log -pi -tndk_translation "found /system/lib$1/libndk_translation.so"
-elif [ -e /system/etc/ndk_translation$v.sfs ]; then
-	mount_sfs /system/etc/ndk_translation$v.sfs $dest_dir
+if [ -s /system/lib$1/libhoudini.so ]; then
+	log -pi -thoudini "found /system/lib$1/libhoudini.so"
+elif [ -e /system/etc/houdini$v.sfs ]; then
+	mount_sfs /system/etc/houdini$v.sfs $dest_dir
 else
 	if mountpoint -q $dest_dir; then
 		kill -9 `fuser -m $dest_dir`
@@ -41,16 +40,16 @@ else
 		chown 1023.1023 /data/media/0/arm
 	fi
 	cd /data/media/0/arm
-	[ -s /data/arm/ndk_translation$v.sfs ] && mv /data/arm/ndk_translation$v.sfs .
-	while ! mount_sfs ndk_translation$v.sfs $dest_dir; do
+	[ -s /data/arm/houdini$v.sfs ] && mv /data/arm/houdini$v.sfs .
+	while ! mount_sfs houdini$v.sfs $dest_dir; do
 		while [ "$(getprop net.dns1)" = "" ]; do
 			sleep 10
 		done
-		[ -s ndk_translation$v.sfs ] && sleep 10 || sleep 30
+		[ -s houdini$v.sfs ] && sleep 10 || sleep 30
 	done
 fi
 
-[ -s /system/lib$1/libndk_translation.so ] || mount --bind $dest_dir/libndk_translation.so /system/lib$1/libndk_translation.so
+[ -s /system/lib$1/libhoudini.so ] || mount --bind $dest_dir/libhoudini.so /system/lib$1/libhoudini.so
 
 # this is to add the supported binary formats via binfmt_misc
 
@@ -61,26 +60,26 @@ fi
 
 cd $binfmt_misc_dir
 if [ -e register ]; then
-	[ -e /system/bin/ndk_translation_program_runner_binfmt_misc_arm$1 ] && dest_dir=/system/bin
-	# register ndk_translation for arm binaries
+	[ -e /system/bin/houdini$1 ] && dest_dir=/system/bin
+	# register Houdini for arm binaries
 	if [ -z "$1" ]; then
-		echo ':arm_exe:M::\\x7f\\x45\\x4c\\x46\\x01\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\x28::'"$dest_dir/ndk_translation_program_runner_binfmt_misc_arm:P" > register
-		echo ':arm_dyn:M::\\x7f\\x45\\x4c\\x46\\x01\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x03\\x00\\x28::'"$dest_dir/ndk_translation_program_runner_binfmt_misc_arm:P" > register
+		echo ':arm_exe:M::\\x7f\\x45\\x4c\\x46\\x01\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\x28::'"$dest_dir/houdini:P" > register
+		echo ':arm_dyn:M::\\x7f\\x45\\x4c\\x46\\x01\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x03\\x00\\x28::'"$dest_dir/houdini:P" > register
 	else
-		echo ':arm64_exe:M::\\x7f\\x45\\x4c\\x46\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\xb7::'"$dest_dir/ndk_translation_program_runner_binfmt_misc_arm64:P" > register
-		echo ':arm64_dyn:M::\\x7f\\x45\\x4c\\x46\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x03\\x00\\xb7::'"$dest_dir/ndk_translation_program_runner_binfmt_misc_arm64:P" > register
+		echo ':arm64_exe:M::\\x7f\\x45\\x4c\\x46\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\xb7::'"$dest_dir/houdini64:P" > register
+		echo ':arm64_dyn:M::\\x7f\\x45\\x4c\\x46\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x03\\x00\\xb7::'"$dest_dir/houdini64:P" > register
 	fi
 	if [ -e arm${1}_exe ]; then
-		ndk_translation_bin=1
+		houdini_bin=1
 	fi
 else
-	log -pe -tndk_translation "No binfmt_misc support"
+	log -pe -thoudini "No binfmt_misc support"
 fi
 
-if [ $ndk_translation_bin -eq 0 ]; then
-	log -pe -tndk_translation "ndk_translation_program_runner_binfmt_misc_arm$1 enabling failed!"
+if [ $houdini_bin -eq 0 ]; then
+	log -pe -thoudini "houdini$1 enabling failed!"
 else
-	log -pi -tndk_translation "ndk_translation_program_runner_binfmt_misc_arm$1 enabled"
+	log -pi -thoudini "houdini$1 enabled"
 fi
 
 [ "$(getprop ro.zygote)" = "zygote64_32" -a -z "$1" ] && exec $0 64

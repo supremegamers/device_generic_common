@@ -19,7 +19,7 @@ LOCAL_CPPFLAGS := -std=c++11
 LOCAL_SHARED_LIBRARIES := libcutils libdl liblog
 LOCAL_C_INCLUDES := art/libnativebridge/include
 LOCAL_MULTILIB := both
-ifneq ("$(wildcard vendor/google/emu-x86/*)","")
+ifneq ("$(wildcard vendor/google/chromeos-x86/*)","")
 	include $(BUILD_SHARED_LIBRARY)
 else
 	LOCAL_POST_INSTALL_CMD := $(hide) \
