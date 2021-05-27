@@ -105,4 +105,11 @@ USE_XML_AUDIO_POLICY_CONF := 1
 BUILD_BROKEN_USES_BUILD_HOST_EXECUTABLE := true
 BUILD_BROKEN_USES_BUILD_HOST_STATIC_LIBRARY := true
 
+ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 -include vendor/google/emu-x86/board/native_bridge_arm_on_x86.mk
+endif
+
+ifeq ($(USE_CROS_HOUDINI_NB),true)
+-include vendor/google/chromeos-x86/board/native_bridge_arm_on_x86.mk
+endif
+

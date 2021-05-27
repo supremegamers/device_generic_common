@@ -158,10 +158,19 @@ $(call inherit-product-if-exists,$(if $(wildcard vendor/google/products/gms.mk),
 
 # Get native bridge settings
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
+
+ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/libndk_translation.mk)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/native_bridge_arm_on_x86.mk)
 NDK_TRANSLATION_PREINSTALL := google
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
+endif
+
+ifeq ($(USE_CROS_HOUDINI_NB),true)
+$(call inherit-product-if-exists, vendor/google/chromeos-x86/target/houdini.mk)
+$(call inherit-product-if-exists, vendor/google/chromeos-x86/target/native_bridge_arm_on_x86.mk)
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
+endif
 
 $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)packages.mk)
 
@@ -172,8 +181,13 @@ $(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet_wifionly
 $(call inherit-product-if-exists,vendor/bliss/config/bliss_packages.mk)
 
 # Widevine addons
+ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/widevine.mk)
+endif
 
+ifeq ($(USE_CROS_HOUDINI_NB),true)
+$(call inherit-product-if-exists, vendor/google/chromeos-x86/target/widevine.mk)
+endif
 
 ifeq ($(USE_EMU_GAPPS),true)
 
