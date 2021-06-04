@@ -6,7 +6,7 @@ PRODUCT_PACKAGES += \
 
 # HWComposer HAL
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.composer@2.1-service \
+    android.hardware.graphics.composer@2.4-service \
     android.hardware.graphics.composer@2.1-service.drmfb
 
 # Audio HAL
