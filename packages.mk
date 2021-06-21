@@ -126,3 +126,12 @@ PRODUCT_PACKAGES_DEBUG := \
 
 PRODUCT_HOST_PACKAGES := \
     qemu-android \
+
+#
+# Packages for AOSP-available stuff we use from the framework
+#
+PRODUCT_PACKAGES += \
+    ip \
+    sleep \
+    tcpdump \
+
