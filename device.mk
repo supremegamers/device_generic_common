@@ -218,3 +218,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
+# DRM service opt-in
+PRODUCT_VENDOR_PROPERTIES += drm.service.enabled=true
