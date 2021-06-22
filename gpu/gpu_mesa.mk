@@ -29,8 +29,39 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.hardware.vulkan.version = 4194307 \
     ro.hardware.egl=mesa
 
+# ANGLE provides an OpenGL implementation built on top of Vulkan.
+PRODUCT_PACKAGES += \
+    libEGL_angle \
+    libGLESv1_CM_angle \
+    libGLESv2_angle \
+    libfeature_support_angle.so
+
+#
+# Packages for the Vulkan implementation
+#
+ifeq ($(TARGET_VULKAN_SUPPORT),true)
+PRODUCT_PACKAGES += \
+    vulkan.ranchu \
+    libvulkan_enc \
+    vulkan.pastel
+endif
+
+# GL/Vk implementation for gfxstream
+PRODUCT_PACKAGES += \
+    hwcomposer.ranchu \
+    libandroidemu \
+    libOpenglCodecCommon \
+    libOpenglSystemCommon \
+    libGLESv1_CM_emulation \
+    lib_renderControl_enc \
+    libEGL_emulation \
+    libGLESv2_enc \
+    libGLESv2_emulation \
+    libGLESv1_enc
+
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:system/etc/permissions/android.hardware.vulkan.compute.xml \
     frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:system/etc/permissions/android.hardware.vulkan.level.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:system/etc/permissions/android.hardware.vulkan.version.xml
+
