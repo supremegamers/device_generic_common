@@ -27,9 +27,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     debug.stagefright.ccodec=0 \
     debug.stagefright.omx_default_rank.sw-audio=1 \
     debug.stagefright.omx_default_rank=0 \
-    ro.lmk.kill_timeout_ms=100
-
-PRODUCT_DEFAULT_PROPERTY_OVERRIDES := \
+    ro.lmk.kill_timeout_ms=100 \
     ro.arch=x86 \
     persist.rtc_local_time=1 \
 
@@ -108,6 +106,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
     frameworks/native/data/etc/android.software.voice_recognizers.xml:system/etc/permissions/android.software.voice_recognizers.xml \
     frameworks/native/data/etc/android.software.webview.xml:system/etc/permissions/android.software.webview.xml \
+    system/bt/vendor_libs/test_vendor_lib/data/controller_properties.json:vendor/etc/bluetooth/controller_properties.json \
     $(foreach f,$(wildcard $(LOCAL_PATH)/alsa/*),$(f):$(subst $(LOCAL_PATH),system/etc,$(f))) \
     $(foreach f,$(wildcard $(LOCAL_PATH)/idc/*.idc $(LOCAL_PATH)/keylayout/*.kl),$(f):$(subst $(LOCAL_PATH),system/usr,$(f)))
 
@@ -120,6 +119,10 @@ PRODUCT_AAPT_CONFIG := normal large xlarge mdpi hdpi
 PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
+
+# Enforce privapp-permissions whitelist
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    ro.control_privapp_permissions=log
 
 # Copy any Permissions files, overriding anything if needed
 $(foreach f,$(wildcard $(LOCAL_PATH)/permissions/*.xml),\
@@ -178,6 +181,8 @@ endif
 
 $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)packages.mk)
 
+$(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
+
 # Inherit common Bliss stuff
 $(call inherit-product-if-exists,vendor/bliss/config/common.mk)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full.mk)
@@ -209,3 +214,7 @@ $(call inherit-product-if-exists, vendor/foss/foss.mk)
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.debug.multi_window=true
     persist.sys.debug.desktop_mode=true
+
+# Boringdroid
+$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
+
