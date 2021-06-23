@@ -159,6 +159,10 @@ $(call inherit-product-if-exists,$(if $(wildcard vendor/google/products/gms.mk),
 # Get native bridge settings
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
 
+ifeq ($(TARGET_PRODUCT),android_x86_64)
+$(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge64.mk)
+endif
+
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/libndk_translation.mk)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/native_bridge_arm_on_x86.mk)

@@ -17,8 +17,7 @@ endif
 
 # Native Bridge ABI List
 NATIVE_BRIDGE_ABI_LIST_32_BIT := armeabi-v7a armeabi
-NATIVE_BRIDGE_ABI_LIST_64_BIT := arm64-v8a
-NATIVE_BRIDGE_ABI_LIST := x86_64 x86 arm64-v8a armeabi-v7a armeabi
+NATIVE_BRIDGE_ABI_LIST := x86 armeabi-v7a armeabi
 
 LOCAL_SRC_FILES := bin/enable_nativebridge
 
@@ -30,10 +29,6 @@ PRODUCT_COPY_FILES := $(foreach f,$(LOCAL_SRC_FILES),$(LOCAL_PATH)/$(f):system/$
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.dalvik.vm.isa.arm=x86 \
     ro.enable.native.bridge.exec=1 \
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.dalvik.vm.isa.arm64=x86_64 \
-    ro.enable.native.bridge.exec64=1
 
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libndk_translation.so
