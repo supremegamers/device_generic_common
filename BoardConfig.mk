@@ -114,3 +114,4 @@ ifeq ($(USE_CROS_HOUDINI_NB),true)
 -include vendor/google/chromeos-x86/board/native_bridge_arm_on_x86.mk
 endif
 
+STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE
