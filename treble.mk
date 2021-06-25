@@ -17,6 +17,7 @@ PRODUCT_PACKAGES += \
 
 # Bluetooth HAL
 PRODUCT_PACKAGES += \
+	android.hardware.bluetooth@1.1-impl \
     android.hardware.bluetooth@1.1-service.btlinux \
     android.hardware.bluetooth.audio@2.1-impl
 
@@ -38,7 +39,7 @@ PRODUCT_PACKAGES += \
 
 # Gatekeeper HAL
 #PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-impl
+#~     android.hardware.gatekeeper@1.0-impl
 
 # Health HAL
 PRODUCT_PACKAGES += \

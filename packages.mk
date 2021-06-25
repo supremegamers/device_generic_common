@@ -134,4 +134,9 @@ PRODUCT_PACKAGES += \
     ip \
     sleep \
     tcpdump \
+    libbt-vendor \
+    iw \
+    iw_vendor \
+    iw_common \
+    external_iw_license
 
