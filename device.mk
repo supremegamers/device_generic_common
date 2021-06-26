@@ -220,3 +220,6 @@ $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
 # DRM service opt-in
 PRODUCT_VENDOR_PROPERTIES += drm.service.enabled=true
+
+PRODUCT_SHIPPING_API_LEVEL := 24
+DISABLE_RILD_OEM_HOOK := true
