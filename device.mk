@@ -204,6 +204,12 @@ $(call inherit-product-if-exists, vendor/google/emu-x86/target/gapps.mk)
 
 endif
 
+ifeq ($(USE_OPENGAPPS),true)
+
+$(call inherit-product-if-exists, vendor/opengapps/gapps.mk)
+
+endif
+
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
