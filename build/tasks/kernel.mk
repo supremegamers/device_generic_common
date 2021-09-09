@@ -44,7 +44,7 @@ else ifeq ($(shell expr $(VERSION) \>= 5 "&" $(PATCHLEVEL) \<= 9 "|" $(VERSION) 
 ifeq ($(HOST_OS),darwin)
 CROSS_COMPILE ?= $(abspath prebuilts/gcc/darwin-x86/host/i686-apple-darwin-4.2.1/bin)/i686-apple-darwin11-
 else 
-CROSS_COMPILE ?= $(abspath prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/bin)/x86_64-linux-
+CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
 endif
 else
 CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
@@ -63,9 +63,8 @@ KBUILD_JOBS := $(shell echo $$((1-(`cat /sys/devices/system/cpu/present`))))
 endif
 
 mk_kernel := + $(hide) /usr/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \
-	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) ARCH=$(TARGET_ARCH) CROSS_COMPILE="$(abspath $(CC_WRAPPER)) $(CROSS_COMPILE)" $(if $(SHOW_COMMANDS),V=1) \
-	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) M4=$(abspath $(M4)) DEPMOD=/sbin/depmod \
-	$(KERNEL_CLANG_CLAGS)
+	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) PATH=/bin:/sbin:$$PATH ARCH=$(TARGET_ARCH) CROSS_COMPILE="" $(if $(SHOW_COMMANDS),V=1) \
+	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) M4=$(abspath $(M4)) DEPMOD=/sbin/depmod CC=clang LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip \
 
 KERNEL_CONFIG_FILE := $(if $(wildcard $(TARGET_KERNEL_CONFIG)),$(TARGET_KERNEL_CONFIG),$(KERNEL_DIR)/$(KERNEL_CONFIG_DIR)/$(TARGET_KERNEL_CONFIG))
 
