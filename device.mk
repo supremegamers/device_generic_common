@@ -184,10 +184,12 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
 # Inherit common Bliss stuff
-$(call inherit-product-if-exists,vendor/bliss/config/common.mk)
-$(call inherit-product-if-exists,vendor/bliss/config/common_full.mk)
-$(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet_wifionly.mk)
-$(call inherit-product-if-exists,vendor/bliss/config/bliss_packages.mk)
+$(call inherit-product-if-exists,vendor/lineage/config/common.mk)
+$(call inherit-product-if-exists,vendor/lineage/config/common_full.mk)
+$(call inherit-product-if-exists,vendor/lineage/config/common_full_tablet_wifionly.mk)
+SAKURA_MAINTAINER := HMTheBoy154
+TARGET_FACE_UNLOCK_SUPPORTED := false
+SAKURA_LAWNCHAIR := true
 
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
