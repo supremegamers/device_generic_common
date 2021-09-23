@@ -95,3 +95,7 @@ PRODUCT_PACKAGES += \
 # ConfigStore HAL
 PRODUCT_PACKAGES += \
     android.hardware.configstore@1.1-service
+
+# Thermal HAL
+PRODUCT_PACKAGES += \
+    android.hardware.thermal@2.0-service.intel

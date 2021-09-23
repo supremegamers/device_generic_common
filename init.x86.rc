@@ -29,12 +29,16 @@ on post-fs-data
     mkdir /data/vendor/wifi/wpa 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
+    mkdir /data/misc/hcid 0770 bluetooth bluetooth
 
     mkdir /data/system 0775 system system
     chown wifi wifi /data/misc/wifi/wpa_supplicant.conf
 
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
+
+    setprop persist.vendor.thermal.mode thermal-daemon
+    mkdir /data/vendor/thermal-daemon 0660 system system
 
 on boot
     setprop ro.radio.use-ppp yes
@@ -53,6 +57,17 @@ on boot
     setprop persist.sys.strictmode.disable 1
     # workaround for h.265 slowness
     setprop sys.media.vdec.drop 0
+
+    chown system system /sys/devices/system/cpu/intel_pstate/max_perf_pct
+    chown system system /sys/devices/system/cpu/intel_pstate/min_perf_pct
+    chown system system /sys/devices/system/cpu/intel_pstate/no_turbo
+    chown system system /sys/class/powercap/intel-rapl:0/enabled
+    chown system system /sys/class/powercap/intel-rapl:0/constraint_0_power_limit_uw
+    chown system system /sys/class/dmi/id/product_uuid
+    chown system system /sys/class/dmi/id/product_name
+    chown system system /system/vendor/etc/
+    chown system system /system/vendor/etc/thermal-daemon/thermal-conf.xml
+    restorecon_recursive /sys/class/powercap
 
 service wpa_supplicant /vendor/bin/hw/wpa_supplicant -dd \
     -O/data/vendor/wifi/wpa/sockets -puse_p2p_group_interface=1 \
@@ -78,6 +93,12 @@ service nativebridge /system/bin/enable_nativebridge
 
 service logcat /system/bin/logcat -b all -v threadtime -f /data/log.txt
     class debug
+
+service thermal-daemon /system/vendor/bin/thermal-daemon --config-file /system/vendor/etc/thermal-daemon/thermal-conf.xml --ignore-cpuid-check
+    class main
+    user system
+    group system
+    disabled
 
 service btattach /system/bin/btattach
     class main
@@ -128,3 +149,6 @@ on property:persist.sys.nativebridge=1
 
 on property:persist.sys.nativebridge=0
     stop nativebridge
+
+on property:sys.boot_completed=1 && property:vendor.thermal.enable=1
+    start thermal-daemon

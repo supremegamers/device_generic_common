@@ -59,6 +59,16 @@ function init_misc()
 			ip link add link wifi_eth name wlan0 type virt_wifi
 		fi
 	fi
+
+	#thermal-daemon test, pulled from Project Celadon
+	case "$(cat /sys/class/dmi/id/chassis_vendor | head -1)" in 
+	QEMU)
+		setprop vendor.thermal.enable 0
+		;;
+	*)
+		setprop vendor.thermal.enable 1
+		;;
+	esac
 }
 
 function init_hal_audio()

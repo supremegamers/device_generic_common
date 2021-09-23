@@ -87,6 +87,8 @@ PRODUCT_PACKAGES += \
     btattach \
     hciconfig \
     hcitool \
+    thermsys \
+    thermal-daemon \
 
 # Stagefright FFMPEG plugins
 PRODUCT_PACKAGES += \
@@ -140,3 +142,6 @@ PRODUCT_PACKAGES += \
     iw_common \
     external_iw_license
 
+PRODUCT_COPY_FILES += \
+	external/thermal_daemon/data/thermal-conf.xml:/system/vendor/etc/thermal-daemon/thermal-conf.xml \
+	external/thermal_daemon/data/thermal-cpu-cdev-order.xml:/system/vendor/etc/thermal-daemon/thermal-cpu-cdev-order.xml
