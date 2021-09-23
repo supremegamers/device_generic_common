@@ -190,6 +190,7 @@ $(call inherit-product-if-exists,vendor/lineage/config/common_full_tablet_wifion
 SAKURA_MAINTAINER := HMTheBoy154
 TARGET_FACE_UNLOCK_SUPPORTED := false
 SAKURA_LAWNCHAIR := true
+SAKURA_BUILD_TYPE := opengapps
 
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
