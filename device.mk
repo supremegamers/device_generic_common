@@ -155,10 +155,6 @@ $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
 # Get tablet dalvik parameters
 $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
 
-# Get GMS
-GAPPS_VARIANT ?= pico
-$(call inherit-product-if-exists,$(if $(wildcard vendor/google/products/gms.mk),vendor/google/products/gms.mk,vendor/gapps/common/common-vendor.mk))
-
 # Get native bridge settings
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
 
@@ -191,6 +187,8 @@ SAKURA_MAINTAINER := HMTheBoy154
 TARGET_FACE_UNLOCK_SUPPORTED := false
 SAKURA_LAWNCHAIR := true
 SAKURA_BUILD_TYPE := opengapps
+SAKURA_OFFICIAL := true
+SAKURA_USE_BORINGDROID := true
 
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
@@ -215,9 +213,6 @@ endif
 
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
-
-# foss apps
-$(call inherit-product-if-exists, vendor/foss/foss.mk)
 
 # Enable MultiWindow
 PRODUCT_PROPERTY_OVERRIDES += \
