@@ -10,8 +10,7 @@
 
 PRODUCT_PACKAGES := \
     hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
-    gralloc.drm     \
-    gralloc.gbm gralloc.minigbm gralloc.intel \
+    gralloc.gbm gralloc.minigbm gralloc.minigbm_intel gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
     libGLES_mesa    \
     libtxc_dxtn     \
     modetest
@@ -20,13 +19,22 @@ PRODUCT_PACKAGES += \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
-    vulkan.android-x86 \
-    vulkan.radv
+    vulkan.intel \
+    vulkan.radeon \
+    vulkan.virtio \
+    vulkan.lvp
+
+PRODUCT_PACKAGES += \
+    libEGL_mesa \
+    libGLESv1_CM_mesa \
+    libGLESv2_mesa \
+    libgallium_dri \
+    libglapi
 
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version = 196608 \
     ro.hardware.vulkan.level = 1 \
-    ro.hardware.vulkan.version = 4194307 \
+    ro.hardware.vulkan.version = 4198400 \
     ro.hardware.egl=mesa
 
 # ANGLE provides an OpenGL implementation built on top of Vulkan.

@@ -107,6 +107,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.voice_recognizers.xml:system/etc/permissions/android.software.voice_recognizers.xml \
     frameworks/native/data/etc/android.software.webview.xml:system/etc/permissions/android.software.webview.xml \
     system/bt/vendor_libs/test_vendor_lib/data/controller_properties.json:vendor/etc/bluetooth/controller_properties.json \
+    external/mesa/src/util/00-mesa-defaults.conf:system/etc/drirc \
     $(foreach f,$(wildcard $(LOCAL_PATH)/alsa/*),$(f):$(subst $(LOCAL_PATH),system/etc,$(f))) \
     $(foreach f,$(wildcard $(LOCAL_PATH)/idc/*.idc $(LOCAL_PATH)/keylayout/*.kl),$(f):$(subst $(LOCAL_PATH),system/usr,$(f)))
 
