@@ -8,3 +8,5 @@ none			/cache		tmpfs	nosuid,nodev,noatime	defaults
 /devices/*/80860F14:02/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/*/80860F16:00/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/*/PNP0FFF:00/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
+/devices/*/*/sd*		auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
+/devices/*/*/nvme*		auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
