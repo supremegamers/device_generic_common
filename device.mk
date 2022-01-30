@@ -212,6 +212,10 @@ $(call inherit-product-if-exists, vendor/opengapps/gapps.mk)
 
 endif
 
+ifeq ($(ANDROID_INTEGRATE_MAGISK),true)
+$(call inherit-product-if-exists, vendor/supremegamers/kokoro/kokoro.mk)
+endif
+
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 

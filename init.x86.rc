@@ -1,4 +1,4 @@
-import /init.superuser.rc
+import /init.kokoro.rc
 
 on early-init
     write /proc/sys/kernel/ctrl-alt-del 1
