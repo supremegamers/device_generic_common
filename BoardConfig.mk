@@ -99,6 +99,8 @@ DEVICE_MANIFEST_FILE := device/generic/common/manifest.xml
 
 BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
                        system/bt/vendor_libs/linux/sepolicy \
+                       device/generic/common/sepolicy/celadon/graphics/mesa \
+                       device/generic/common/sepolicy/celadon/thermal \
 
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 

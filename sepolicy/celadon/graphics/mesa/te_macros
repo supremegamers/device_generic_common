@@ -1,0 +1,8 @@
+#####################################
+# module_only(module_name, rules)
+# Only add rules if a module is true.
+# Note: that a module must declare themselves exported
+# by adding BOARD_SEPOLICY_M4DEFS += module_<modname>=true
+# in the module specific mixin BoardConfig.mk file.
+# WARNING: <modname> cannot contain a dash, use underscores.
+define(`module_only', `ifelse(module_$1, `true', $2)')
