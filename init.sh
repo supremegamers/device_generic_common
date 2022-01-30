@@ -197,16 +197,16 @@ function init_uvesafb()
 function init_hal_gralloc()
 {
 	[ "$VULKAN" = "1" ] && GRALLOC=gbm
-	
-	case "$(cat /proc/fb | head -1)" in
-		*virtio*drmfb|*DRM*emulated)
+
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*virtio_gpu)
 			HWC=${HWC:-drm}
 			GRALLOC=${GRALLOC:-gbm}
 			video=${video:-1280x768}
 			;&
-		0*i915drmfb|0*inteldrmfb|0*radeondrmfb|0*nouveau*|0*svgadrmfb|0*amdgpudrmfb)
+		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC:-}
+				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
 				set_drm_mode
 			fi
@@ -214,11 +214,11 @@ function init_hal_gralloc()
 		"")
 			init_uvesafb
 			;&
-		0*)
+		*)
 			;;
 	esac
 
-	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl swiftshader
+	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl angle && ro.hardware.vulkan pastel
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
@@ -231,12 +231,15 @@ function init_hal_hwcomposer()
 
 function init_hal_vulkan()
 {
-	case "$(cat /proc/fb | head -1)" in
-		0*i915drmfb|0*inteldrmfb)
-			set_property ro.hardware.vulkan android-x86
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*i915)
+			set_property ro.hardware.vulkan intel
 			;;
-		0*amdgpudrmfb)
-			set_property ro.hardware.vulkan radv
+		*amdgpu)
+			set_property ro.hardware.vulkan radeon
+			;;
+		*virtio_gpu)
+			set_property ro.hardware.vulkan virtio
 			;;
 		*)
 			;;
