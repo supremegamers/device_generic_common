@@ -34,6 +34,8 @@ ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libndk_translation.so
 else ifeq ($(USE_CROS_HOUDINI_NB),true)
 PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libhoudini.so
+else ifeq ($(ANDROID_USE_INTEL_HOUDINI),true)
+PRODUCT_PROPERTY_OVERRIDES := ro.dalvik.vm.native.bridge=libhoudini.so
 
 else
 

@@ -101,6 +101,7 @@ BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
                        system/bt/vendor_libs/linux/sepolicy \
                        device/generic/common/sepolicy/celadon/graphics/mesa \
                        device/generic/common/sepolicy/celadon/thermal \
+                       vendor/intel/proprietary/houdini/sepolicy \
 
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 
@@ -120,6 +121,10 @@ endif
 
 ifeq ($(USE_CROS_HOUDINI_NB),true)
 -include vendor/google/chromeos-x86/board/native_bridge_arm_on_x86.mk
+endif
+
+ifeq ($(ANDROID_USE_INTEL_HOUDINI),true)
+-include vendor/intel/proprietary/houdini/board/native_bridge_arm_on_x86.mk
 endif
 
 STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE

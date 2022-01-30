@@ -21,6 +21,8 @@ LOCAL_C_INCLUDES := art/libnativebridge/include
 LOCAL_MULTILIB := both
 ifneq ("$(wildcard vendor/google/chromeos-x86/*)","")
 	include $(BUILD_SHARED_LIBRARY)
+else ifneq ("$(wildcard vendor/intel/proprietary/houdini/*)","")
+	include $(BUILD_SHARED_LIBRARY)
 else
 	LOCAL_POST_INSTALL_CMD := $(hide) \
 	    rm -rf $(TARGET_OUT)/*/{arm*,*houdini*} {$(TARGET_OUT),$(PRODUCT_OUT)}/vendor/{*/arm*,*/*houdini*}; \

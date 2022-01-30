@@ -176,6 +176,12 @@ $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/native_bridg
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 endif
 
+ifeq ($(ANDROID_USE_INTEL_HOUDINI),true)
+$(call inherit-product-if-exists, vendor/intel/proprietary/houdini/houdini.mk)
+$(call inherit-product-if-exists, vendor/intel/proprietary/houdini/native_bridge_arm_on_x86.mk)
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
+endif
+
 $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)packages.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
