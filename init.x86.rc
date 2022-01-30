@@ -11,6 +11,18 @@ on early-init
 
     exec u:r:init:s0 -- /sbin/modprobe sdcardfs
 
+on early-init && property:mesa.gles.override=*
+    export MESA_GLES_VERSION_OVERRIDE ${mesa.gles.override}
+
+on early-init && property:mesa.loader.override=*
+    export MESA_LOADER_DRIVER_OVERRIDE ${mesa.loader.override}
+
+on early-init && property:mesa.galliumhud.value=*
+    export GALLIUM_HUD ${mesa.galliumhud.value}
+
+on early-init && property:mesa.galliumhud.period=*
+    export GALLIUM_HUD_PERIOD ${mesa.galliumhud.period}
+
 on init
 
 on fs
