@@ -156,6 +156,16 @@ $(call inherit-product-if-exists,hardware/libsensors/sensors.mk)
 # Get tablet dalvik parameters
 $(call inherit-product,frameworks/native/build/tablet-10in-xhdpi-2048-dalvik-heap.mk)
 
+# Include PRODUCT_SOONG_NAMESPACES
+PRODUCT_SOONG_NAMESPACES += device/generic/goldfish-opengl # for vulkan
+#PRODUCT_SOONG_NAMESPACES += hardware/google/camera
+#PRODUCT_SOONG_NAMESPACES += hardware/google/camera/devices/EmulatedCamera
+PRODUCT_SOONG_NAMESPACES += external/mesa
+PRODUCT_SOONG_NAMESPACES += external/libdrm
+PRODUCT_SOONG_NAMESPACES += external/drm_hwcomposer
+PRODUCT_SOONG_NAMESPACES += external/clang
+PRODUCT_SOONG_NAMESPACES += packages/apps/Bluetooth
+
 # Get native bridge settings
 $(call inherit-product-if-exists,$(LOCAL_PATH)/nativebridge/nativebridge.mk)
 
