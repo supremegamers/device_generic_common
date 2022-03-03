@@ -21,6 +21,25 @@
 #define BLUETOOTH_HCI_USE_USB          TRUE
 // Bluetooth Low Power Mode is supported on BT4.0
 #define HCILP_INCLUDED                 FALSE
+
+// Turn off BLE_LOCAL_PRIVACY_ENABLED. Remote reconnect fails on
+// often if this is enabled.
+#define BLE_LOCAL_PRIVACY_ENABLED FALSE
+
+/* minimum acceptable connection interval */
+#define BTM_BLE_CONN_INT_MIN_LIMIT 0x0006  /*7.5ms=6*1.25*/
+
+/*fix bt crash about init */
 #define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE
+
+#define BTM_BLE_CONN_INT_MIN_DEF       6
+#define BTM_BLE_CONN_INT_MAX_DEF       12
+#define BTM_BLE_SCAN_SLOW_INT_1        64
+#define BTM_BLE_SCAN_SLOW_WIN_1        16
+
+#define BTA_SKIP_BLE_READ_REMOTE_FEAT  TRUE
+#define BLE_DELAY_REQUEST_ENC          TRUE
+
+#define BTA_AV_SINK_INCLUDED           TRUE
 
 #endif
