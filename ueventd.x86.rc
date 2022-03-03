@@ -2,8 +2,8 @@
 /dev/ttyACM*              0660  system        radio
 /dev/ttyUSB*              0660  radio         radio
 /dev/video*               0660  cameraserver  system
-/dev/iio:device*          0660  system        system
-/dev/ion                  0664  system        system
+/dev/iio:device*          0666  system        system
+/dev/ion                  0666  system        system
 
 # for bluetooth nodes
 /sys/devices/pci*/0000:00:*/usb*/*/*/*/bluetooth/hci0/rfkill* state  0660 bluetooth bluetooth
@@ -11,7 +11,7 @@
 /dev/rfkill               0660  bluetooth     wifi
 /dev/uhid                 0660  bluetooth     bluetooth
 /dev/bus/usb/00*/00*               0660 bluetooth bluetooth
-
+/dev/bus/usb/*/*          0660   system     system
 /sys/devices/system/cpu/cpu*    online        0664   system     system
 
 # thermal daemon runs as system user and it depends on these nodes
