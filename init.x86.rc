@@ -46,6 +46,9 @@ on post-fs-data
 
     # Set indication (checked by vold) that we have finished this action
     setprop vold.post_fs_data_done 1
+    
+    # Fix vendor issues on startup
+    chmod 777 /vendor/*
 
     setprop persist.vendor.thermal.mode thermal-daemon
     mkdir /data/vendor/thermal-daemon 0660 system system
