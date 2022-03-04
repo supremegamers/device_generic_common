@@ -193,6 +193,8 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 endif
 
 $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)packages.mk)
+$(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)media_packages.mk),$(PRODUCT_DIR),$(LOCAL_PATH)/)media_packages.mk)
+$(call inherit-product-if-exists,$(LOCAL_PATH)/product_property_overrides.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
