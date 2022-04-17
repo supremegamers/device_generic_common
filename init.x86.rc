@@ -7,6 +7,7 @@ on early-init
 
     export force_s3tc_enable true
     export EGL_LOG_LEVEL info
+    export OPENSSL_armcap 0
 #   export EGL_DRIVERS egl_dri2
 
 on early-init && property:mesa.gles.override=*
