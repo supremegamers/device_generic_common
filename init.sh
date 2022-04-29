@@ -69,6 +69,10 @@ function init_misc()
 		setprop vendor.thermal.enable 1
 		;;
 	esac
+
+	##mgLRU tweak
+    echo y > /sys/kernel/mm/lru_gen/enabled
+    echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
 }
 
 function init_hal_audio()
