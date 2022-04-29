@@ -222,7 +222,7 @@ function init_hal_gralloc()
 			;;
 	esac
 
-	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl angle && ro.hardware.vulkan pastel
+	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl angle && ro.hardware.vulkan pastel && ro.hardware.gralloc default
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
