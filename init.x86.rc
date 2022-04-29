@@ -163,3 +163,7 @@ on property:persist.sys.nativebridge=0
 
 on property:sys.boot_completed=1 && property:vendor.thermal.enable=1
     start thermal-daemon
+
+#based on PrimeOS's prime.fix.permission property
+on property:persist.sys.nodataperm=1
+    exec u:r:su:s0 root -- /system/bin/sh /system/vendor/etc/nodataperm.sh
