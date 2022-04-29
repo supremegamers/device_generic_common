@@ -36,8 +36,8 @@ function init_misc()
 	[ -d /sys/devices/system/cpu/cpu0/cpufreq ] || modprobe acpi-cpufreq
 
 	# enable sdcardfs if /data is not mounted on tmpfs or 9p
-	mount | grep /data\ | grep -qE 'tmpfs|9p'
-	[ $? -eq 0 ] && set_prop_if_empty ro.sys.sdcardfs false
+	#mount | grep /data\ | grep -qE 'tmpfs|9p'
+	#[ $? -eq 0 ] && set_prop_if_empty ro.sys.sdcardfs false
 
 	# remove wl if it's not used
 	local wifi
