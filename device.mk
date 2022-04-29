@@ -192,8 +192,9 @@ $(call inherit-product-if-exists,vendor/lineage/config/common_full.mk)
 $(call inherit-product-if-exists,vendor/lineage/config/common_full_tablet_wifionly.mk)
 SAKURA_MAINTAINER := HMTheBoy154
 TARGET_FACE_UNLOCK_SUPPORTED := false
-SAKURA_LAWNCHAIR := true
-SAKURA_BUILD_TYPE := opengapps
+#SAKURA_LAWNCHAIR := true
+##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
+#SAKURA_BUILD_TYPE := opengapps
 #SAKURA_OFFICIAL := true
 SAKURA_USE_BORINGDROID := true
 
