@@ -8,51 +8,39 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
+TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-latest/bin
+
 ifneq ($(TARGET_NO_KERNEL),true)
 ifeq ($(TARGET_PREBUILT_KERNEL),)
+ifneq ($(filter x86%,$(TARGET_ARCH)),)
 
 KERNEL_DIR ?= kernel
 
-ifneq ($(filter x86%,$(TARGET_ARCH)),)
 TARGET_KERNEL_ARCH ?= $(TARGET_ARCH)
 KERNEL_TARGET := bzImage
 TARGET_KERNEL_CONFIG ?= android-$(TARGET_KERNEL_ARCH)_defconfig
 KERNEL_CONFIG_DIR := arch/x86/configs
-endif
-ifeq ($(TARGET_ARCH),arm)
-KERNEL_TARGET := zImage
-TARGET_KERNEL_CONFIG ?= goldfish_defconfig
-KERNEL_CONFIG_DIR := arch/arm/configs
-endif
 
-# Grab current kernel version information
-ROM_FOLDER_LOCATION := $(abspath $(PWD))
-KERNEL_MAKEFILE_LOCATION := "$(ROM_FOLDER_LOCATION)/kernel/Makefile"
-VERSION := $(shell grep -m 1 VERSION $(KERNEL_MAKEFILE_LOCATION) | sed 's/^.*= //g')
-PATCHLEVEL := $(shell grep -m 1 PATCHLEVEL $(KERNEL_MAKEFILE_LOCATION) | sed 's/^.*= //g')
-SUBLEVEL := $(shell grep -m 1 SUBLEVEL $(KERNEL_MAKEFILE_LOCATION) | sed 's/^.*= //g')
-
-KERNEL_CLANG_CLAGS := HOSTCC=$(abspath $(LLVM_PREBUILTS_PATH)/clang)
-ifeq ($(BUILD_KERNEL_WITH_CLANG),true)
-CROSS_COMPILE := x86_64-linux-androidkernel-
-KERNEL_CLANG_CLAGS += CC=$(abspath $(LLVM_PREBUILTS_PATH)/clang) CLANG_TRIPLE=x86_64-linux-gnu-
-# If current kernel version >= 5.9 
-else ifeq ($(shell expr $(VERSION) \>= 5 "&" $(PATCHLEVEL) \>= 9), 1)
-CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
-# If current kernel version <= 5.9 
-else ifeq ($(shell expr $(VERSION) \>= 5 "&" $(PATCHLEVEL) \<= 9 "|" $(VERSION) \< 5), 1)
-ifeq ($(HOST_OS),darwin)
-CROSS_COMPILE ?= $(abspath prebuilts/gcc/darwin-x86/host/i686-apple-darwin-4.2.1/bin)/i686-apple-darwin11-
-else 
-CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
-endif
+ifeq ($(TARGET_KERNEL_ARCH),x86_64)
+CROSS_COMPILE := $(abspath $(TARGET_TOOLS_PREFIX))
+KERNEL_CLANG_FLAGS := \
+        LLVM=1 \
+        CC=$(abspath $(TARGET_CLANG_PATH)/clang) \
+        LD=$(abspath $(TARGET_CLANG_PATH)/ld.lld) \
+        AR=$(abspath $(TARGET_CLANG_PATH)/llvm-ar) \
+        NM=$(abspath $(TARGET_CLANG_PATH)/llvm-nm) \
+        OBJCOPY=$(abspath $(TARGET_CLANG_PATH)/llvm-objcopy) \
+        OBJDUMP=$(abspath $(TARGET_CLANG_PATH)/llvm-objdump) \
+        READELF=$(abspath $(TARGET_CLANG_PATH)/llvm-readelf) \
+        OBJSIZE=$(abspath $(TARGET_CLANG_PATH)/llvm-size) \
+        STRIP=$(abspath $(TARGET_CLANG_PATH)/llvm-strip) \
+        HOSTCC=$(abspath $(TARGET_CLANG_PATH)/clang) \
+        HOSTCXX=$(abspath $(TARGET_CLANG_PATH)/clang++) \
+        HOSTLD=$(abspath $(TARGET_CLANG_PATH)/ld.lld) \
+        HOSTLDFLAGS=-fuse-ld=lld \
+        HOSTAR=$(abspath $(TARGET_CLANG_PATH)/llvm-ar)
 else
-CROSS_COMPILE ?= $(abspath $(TARGET_TOOLS_PREFIX))
-endif
-# Allow to use local gcc: "export NO_KERNEL_CROSS_COMPILE=true" 
-# or adding NO_KERNEL_CROSS_COMPILE := true to BoardConfig.mk
-ifeq ($(NO_KERNEL_CROSS_COMPILE),true)
-KERNEL_CROSS_COMPILE ?=
+$(error not implemented)
 endif
 
 KBUILD_OUTPUT := $(TARGET_OUT_INTERMEDIATES)/kernel
@@ -62,9 +50,10 @@ else
 KBUILD_JOBS := $(shell echo $$((1-(`cat /sys/devices/system/cpu/present`))))
 endif
 
-mk_kernel := + $(hide) /usr/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \
-	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) PATH=/bin:/sbin:$$PATH ARCH=$(TARGET_ARCH) CROSS_COMPILE="" $(if $(SHOW_COMMANDS),V=1) \
-	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) M4=$(abspath $(M4)) DEPMOD=/sbin/depmod CC=clang LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip \
+mk_kernel := + $(hide) prebuilts/build-tools/$(HOST_PREBUILT_TAG)/bin/make -j$(KBUILD_JOBS) -l$$(($(KBUILD_JOBS)+2)) \
+	-C $(KERNEL_DIR) O=$(abspath $(KBUILD_OUTPUT)) ARCH=$(TARGET_ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+	YACC=$(abspath $(BISON)) LEX=$(abspath $(LEX)) M4=$(abspath $(M4)) DEPMOD=/sbin/depmod PERL=/usr/bin/perl \
+	$(KERNEL_CLANG_FLAGS)
 
 KERNEL_CONFIG_FILE := $(if $(wildcard $(TARGET_KERNEL_CONFIG)),$(TARGET_KERNEL_CONFIG),$(KERNEL_DIR)/$(KERNEL_CONFIG_DIR)/$(TARGET_KERNEL_CONFIG))
 
@@ -82,16 +71,11 @@ $(KERNEL_ARCH_CHANGED):
 endif
 $(KERNEL_DOTCONFIG_FILE): $(KERNEL_CONFIG_FILE) $(wildcard $(TARGET_KERNEL_DIFFCONFIG)) $(KERNEL_ARCH_CHANGED)
 	$(hide) mkdir -p $(@D) && cat $(wildcard $^) > $@
-	$(hide) ln -sf ../../../../../../prebuilts $(@D)
 	$(hide) rm -f $(KERNEL_ARCH_CHANGED)
 
 BUILT_KERNEL_TARGET := $(KBUILD_OUTPUT)/arch/$(TARGET_ARCH)/boot/$(KERNEL_TARGET)
-$(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE)
+$(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE) $(M4) $(LEX) $(BISON)
 	# A dirty hack to use ar & ld
-	$(hide) mkdir -p $(OUT_DIR)/.path; ln -sf ../../$(LLVM_PREBUILTS_PATH)/llvm-ar $(OUT_DIR)/.path/ar; ln -sf ../../$(LLVM_PREBUILTS_PATH)/ld.lld $(OUT_DIR)/.path/ld
-ifeq ($(BUILD_KERNEL_WITH_CLANG),true)
-	$(hide) cd $(OUT_DIR)/.path; ln -sf ../../$(dir $(TARGET_TOOLS_PREFIX))x86_64-linux-androidkernel-* .; ln -sf x86_64-linux-androidkernel-as x86_64-linux-gnu-as
-endif
 	$(mk_kernel) olddefconfig
 	$(mk_kernel) $(KERNEL_TARGET) $(if $(MOD_ENABLED),modules)
 	$(if $(FIRMWARE_ENABLED),$(mk_kernel) INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) firmware_install)
@@ -125,6 +109,7 @@ TARGET_PREBUILT_KERNEL := $(BUILT_KERNEL_TARGET)
 .PHONY: kernel
 kernel: $(INSTALLED_KERNEL_TARGET) $(KERNEL_MODULES_DEP)
 
+endif # TARGET_ARCH
 endif # TARGET_PREBUILT_KERNEL
 
 ifndef LINEAGE_BUILD
@@ -135,4 +120,5 @@ ifdef TARGET_PREBUILT_MODULES
 	$(hide) cp -r $(TARGET_PREBUILT_MODULES) $(TARGET_OUT)/lib
 endif
 endif # LINEAGE_BUILD
-endif # KBUILD_OUTPUT
+
+endif # TARGET_NO_KERNEL
