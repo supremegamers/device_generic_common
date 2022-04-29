@@ -42,17 +42,10 @@ PRODUCT_PACKAGES += \
     libEGL_angle \
     libGLESv1_CM_angle \
     libGLESv2_angle \
-    libfeature_support_angle.so
-
-#
-# Packages for the Vulkan implementation
-#
-ifeq ($(TARGET_VULKAN_SUPPORT),true)
-PRODUCT_PACKAGES += \
+    libfeature_support_angle.so \
     vulkan.ranchu \
     libvulkan_enc \
     vulkan.pastel
-endif
 
 # GL/Vk implementation for gfxstream
 PRODUCT_PACKAGES += \
