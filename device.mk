@@ -60,7 +60,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ppp/peers/gprs:system/etc/ppp/peers/gprs \
     $(LOCAL_PATH)/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
-    device/sample/etc/apns-full-conf.xml:system/etc/apns-conf.xml \
     device/sample/etc/old-apns-conf.xml:system/etc/old-apns-conf.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:system/etc/media_codecs_google_c2.xml \
