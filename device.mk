@@ -16,6 +16,8 @@
 
 PRODUCT_DIR := $(dir $(lastword $(filter-out device/common/%,$(filter device/%,$(ALL_PRODUCTS)))))
 
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
+
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.ril.hsxpa=1 \
     ro.ril.gprsclass=10 \

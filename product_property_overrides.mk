@@ -9,5 +9,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Some CTS tests will be skipped based on what the initial API level that
 # shipped on device was.
-PRODUCT_PROPERTY_OVERRIDES += \
- ro.product.first_api_level=21
+#PRODUCT_PROPERTY_OVERRIDES += \
+# ro.product.first_api_level=21
