@@ -188,16 +188,17 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
 # Inherit common Bliss stuff
-$(call inherit-product-if-exists,vendor/lineage/config/common.mk)
-$(call inherit-product-if-exists,vendor/lineage/config/common_full.mk)
-$(call inherit-product-if-exists,vendor/lineage/config/common_full_tablet_wifionly.mk)
-SAKURA_MAINTAINER := HMTheBoy154
+$(call inherit-product-if-exists,vendor/kasumi/config/common.mk)
+$(call inherit-product-if-exists,vendor/kasumi/config/common_full.mk)
+$(call inherit-product-if-exists,vendor/kasumi/config/common_full_tablet_wifionly.mk)
+#SAKURA_MAINTAINER := HMTheBoy154
+#KASUMI_BUILD_TYPE := auroraoss
 TARGET_FACE_UNLOCK_SUPPORTED := false
 #SAKURA_LAWNCHAIR := true
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
 #SAKURA_BUILD_TYPE := opengapps
 #SAKURA_OFFICIAL := true
-SAKURA_USE_BORINGDROID := true
+#SAKURA_USE_BORINGDROID := true
 
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
@@ -225,7 +226,7 @@ $(call inherit-product-if-exists, vendor/supremegamers/kokoro/kokoro.mk)
 endif
 
 # Boringdroid
-$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
+#$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
 # Enable MultiWindow
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -233,7 +234,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.debug.desktop_mode=true
 
 # Boringdroid
-$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
+#$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
 # DRM service opt-in
 PRODUCT_VENDOR_PROPERTIES += drm.service.enabled=true
