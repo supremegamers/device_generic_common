@@ -10,7 +10,8 @@
 
 PRODUCT_PACKAGES := \
     hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
-    gralloc.gbm gralloc.minigbm gralloc.minigbm_intel gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
+    gralloc.gbm gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
+    gralloc.minigbm_dmabuf \
     libGLES_mesa    \
     libtxc_dxtn     \
     modetest
