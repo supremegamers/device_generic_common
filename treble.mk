@@ -42,8 +42,8 @@ PRODUCT_PACKAGES += \
     android.hardware.dumpstate@1.0-service.example
 
 # Gatekeeper HAL
-#PRODUCT_PACKAGES += \
-#~     android.hardware.gatekeeper@1.0-impl
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0-service.software
 
 # Health HAL
 PRODUCT_PACKAGES += \
