@@ -200,8 +200,6 @@ function init_uvesafb()
 
 function init_hal_gralloc()
 {
-	[ "$VULKAN" = "1" ] && GRALLOC=gbm
-
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*virtio_gpu)
 			HWC=${HWC:-drm}
