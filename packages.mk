@@ -56,7 +56,6 @@ PRODUCT_PACKAGES := \
     sftp \
     ssh \
     sshd \
-    su \
     tablet-mode \
     v86d \
     wacom-input \
