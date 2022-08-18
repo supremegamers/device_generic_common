@@ -220,7 +220,10 @@ function init_hal_gralloc()
 			;;
 	esac
 
-	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl angle && ro.hardware.gralloc default
+	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl angle \
+											&& set_property ro.hardware.gralloc minigbm \
+											&& set_property ro.hardware.vulkan pastel \
+											&& set_property ro.hardware.hwcomposer ranchu
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
