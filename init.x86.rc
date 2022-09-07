@@ -96,12 +96,6 @@ service wpa_supplicant /vendor/bin/hw/wpa_supplicant -dd \
     disabled
     oneshot
 
-service nativebridge /system/bin/enable_nativebridge
-    class main
-    disabled
-    oneshot
-    seclabel u:r:zygote:s0
-
 service logcat /system/bin/logcat -b all -v threadtime -f /data/log.txt
     class debug
 
@@ -154,12 +148,6 @@ on property:net.dns1=*
 
 on property:debug.logcat=1
     class_start debug
-
-on property:persist.sys.nativebridge=1
-    start nativebridge
-
-on property:persist.sys.nativebridge=0
-    stop nativebridge
 
 on property:sys.boot_completed=1 && property:vendor.thermal.enable=1
     start thermal-daemon
