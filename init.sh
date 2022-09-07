@@ -220,11 +220,23 @@ function init_hal_gralloc()
 			;;
 	esac
 
-	[ -z "$(getprop ro.hardware.gralloc)" ] && set_property ro.hardware.egl angle \
-											&& set_property ro.hardware.gralloc minigbm \
-											&& set_property ro.hardware.vulkan pastel \
-											&& set_property ro.hardware.hwcomposer ranchu
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
+}
+
+function init_egl()
+{
+
+	if [ "$HWACCEL" != "0" ]; then
+		set_property ro.hardware.egl mesa
+	else
+		if [ "$SWANGLE" != "0"]; then
+			set_property ro.hardware.egl angle
+			set_property ro.hardware.vulkan pastel
+			set_property ro.cpuvulkan.version 4198400
+		else
+		set_property ro.hardware.egl swiftshader
+		fi
+	fi
 }
 
 function init_hal_hwcomposer()
@@ -621,6 +633,9 @@ for c in `cat /proc/cmdline`; do
 	case $c in
 		BOOT_IMAGE=*|iso-scan/*|*.*=*)
 			;;
+		nomodeset)
+			HWACCEL=0
+			;;
 		*=*)
 			eval $c
 			if [ -z "$1" ]; then
@@ -646,6 +661,9 @@ hw_sh=/vendor/etc/init.sh
 [ -e $hw_sh ] && source $hw_sh
 
 case "$1" in
+	eglsetup)
+		init_egl
+		;;
 	netconsole)
 		[ -n "$DEBUG" ] && do_netconsole
 		;;
