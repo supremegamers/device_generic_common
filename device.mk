@@ -61,7 +61,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ppp/peers/gprs:system/etc/ppp/peers/gprs \
     $(LOCAL_PATH)/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
-    device/sample/etc/old-apns-conf.xml:system/etc/old-apns-conf.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:system/etc/media_codecs_google_c2.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:system/etc/media_codecs_google_c2_audio.xml \
@@ -182,15 +181,17 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
 # Inherit common Bliss stuff
-$(call inherit-product-if-exists,vendor/kasumi/config/common.mk)
-$(call inherit-product-if-exists,vendor/kasumi/config/common_full.mk)
-$(call inherit-product-if-exists,vendor/kasumi/config/common_full_tablet_wifionly.mk)
+$(call inherit-product-if-exists,vendor/bliss/config/common.mk)
+$(call inherit-product-if-exists,vendor/bliss/config/common_full.mk)
+$(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet_wifionly.mk)
 #SAKURA_MAINTAINER := HMTheBoy154
 #KASUMI_BUILD_TYPE := auroraoss
 TARGET_FACE_UNLOCK_SUPPORTED := false
+TARGET_WANTS_FOD_ANIMATIONS := false
 #SAKURA_LAWNCHAIR := true
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
-#SAKURA_BUILD_TYPE := opengapps
+BLISS_BUILD_VARIANT := foss
+WITH_SU := false
 #SAKURA_OFFICIAL := true
 #SAKURA_USE_BORINGDROID := true
 

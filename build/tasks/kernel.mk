@@ -16,7 +16,7 @@ ifneq ($(filter x86%,$(TARGET_ARCH)),)
 
 KERNEL_DIR ?= kernel
 
-TARGET_KERNEL_ARCH ?= $(TARGET_ARCH)
+TARGET_KERNEL_ARCH := $(TARGET_ARCH)
 KERNEL_TARGET := bzImage
 TARGET_KERNEL_CONFIG ?= android-$(TARGET_KERNEL_ARCH)_defconfig
 KERNEL_CONFIG_DIR := arch/x86/configs
