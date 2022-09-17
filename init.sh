@@ -60,16 +60,6 @@ function init_misc()
 		fi
 	fi
 
-	#thermal-daemon test, pulled from Project Celadon
-	case "$(cat /sys/class/dmi/id/chassis_vendor | head -1)" in 
-	QEMU)
-		setprop vendor.thermal.enable 0
-		;;
-	*)
-		setprop vendor.thermal.enable 1
-		;;
-	esac
-
 	##mgLRU tweak
     echo y > /sys/kernel/mm/lru_gen/enabled
     echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
@@ -285,6 +275,19 @@ function init_hal_power()
 			;;
 		*)
 			;;
+	esac
+}
+
+function init_hal_thermal()
+{
+	#thermal-daemon test, pulled from Project Celadon
+	case "$(cat /sys/class/dmi/id/chassis_vendor | head -1)" in 
+	QEMU)
+		setprop vendor.thermal.enable 0
+		;;
+	*)
+		setprop vendor.thermal.enable 1
+		;;
 	esac
 }
 
@@ -521,6 +524,7 @@ function do_init()
 	init_hal_vulkan
 	init_hal_lights
 	init_hal_power
+	init_hal_thermal
 	init_hal_sensors
 	init_tscal
 	init_ril
