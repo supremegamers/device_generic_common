@@ -232,6 +232,7 @@ function init_egl()
 			set_property ro.cpuvulkan.version 4198400
 		else
 		set_property ro.hardware.egl swiftshader
+		set_property ro.hardware.vulkan pastel
 		fi
 	fi
 }
