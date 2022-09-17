@@ -192,14 +192,21 @@ function init_hal_gralloc()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*virtio_gpu)
-			HWC=${HWC:-drm}
-			GRALLOC=${GRALLOC:-gbm}
+			HWC=${HWC:-drm_minigbm}
+			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			video=${video:-1280x768}
 			;&
-		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
+		*radeon)
 			if [ "$HWACCEL" != "0" ]; then
 				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
+				set_drm_mode
+			fi
+			;&
+		*i915|*nouveau|*vmwgfx|*amdgpu)
+			if [ "$HWACCEL" != "0" ]; then
+				set_property ro.hardware.hwcomposer ${HWC:-drm_minigbm}
+				set_property ro.hardware.gralloc ${GRALLOC:-minigbm_gbm_mesa}
 				set_drm_mode
 			fi
 			;;

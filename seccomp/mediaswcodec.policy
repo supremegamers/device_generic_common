@@ -1,0 +1,2 @@
+#for minigbm_gbm_mesa
+sched_getaffinity: 1

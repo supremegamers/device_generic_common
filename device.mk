@@ -109,6 +109,7 @@ PRODUCT_COPY_FILES += \
     external/thermal_daemon/data/thermal-conf.xml:/system/vendor/etc/thermal-daemon/thermal-conf.xml \
     external/thermal_daemon/data/thermal-cpu-cdev-order.xml:/system/vendor/etc/thermal-daemon/thermal-cpu-cdev-order.xml \
     external/mesa/src/util/00-mesa-defaults.conf:system/etc/drirc \
+    $(LOCAL_PATH)/seccomp/mediaswcodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaswcodec.policy \
     $(foreach f,$(wildcard $(LOCAL_PATH)/alsa/*),$(f):$(subst $(LOCAL_PATH),system/etc,$(f))) \
     $(foreach f,$(wildcard $(LOCAL_PATH)/idc/*.idc $(LOCAL_PATH)/keylayout/*.kl),$(f):$(subst $(LOCAL_PATH),system/usr,$(f)))
 
