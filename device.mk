@@ -187,16 +187,11 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 $(call inherit-product-if-exists,vendor/bliss/config/common.mk)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full.mk)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet_wifionly.mk)
-#SAKURA_MAINTAINER := HMTheBoy154
-#KASUMI_BUILD_TYPE := auroraoss
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
-#SAKURA_LAWNCHAIR := true
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
 BLISS_BUILD_VARIANT := foss
 WITH_SU := false
-#SAKURA_OFFICIAL := true
-#SAKURA_USE_BORINGDROID := true
 
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
@@ -230,9 +225,6 @@ endif
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.debug.multi_window=true
     persist.sys.debug.desktop_mode=true
-
-# Boringdroid
-#$(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
 # DRM service opt-in
 PRODUCT_VENDOR_PROPERTIES += drm.service.enabled=true
