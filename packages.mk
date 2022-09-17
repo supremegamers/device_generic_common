@@ -17,24 +17,7 @@
 # Common packages for Android-x86 platform.
 
 PRODUCT_PACKAGES := \
-    AnalyticsService \
-    BasicSmsReceiver \
-    Development \
-    Galaxy4 \
-    GlobalTime \
-    HoloSpiralWallpaper \
-    Launcher3 \
-    LiveWallpapers \
-    LiveWallpapersPicker \
-    MagicSmokeWallpapers \
-    NotePad \
-    PhaseBeam \
-    PinyinIME \
-    Provision \
-    RSSReader \
     Taskbar \
-    VisualizationWallpapers \
-    WallpaperPicker \
     camera.x86 \
     chat \
     com.android.future.usb.accessory \
@@ -50,7 +33,6 @@ PRODUCT_PACKAGES := \
     lights.default \
     make_ext4fs \
     parted \
-    power.x86 \
     rtk_hciattach \
     scp \
     sftp \
