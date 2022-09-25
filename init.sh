@@ -114,7 +114,7 @@ function init_hal_bluetooth()
 			modprobe btusb
 			;;
 		*)
-			for bt in $(busybox lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
+			for bt in $(toybox lsusb -v | awk ' /Class:.E0/ { print $9 } '); do
 				chown 1002.1002 $bt && chmod 660 $bt
 			done
 			;;
@@ -416,7 +416,7 @@ function init_hal_sensors()
 
 	# has iio sensor-hub?
 	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
-		busybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+		toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
 		[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
 		hal_sensors=iio
 	elif lsmod | grep -q hid_sensor_accel_3d; then
