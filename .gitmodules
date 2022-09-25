@@ -1,0 +1,6 @@
+[submodule "pciids"]
+	path = pciids
+	url = https://github.com/pciutils/pciids
+[submodule "usbids"]
+	path = usbids
+	url = https://github.com/usbids/usbids
