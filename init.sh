@@ -196,17 +196,10 @@ function init_hal_gralloc()
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			video=${video:-1280x768}
 			;&
-		*radeon)
+		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
 				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
-				set_drm_mode
-			fi
-			;&
-		*i915|*nouveau|*vmwgfx|*amdgpu)
-			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC:-drm_minigbm}
-				set_property ro.hardware.gralloc ${GRALLOC:-minigbm_gbm_mesa}
 				set_drm_mode
 			fi
 			;;
