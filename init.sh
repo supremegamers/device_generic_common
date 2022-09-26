@@ -219,7 +219,7 @@ function init_egl()
 	if [ "$HWACCEL" != "0" ]; then
 		set_property ro.hardware.egl mesa
 	else
-		if [ "$SWANGLE" != "0" ]; then
+		if [ "$SWANGLE" == "1" ]; then
 			set_property ro.hardware.egl angle
 			set_property ro.hardware.vulkan pastel
 			set_property ro.cpuvulkan.version 4198400
