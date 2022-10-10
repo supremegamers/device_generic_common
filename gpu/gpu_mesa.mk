@@ -45,7 +45,10 @@ PRODUCT_PACKAGES += \
     libGLESv2_mesa \
     libgallium_dri \
     libglapi \
-    libgbm_mesa_wrapper
+    libgbm_mesa_wrapper \
+    crocus_drv_video \
+    iHD_drv_video \
+    vainfo
 
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version = 196608
