@@ -76,7 +76,8 @@ PRODUCT_PACKAGES += \
     i965_drv_video \
     libffmpeg_extractor \
     libffmpeg_omx \
-    media_codecs_ffmpeg.xml
+    media_codecs_ffmpeg.xml \
+    android.hardware.media.c2@1.2-ffmpeg-service
 
 # Third party apps
 PRODUCT_PACKAGES += \
