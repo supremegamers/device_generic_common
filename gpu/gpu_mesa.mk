@@ -48,6 +48,7 @@ PRODUCT_PACKAGES += \
     libgbm_mesa_wrapper \
     crocus_drv_video \
     iHD_drv_video \
+    libgallium_drv_video \
     vainfo
 
 PRODUCT_PROPERTY_OVERRIDES := \
