@@ -123,3 +123,5 @@ PRODUCT_PACKAGES += \
     iw_common \
     external_iw_license
 
+
+PRODUCT_PACKAGES += hidrawcheck iptsd

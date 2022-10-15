@@ -192,7 +192,7 @@ $(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet_wifionly
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
-#BLISS_BUILD_VARIANT := foss
+BLISS_SPECIAL_VARIANT := -surface
 WITH_SU := false
 
 # Widevine addons
