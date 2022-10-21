@@ -71,16 +71,14 @@ function init_hal_audio()
 		VirtualBox*|Bochs*)
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
 			;;
-		TS10*)
-			set_prop_if_empty hal.audio.out pcmC0D2p
-			;;
 	esac
 	
-	# choose the first connected HDMI port on card 0 or 1
-	pcm=$(alsa_ctl store -f - 0 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC0D${pcm}p"
-	pcm=$(alsa_ctl store -f - 1 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC1D${pcm}p"
+CMD_CPU_INFO="/proc/cpuinfo"
+value_model=`grep -i model /proc/cpuinfo | cut -d ':' -f2 | head -n 1`
+
+	if [ $value_model == 140 ]; then
+    	set_property ro.vendor.hdmi.audio tgl
+	fi
 }
 
 function init_hal_bluetooth()
@@ -601,19 +599,7 @@ function do_bootcomplete()
 		if [ -e $f ]; then
 			alsa_ctl -f $f restore $c
 		else
-			alsa_ctl init $c
-			alsa_amixer -c $c set Master on
-			alsa_amixer -c $c set Master 100%
-			alsa_amixer -c $c set Headphone on
-			alsa_amixer -c $c set Headphone 100%
-			alsa_amixer -c $c set Speaker 100%
-			alsa_amixer -c $c set Capture 80%
-			alsa_amixer -c $c set Capture cap
-			alsa_amixer -c $c set PCM 100% unmute
-			alsa_amixer -c $c set SPO unmute
-			alsa_amixer -c $c set IEC958 on
-			alsa_amixer -c $c set 'Mic Boost' 1
-			alsa_amixer -c $c set 'Internal Mic Boost' 1
+			alsa_ctl init
 		fi
 	done
 

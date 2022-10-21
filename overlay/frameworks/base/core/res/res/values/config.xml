@@ -123,4 +123,9 @@
          opaque.
          -->
     <integer name="config_navBarOpacityMode">1</integer>
+
+    <!-- Flag indicating that the media framework should not allow changes or mute on any
+         stream or master volumes. -->
+    <bool name="config_useFixedVolume">false</bool>
+
 </resources>

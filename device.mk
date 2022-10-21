@@ -148,7 +148,7 @@ $(call inherit-product,device/generic/firmware/firmware.mk)
 $(call inherit-product-if-exists,external/tslib/tslib.mk)
 
 # Get the alsa files
-$(call inherit-product-if-exists,hardware/libaudio/alsa.mk)
+$(call inherit-product-if-exists,hardware/intel/audio/alsa.mk)
 
 # Get GPS configuration
 $(call inherit-product-if-exists,device/common/gps/gps_as.mk)

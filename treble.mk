@@ -12,7 +12,7 @@ PRODUCT_PACKAGES += \
 
 # Audio HAL
 PRODUCT_PACKAGES += \
-    android.hardware.audio.service \
+    android.hardware.audio@2.0-service \
     android.hardware.audio@6.0-impl \
     android.hardware.audio.effect@6.0-impl \
     android.hardware.soundtrigger@2.3-impl
@@ -20,7 +20,6 @@ PRODUCT_PACKAGES += \
 # Bluetooth HAL
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-service.vbt \
-    audio.a2dp.default \
 #    android.hardware.bluetooth@1.1-service.btlinux \
 #    android.hardware.bluetooth.audio@2.1-impl \
 #	android.hardware.bluetooth@1.0-impl \
