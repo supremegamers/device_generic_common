@@ -123,3 +123,7 @@ PRODUCT_PACKAGES += \
     iw_common \
     external_iw_license
 
+# aptX/aptX HD encoders
+PRODUCT_PACKAGES += \
+    libaptX_encoder \
+    libaptXHD_encoder
