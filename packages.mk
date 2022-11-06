@@ -73,11 +73,10 @@ PRODUCT_PACKAGES += \
 
 # Stagefright FFMPEG plugins
 PRODUCT_PACKAGES += \
-    i965_drv_video \
     libffmpeg_extractor \
     libffmpeg_omx \
     media_codecs_ffmpeg.xml \
-    android.hardware.media.c2@1.2-ffmpeg-service
+    android.hardware.media.c2@1.1-ffmpeg-service
 
 # Third party apps
 PRODUCT_PACKAGES += \
@@ -124,5 +123,9 @@ PRODUCT_PACKAGES += \
     iw_common \
     external_iw_license
 
-
 PRODUCT_PACKAGES += hidrawcheck iptsd
+
+# aptX/aptX HD encoders
+PRODUCT_PACKAGES += \
+    libaptX_encoder \
+    libaptXHD_encoder

@@ -132,6 +132,9 @@ function init_hal_bluetooth()
 		if [ -n "$TTYSTRING" ]; then
 			echo "RTL8723BS BT uses $TTYSTRING for Bluetooth."
 			ln -sf $TTYSTRING /dev/rtk_h5
+			# HAXXX
+			modprobe -r 8250_dw
+			modprobe 8250_dw
 			start rtk_hciattach
 		fi
 	fi
