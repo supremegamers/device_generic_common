@@ -50,7 +50,8 @@ PRODUCT_PACKAGES += \
     crocus_drv_video \
     iHD_drv_video \
     libgallium_drv_video \
-    vainfo
+    vainfo \
+    amdgpu.ids
 
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version = 196608
