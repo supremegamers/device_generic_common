@@ -201,7 +201,7 @@ function init_hal_gralloc()
 			;&
 		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
-				${HWC:+set_property ro.hardware.hwcomposer $HWC}
+				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
 				set_drm_mode
 			fi
@@ -236,8 +236,13 @@ function init_egl()
 function init_hal_hwcomposer()
 {
 	# TODO
-	[ "$HWC" = "drmfb" ] && start vendor.hwcomposer-2-1.drmfb
-	return
+	if [ "$HWC" = "" ]; then
+		set_property debug.sf.hwc_service_name drmfb
+		start vendor.hwcomposer-2-1.drmfb
+	else
+		set_property debug.sf.hwc_service_name default
+		start vendor.hwcomposer-2-4
+	fi
 }
 
 function init_hal_vulkan()
