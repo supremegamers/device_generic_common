@@ -33,7 +33,8 @@ PRODUCT_PACKAGES += \
 
 # Media codec
 PRODUCT_PACKAGES += \
-    android.hardware.media.c2@1.0-service \
+    android.hardware.media.c2@1.1-service \
+    android.hardware.media.c2@1.1-ffmpeg-service \
     android.hardware.media.omx@1.0-service
 
 # DumpState HAL

@@ -75,8 +75,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libffmpeg_extractor \
     libffmpeg_omx \
-    media_codecs_ffmpeg.xml \
-    android.hardware.media.c2@1.1-ffmpeg-service
+    media_codecs_ffmpeg.xml
 
 # Third party apps
 PRODUCT_PACKAGES += \
