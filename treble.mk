@@ -1,8 +1,14 @@
 # Graphics HAL
 PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
+    android.hardware.graphics.mapper@4.0-impl.minigbm \
+    android.hardware.graphics.mapper@4.0-impl.minigbm_arcvm\
+    android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
     android.hardware.graphics.allocator@2.0-impl \
-    android.hardware.graphics.allocator@2.0-service
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.allocator@4.0-service.minigbm \
+    android.hardware.graphics.allocator@4.0-service.minigbm_arcvm \
+    android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa
 
 # HWComposer HAL
 PRODUCT_PACKAGES += \

@@ -213,6 +213,28 @@ function init_hal_gralloc()
 			;;
 	esac
 
+	if [ "$GRALLOC4_MINIGBM" = "1" ]; then
+		set_property debug.ui.default_mapper 4
+		set_property debug.ui.default_gralloc 4
+		case "$GRALLOC" in
+			minigbm)
+				start vendor.graphics.allocator-4-0
+			;;
+			minigbm_arcvm)
+				start vendor.graphics.allocator-4-0-arcvm
+			;;
+			minigbm_gbm_mesa)
+				start vendor.graphics.allocator-4-0-gbm_mesa
+			;;
+			*)
+			;;
+		esac
+	else
+		set_property debug.ui.default_mapper 2
+		set_property debug.ui.default_gralloc 2
+		start vendor.gralloc-2-0
+	fi
+
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
 
