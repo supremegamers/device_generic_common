@@ -199,8 +199,9 @@ ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/widevine.mk)
 endif
 
-ifeq ($(USE_CROS_WIDEVINE),true)
+ifeq ($(USE_WIDEVINE),true)
 $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/widevine.mk)
+$(call inherit-product-if-exists, vendor/google/proprietary/widevine-prebuilt/widevine.mk)
 endif
 
 ifeq ($(USE_EMU_GAPPS),true)

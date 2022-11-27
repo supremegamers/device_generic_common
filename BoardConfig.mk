@@ -103,6 +103,7 @@ BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
                        device/generic/common/sepolicy/celadon/graphics/mesa \
                        device/generic/common/sepolicy/celadon/thermal \
                        vendor/intel/proprietary/houdini/sepolicy \
+                       vendor/google/proprietary/widevine-prebuilt/sepolicy
 
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 
