@@ -4,6 +4,10 @@
 
 TARGET_BOARD_PLATFORM := android-x86
 
+## Switch to EROFS image instead of Squashfs
+USE_SQUASHFS := 0
+USE_EROFS := 1
+
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
