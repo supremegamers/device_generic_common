@@ -14,6 +14,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.composer@2.4-impl \
+    android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.composer@2.4-service \
     android.hardware.graphics.composer@2.1-drmfb-service
 
@@ -85,7 +86,6 @@ PRODUCT_PACKAGES += \
 
 # Sensors HAL
 PRODUCT_PACKAGES += \
-    android.hardware.sensors@1.0-service \
     android.hardware.sensors@1.0-impl
 
 # USB HAL

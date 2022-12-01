@@ -63,6 +63,7 @@
         <name>android.hardware.graphics.composer</name>
         <transport>hwbinder</transport>
         <fqname>@2.1::IComposer/drmfb</fqname>
+        <fqname>@2.1::IComposer/default</fqname>
         <fqname>@2.4::IComposer/default</fqname>
     </hal>
     <hal format="hidl">
@@ -122,7 +123,7 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.sensors</name>
-        <transport>hwbinder</transport>
+        <transport arch="32+64">passthrough</transport>
         <version>1.0</version>
         <interface>
             <name>ISensors</name>

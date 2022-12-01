@@ -249,6 +249,7 @@ function init_egl()
 			set_property ro.hardware.vulkan pastel
 			set_property ro.cpuvulkan.version 4198400
 		else
+		start vendor.hwcomposer-2-1
 		set_property ro.hardware.egl swiftshader
 		set_property ro.hardware.vulkan pastel
 		fi
@@ -258,12 +259,14 @@ function init_egl()
 function init_hal_hwcomposer()
 {
 	# TODO
-	if [ "$HWC" = "" ]; then
-		set_property debug.sf.hwc_service_name drmfb
-		start vendor.hwcomposer-2-1.drmfb
-	else
-		set_property debug.sf.hwc_service_name default
-		start vendor.hwcomposer-2-4
+	if [ "$HWACCEL" != "0" ]; then
+		if [ "$HWC" = "" ]; then
+			set_property debug.sf.hwc_service_name drmfb
+			start vendor.hwcomposer-2-1.drmfb
+		else
+			set_property debug.sf.hwc_service_name default
+			start vendor.hwcomposer-2-4
+		fi
 	fi
 }
 
