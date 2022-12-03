@@ -26,7 +26,8 @@ function init_misc()
 {
 	# device information
 	VENDOR=$(cat $DMIPATH/sys_vendor)
-	if [ -z "$VENDOR" ]; then setprop ro.product.manufacturer "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.manufacturer "$VENDOR"; fi
+	setprop ro.product.manufacturer "$(cat $DMIPATH/board_vendor)"
+	if [ -z "$VENDOR" ]; then setprop ro.product.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.brand "$VENDOR"; fi
 	if [ -z "$PRODUCT" ]; then setprop ro.product.model "$BOARD"; else setprop ro.product.model "$PRODUCT"; fi
 
 	# a hack for USB modem
