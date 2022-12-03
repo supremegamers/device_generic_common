@@ -128,7 +128,6 @@ DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Enforce privapp-permissions whitelist
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.control_privapp_permissions=log \
     ro.sys.sdcardfs=false \
     persist.sys.sdcardfs=force_off
 
@@ -190,6 +189,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full_phone.mk)
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
 #BLISS_BUILD_VARIANT := foss
 WITH_SU := false
