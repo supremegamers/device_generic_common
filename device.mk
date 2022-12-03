@@ -28,7 +28,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.arch=x86 \
     persist.rtc_local_time=1 \
     bluetooth.rfkill=1 \
-    dalvik.vm.useautofastjni=true
+    dalvik.vm.useautofastjni=true \
+    debug.renderengine.backend=threaded
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
