@@ -112,7 +112,7 @@ service thermal-daemon /system/vendor/bin/thermal-daemon --config-file /system/v
     group system
     disabled
 
-service btattach /system/bin/btattach
+service btattach /system/vendor/bin/btattach
     class main
     disabled
     oneshot

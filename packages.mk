@@ -66,6 +66,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     btattach \
+	btmon \
     hciconfig \
     hcitool \
     thermsys \
@@ -98,7 +99,6 @@ PRODUCT_PACKAGES_DEBUG := \
     avtest \
     bneptest \
     btmgmt \
-    btmon \
     btproxy \
     haltest \
     l2ping \
