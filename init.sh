@@ -272,6 +272,18 @@ function init_hal_hwcomposer()
 	fi
 }
 
+function init_hal_media()
+{
+	if [ "$FFMPEG_CODEC" -ge "1" ]; then
+	    set_property media.sf.hwaccel 1
+		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
+			set_property debug.ffmpeg.loglevel verbose
+		fi
+	else
+	    set_property media.sf.hwaccel 0
+	fi
+}
+
 function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
@@ -557,6 +569,7 @@ function do_init()
 	init_hal_gps
 	init_hal_gralloc
 	init_hal_hwcomposer
+	init_hal_media
 	init_hal_vulkan
 	init_hal_lights
 	init_hal_power
