@@ -9,6 +9,7 @@ on early-init
     export EGL_LOG_LEVEL info
     export OPENSSL_armcap 0
     export INTEL_DEBUG noccs,heur32
+    export VIRGL_DEBUG nocoherent
 #   export EGL_DRIVERS egl_dri2
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
 
