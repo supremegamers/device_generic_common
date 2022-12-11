@@ -225,6 +225,9 @@ endif
 # Add agp-apps
 $(call inherit-product-if-exists, vendor/prebuilts/agp-apps/agp-apps.mk)
 
+# Add SettingsIntelligenceGooglePrebuilt
+$(call inherit-product-if-exists, vendor/google/proprietary/SettingsIntelligenceGooglePrebuilt/sigp.mk)
+
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)
 
