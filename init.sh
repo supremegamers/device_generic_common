@@ -48,10 +48,10 @@ function init_misc()
 		[ "$wifi" != "wl" ] && rmmod_if_exist wl
 	fi
 
-	# enable virt_wifi if needed
+	# disable virt_wifi by default, only turn on when user set VIRT_WIFI=1
 	local eth=`getprop net.virt_wifi eth0`
-	if [ -d /sys/class/net/$eth -a "$VIRT_WIFI" != "0" ]; then
-		if [ -n "$wifi" -a "$VIRT_WIFI" = "1" ]; then
+	if [ -d /sys/class/net/$eth -a "$VIRT_WIFI" -gt "0" ]; then
+		if [ -n "$wifi" -a "$VIRT_WIFI" -ge "1" ]; then
 			rmmod_if_exist iwlmvm $wifi
 		fi
 		if [ ! -d /sys/class/net/wlan0 ]; then
