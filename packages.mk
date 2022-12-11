@@ -18,7 +18,6 @@
 
 PRODUCT_PACKAGES := \
     Taskbar \
-    camera.x86 \
     chat \
     com.android.future.usb.accessory \
     drmserver \
