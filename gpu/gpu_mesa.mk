@@ -10,8 +10,8 @@
 
 PRODUCT_PACKAGES := \
     hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
-    gralloc.gbm gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
-    gralloc.minigbm_dmabuf \
+    gralloc.minigbm_dmabuf gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
+    gralloc.gbm gralloc.gbm_nohack gralloc.gbm_noscanout \
 	hwcomposer.cutf_cvm_ashmem hwcomposer.cutf_hwc2 hwcomposer-stats \
     libGLES_mesa    \
     libtxc_dxtn     \
@@ -25,10 +25,8 @@ PRODUCT_PACKAGES := \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
-    vulkan.ranchu \
     libvulkan_enc \
     vulkan.pastel \
-    hwcomposer.ranchu \
     libandroidemu \
     libOpenglCodecCommon \
     libOpenglSystemCommon \
@@ -50,7 +48,8 @@ PRODUCT_PACKAGES += \
     crocus_drv_video \
     iHD_drv_video \
     libgallium_drv_video \
-    vainfo
+    vainfo \
+    amdgpu.ids
 
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.opengles.version = 196608
@@ -70,5 +69,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
-    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml
-    
+    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml \
+    frameworks/native/data/etc/android.software.vulkan.deqp.level-2021-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.vulkan.deqp.level.xml \
+    frameworks/native/data/etc/android.software.opengles.deqp.level-2021-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.opengles.deqp.level.xml

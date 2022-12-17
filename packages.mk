@@ -18,7 +18,6 @@
 
 PRODUCT_PACKAGES := \
     Taskbar \
-    camera.x86 \
     chat \
     com.android.future.usb.accessory \
     drmserver \
@@ -66,6 +65,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     btattach \
+	btmon \
     hciconfig \
     hcitool \
     thermsys \
@@ -75,8 +75,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libffmpeg_extractor \
     libffmpeg_omx \
-    media_codecs_ffmpeg.xml \
-    android.hardware.media.c2@1.1-ffmpeg-service
+    media_codecs_ffmpeg.xml
 
 # Third party apps
 PRODUCT_PACKAGES += \
@@ -99,7 +98,6 @@ PRODUCT_PACKAGES_DEBUG := \
     avtest \
     bneptest \
     btmgmt \
-    btmon \
     btproxy \
     haltest \
     l2ping \

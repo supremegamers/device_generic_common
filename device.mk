@@ -21,13 +21,14 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.ril.gprsclass=10 \
     keyguard.no_require_sim=true \
     ro.com.android.dataroaming=true \
-    media.sf.hwaccel=1 \
     media.sf.omx-plugin=libffmpeg_omx.so \
     media.sf.extractor-plugin=libffmpeg_extractor.so \
     ro.lmk.kill_timeout_ms=100 \
     ro.arch=x86 \
     persist.rtc_local_time=1 \
-    bluetooth.rfkill=1
+    bluetooth.rfkill=1 \
+    dalvik.vm.useautofastjni=true \
+    debug.renderengine.backend=threaded
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
@@ -45,12 +46,13 @@ PRODUCT_COPY_FILES := \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR)init.rc:root/init.rc) \
     $(if $(wildcard $(PRODUCT_DIR)init.sh),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.sh:system/etc/init.sh \
     $(if $(wildcard $(PRODUCT_DIR)modules.blocklist),$(PRODUCT_DIR),$(LOCAL_PATH)/)modules.blocklist:system/etc/modules.blocklist \
+    $(if $(wildcard $(PRODUCT_DIR)modules.options),$(PRODUCT_DIR),$(LOCAL_PATH)/)modules.options:system/etc/modules.options \
     $(if $(wildcard $(PRODUCT_DIR)fstab.$(TARGET_PRODUCT)),$(PRODUCT_DIR)fstab.$(TARGET_PRODUCT),$(LOCAL_PATH)/fstab.x86):root/fstab.$(TARGET_PRODUCT) \
     $(if $(wildcard $(PRODUCT_DIR)wpa_supplicant.conf),$(PRODUCT_DIR),$(LOCAL_PATH)/)wpa_supplicant.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant.conf \
     $(if $(wildcard $(PRODUCT_DIR)wpa_supplicant_overlay.conf),$(PRODUCT_DIR),$(LOCAL_PATH)/)wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf \
     $(if $(wildcard $(PRODUCT_DIR)excluded-input-devices.xml),$(PRODUCT_DIR),$(LOCAL_PATH)/)excluded-input-devices.xml:system/etc/excluded-input-devices.xml \
     $(if $(wildcard $(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)init.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/init.x86.rc):root/init.$(TARGET_PRODUCT).rc \
-    $(if $(wildcard $(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/ueventd.x86.rc):root/ueventd.$(TARGET_PRODUCT).rc \
+    $(if $(wildcard $(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)ueventd.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/ueventd.x86.rc):$(TARGET_COPY_OUT_VENDOR)/etc/ueventd.rc \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ppp/ip-up:system/etc/ppp/ip-up \
@@ -58,6 +60,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ppp/peers/gprs:system/etc/ppp/peers/gprs \
     $(LOCAL_PATH)/media_codecs.xml:system/etc/media_codecs.xml \
     $(LOCAL_PATH)/media_profiles.xml:system/etc/media_profiles.xml \
+    $(LOCAL_PATH)/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml \
     $(LOCAL_PATH)/pciids/pci.ids:system/vendor/etc/pci.ids \
     $(LOCAL_PATH)/usbids/usb.ids:system/vendor/etc/usb.ids \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
@@ -104,10 +107,12 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.xml:system/etc/permissions/android.software.sip.xml \
     frameworks/native/data/etc/android.software.voice_recognizers.xml:system/etc/permissions/android.software.voice_recognizers.xml \
     frameworks/native/data/etc/android.software.webview.xml:system/etc/permissions/android.software.webview.xml \
-    system/bt/vendor_libs/test_vendor_lib/data/controller_properties.json:system/vendor/etc/bluetooth/controller_properties.json \
     external/thermal_daemon/data/thermal-conf.xml:/system/vendor/etc/thermal-daemon/thermal-conf.xml \
     external/thermal_daemon/data/thermal-cpu-cdev-order.xml:/system/vendor/etc/thermal-daemon/thermal-cpu-cdev-order.xml \
     external/mesa/src/util/00-mesa-defaults.conf:system/etc/drirc \
+    $(LOCAL_PATH)/OEMBlackList:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.OEMBlackList \
+    $(LOCAL_PATH)/OEMWhiteList:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.OEMWhiteList \
+    $(LOCAL_PATH)/ThirdPartySO:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.ThirdPartySO \
     $(LOCAL_PATH)/seccomp/mediaswcodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaswcodec.policy \
     $(foreach f,$(wildcard $(LOCAL_PATH)/alsa/*),$(f):$(subst $(LOCAL_PATH),system/etc,$(f))) \
     $(foreach f,$(wildcard $(LOCAL_PATH)/idc/*.idc $(LOCAL_PATH)/keylayout/*.kl),$(f):$(subst $(LOCAL_PATH),system/usr,$(f)))
@@ -124,7 +129,6 @@ DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Enforce privapp-permissions whitelist
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.control_privapp_permissions=log \
     ro.sys.sdcardfs=false \
     persist.sys.sdcardfs=force_off
 
@@ -183,11 +187,10 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
 # Inherit common Bliss stuff
-$(call inherit-product-if-exists,vendor/bliss/config/common.mk)
-$(call inherit-product-if-exists,vendor/bliss/config/common_full.mk)
-$(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet_wifionly.mk)
+$(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet.mk)
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
 BLISS_SPECIAL_VARIANT := -surface
 WITH_SU := false
@@ -197,8 +200,9 @@ ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/widevine.mk)
 endif
 
-ifeq ($(USE_CROS_WIDEVINE),true)
+ifeq ($(USE_WIDEVINE),true)
 $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/widevine.mk)
+$(call inherit-product-if-exists, vendor/google/proprietary/widevine-prebuilt/widevine.mk)
 endif
 
 ifeq ($(USE_EMU_GAPPS),true)
@@ -219,6 +223,9 @@ endif
 
 # Add agp-apps
 $(call inherit-product-if-exists, vendor/prebuilts/agp-apps/agp-apps.mk)
+
+# Add SettingsIntelligenceGooglePrebuilt
+$(call inherit-product-if-exists, vendor/google/proprietary/SettingsIntelligenceGooglePrebuilt/sigp.mk)
 
 # Boringdroid
 $(call inherit-product-if-exists, vendor/boringdroid/boringdroid.mk)

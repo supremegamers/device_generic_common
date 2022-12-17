@@ -1,14 +1,22 @@
 # Graphics HAL
 PRODUCT_PACKAGES += \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
+    android.hardware.graphics.mapper@4.0-impl.minigbm \
+    android.hardware.graphics.mapper@4.0-impl.minigbm_arcvm\
+    android.hardware.graphics.mapper@4.0-impl.minigbm_gbm_mesa \
     android.hardware.graphics.allocator@2.0-impl \
-    android.hardware.graphics.allocator@2.0-service
+    android.hardware.graphics.allocator@2.0-service \
+    android.hardware.graphics.allocator@4.0-service.minigbm \
+    android.hardware.graphics.allocator@4.0-service.minigbm_arcvm \
+    android.hardware.graphics.allocator@4.0-service.minigbm_gbm_mesa
 
 # HWComposer HAL
 PRODUCT_PACKAGES += \
     android.hardware.graphics.composer@2.1-impl \
+    android.hardware.graphics.composer@2.4-impl \
     android.hardware.graphics.composer@2.1-service \
-    android.hardware.graphics.composer@2.1-service.drmfb
+    android.hardware.graphics.composer@2.4-service \
+    android.hardware.graphics.composer@2.1-drmfb-service
 
 # Audio HAL
 PRODUCT_PACKAGES += \
@@ -27,13 +35,12 @@ PRODUCT_PACKAGES += \
 
 # Camera HAL
 PRODUCT_PACKAGES += \
-    camera.device@3.2-impl \
-    android.hardware.camera.provider@2.4-impl \
-    android.hardware.camera.provider@2.4-service
+    android.hardware.camera.provider@2.5-external-service
 
 # Media codec
 PRODUCT_PACKAGES += \
-    android.hardware.media.c2@1.0-service \
+    android.hardware.media.c2@1.1-service \
+    android.hardware.media.c2@1.2-ffmpeg-service \
     android.hardware.media.omx@1.0-service
 
 # DumpState HAL
@@ -87,8 +94,8 @@ PRODUCT_PACKAGES += \
 # Drm HAL
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
-    android.hardware.drm@1.0-service \
-    android.hardware.drm@1.3-service.clearkey
+    android.hardware.drm@1.0-service-lazy \
+    android.hardware.drm@1.4-service-lazy.clearkey
 
 # GPS HAL
 PRODUCT_PACKAGES += \

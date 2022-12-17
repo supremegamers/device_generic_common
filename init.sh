@@ -26,8 +26,10 @@ function init_misc()
 {
 	# device information
 	VENDOR=$(cat $DMIPATH/sys_vendor)
-	if [ -z "$VENDOR" ]; then setprop ro.product.manufacturer "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.manufacturer "$VENDOR"; fi
+	setprop ro.product.manufacturer "$(cat $DMIPATH/board_vendor)"
+	if [ -z "$VENDOR" ]; then setprop ro.product.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.brand "$VENDOR"; fi
 	if [ -z "$PRODUCT" ]; then setprop ro.product.model "$BOARD"; else setprop ro.product.model "$PRODUCT"; fi
+	setprop ro.serialno "$(cat $DMIPATH/product_serial)"
 
 	# a hack for USB modem
 	lsusb | grep 1a8d:1000 && eject
@@ -46,10 +48,10 @@ function init_misc()
 		[ "$wifi" != "wl" ] && rmmod_if_exist wl
 	fi
 
-	# enable virt_wifi if needed
+	# disable virt_wifi by default, only turn on when user set VIRT_WIFI=1
 	local eth=`getprop net.virt_wifi eth0`
-	if [ -d /sys/class/net/$eth -a "$VIRT_WIFI" != "0" ]; then
-		if [ -n "$wifi" -a "$VIRT_WIFI" = "1" ]; then
+	if [ -d /sys/class/net/$eth -a "$VIRT_WIFI" -gt "0" ]; then
+		if [ -n "$wifi" -a "$VIRT_WIFI" -ge "1" ]; then
 			rmmod_if_exist iwlmvm $wifi
 		fi
 		if [ ! -d /sys/class/net/wlan0 ]; then
@@ -201,7 +203,7 @@ function init_hal_gralloc()
 			;&
 		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
-				${HWC:+set_property ro.hardware.hwcomposer $HWC}
+				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
 				set_drm_mode
 			fi
@@ -212,6 +214,28 @@ function init_hal_gralloc()
 		*)
 			;;
 	esac
+
+	if [ "$GRALLOC4_MINIGBM" = "1" ]; then
+		set_property debug.ui.default_mapper 4
+		set_property debug.ui.default_gralloc 4
+		case "$GRALLOC" in
+			minigbm)
+				start vendor.graphics.allocator-4-0
+			;;
+			minigbm_arcvm)
+				start vendor.graphics.allocator-4-0-arcvm
+			;;
+			minigbm_gbm_mesa)
+				start vendor.graphics.allocator-4-0-gbm_mesa
+			;;
+			*)
+			;;
+		esac
+	else
+		set_property debug.ui.default_mapper 2
+		set_property debug.ui.default_gralloc 2
+		start vendor.gralloc-2-0
+	fi
 
 	[ -n "$DEBUG" ] && set_property debug.egl.trace error
 }
@@ -227,6 +251,7 @@ function init_egl()
 			set_property ro.hardware.vulkan pastel
 			set_property ro.cpuvulkan.version 4198400
 		else
+		start vendor.hwcomposer-2-1
 		set_property ro.hardware.egl swiftshader
 		set_property ro.hardware.vulkan pastel
 		fi
@@ -236,8 +261,27 @@ function init_egl()
 function init_hal_hwcomposer()
 {
 	# TODO
-	[ "$HWC" = "drmfb" ] && start vendor.hwcomposer-2-1.drmfb
-	return
+	if [ "$HWACCEL" != "0" ]; then
+		if [ "$HWC" = "" ]; then
+			set_property debug.sf.hwc_service_name drmfb
+			start vendor.hwcomposer-2-1.drmfb
+		else
+			set_property debug.sf.hwc_service_name default
+			start vendor.hwcomposer-2-4
+		fi
+	fi
+}
+
+function init_hal_media()
+{
+	if [ "$FFMPEG_CODEC" -ge "1" ]; then
+	    set_property media.sf.hwaccel 1
+		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
+			set_property debug.ffmpeg.loglevel verbose
+		fi
+	else
+	    set_property media.sf.hwaccel 0
+	fi
 }
 
 function init_hal_vulkan()
@@ -400,6 +444,12 @@ function init_hal_sensors()
 		*T*0*TA*|*M80TA*)
 			set_property ro.iio.accel.y.opt_scale -1
 			;;
+		*TECLAST*X4*)
+			set_property ro.iio.accel.quirks no-trig
+			set_property ro.iio.accel.order 102
+			set_property ro.iio.accel.x.opt_scale -1
+			set_property ro.iio.accel.y.opt_scale -1
+			;;
 		*SwitchSA5-271*|*SwitchSA5-271P*)
 			set_property ro.ignore_atkbd 1
 			has_sensors=true
@@ -525,6 +575,7 @@ function do_init()
 	init_hal_gps
 	init_hal_gralloc
 	init_hal_hwcomposer
+	init_hal_media
 	init_hal_vulkan
 	init_hal_lights
 	init_hal_power
