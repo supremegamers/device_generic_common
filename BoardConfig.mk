@@ -89,6 +89,7 @@ endif
 
 BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
+BOARD_MESA3D_BUILD_LIBGBM := true
 BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl
 BOARD_MESA3D_VULKAN_DRIVERS := amd intel virtio-experimental
 BUILD_EMULATOR_OPENGL := true
