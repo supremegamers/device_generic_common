@@ -444,6 +444,12 @@ function init_hal_sensors()
 		*T*0*TA*|*M80TA*)
 			set_property ro.iio.accel.y.opt_scale -1
 			;;
+		*TECLAST*X4*)
+			set_property ro.iio.accel.quirks no-trig
+			set_property ro.iio.accel.order 102
+			set_property ro.iio.accel.x.opt_scale -1
+			set_property ro.iio.accel.y.opt_scale -1
+			;;
 		*SwitchSA5-271*|*SwitchSA5-271P*)
 			set_property ro.ignore_atkbd 1
 			has_sensors=true
