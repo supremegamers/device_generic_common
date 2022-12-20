@@ -138,6 +138,15 @@ service ctrl-alt-del /system/bin/input keyevent --longpress POWER
     keycodes 97 100 111
     seclabel u:r:init:s0
 
+service iptsd /system/vendor/bin/iptsd ${persist.ipts.device}
+    disabled
+    oneshot
+    seclabel u:r:inputflinger:s0
+
+service iptsd-service /system/vendor/bin/iptsd-service.sh
+    class main
+    seclabel u:r:zygote:s0
+
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking
     write /dev/tty0 "[?17;0;0c"
@@ -147,6 +156,7 @@ on property:system_init.startsurfaceflinger=0
 on property:sys.boot_completed=1
     write /proc/sys/kernel/ctrl-alt-del 0
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh bootcomplete
+    start iptsd-service
 
 on property:net.dns1=*
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh netconsole
