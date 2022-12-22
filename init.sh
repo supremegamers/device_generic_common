@@ -298,7 +298,11 @@ function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*i915)
-			set_property ro.hardware.vulkan intel
+			if [ "$INTEL_HASVK" -ge "1" ]; then
+				set_property ro.hardware.vulkan intel_hasvk
+			else
+				set_property ro.hardware.vulkan intel
+			fi
 			;;
 		*amdgpu)
 			set_property ro.hardware.vulkan radeon
