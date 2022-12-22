@@ -139,9 +139,6 @@ $(foreach f,$(wildcard $(LOCAL_PATH)/permissions/*.xml),\
 # Get Android 8.0 HIDL HALs
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
 
-# Get the firmwares
-$(call inherit-product,device/generic/firmware/firmware.mk)
-
 # Get the touchscreen calibration tool
 $(call inherit-product-if-exists,external/tslib/tslib.mk)
 
