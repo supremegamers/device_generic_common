@@ -676,7 +676,18 @@ function do_bootcomplete()
             chown 1010.1010 $FILE_CHECK
             chmod 660 $FILE_CHECK
 	fi
-	
+
+	POST_INST=/data/vendor/post_inst_complete
+	USER_APPS=/system/etc/user_app/*
+
+	if [ ! -f "$POST_INST" ]; then
+		for apk in $USER_APPS
+		do		
+			pm install $apk
+		done
+		touch /data/vendor/post_inst_complete
+	fi
+
 	post_bootcomplete
 }
 
