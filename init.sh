@@ -275,11 +275,21 @@ function init_hal_hwcomposer()
 function init_hal_media()
 {
 	if [ "$FFMPEG_CODEC" -ge "1" ]; then
+	    set_property media.sf.omx-plugin libffmpeg_omx.so
+    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
 	    set_property media.sf.hwaccel 1
 		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
 			set_property debug.ffmpeg.loglevel verbose
 		fi
+		if [ "$FFMPEG_PREFER_C2" -ge "1" ]; then
+			set_property debug.ffmpeg-codec2.rank 0
+		else
+			set_property debug.ffmpeg-codec2.rank 4294967295		
+		fi
 	else
+		set_property debug.ffmpeg-codec2.rank 4294967295
+	    set_property media.sf.omx-plugin ""
+    	set_property media.sf.extractor-plugin ""
 	    set_property media.sf.hwaccel 0
 	fi
 }
