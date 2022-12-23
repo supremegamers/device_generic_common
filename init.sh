@@ -26,9 +26,12 @@ function init_misc()
 {
 	# device information
 	VENDOR=$(cat $DMIPATH/sys_vendor)
-	setprop ro.product.manufacturer "$(cat $DMIPATH/board_vendor)"
-	if [ -z "$VENDOR" ]; then setprop ro.product.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.brand "$VENDOR"; fi
-	if [ -z "$PRODUCT" ]; then setprop ro.product.model "$BOARD"; else setprop ro.product.model "$PRODUCT"; fi
+	setprop ro.product.vendor.manufacturer "$(cat $DMIPATH/board_vendor)"
+	if [ -z "$VENDOR" ]; then setprop ro.product.vendor.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.vendor.brand "$VENDOR"; fi
+	if [ -z "$PRODUCT" ]; then setprop ro.product.vendor.model "$BOARD"; else setprop ro.product.vendor.model "$PRODUCT"; fi
+	setprop ro.product.bliss.manufacturer "$(cat $DMIPATH/board_vendor)"
+	if [ -z "$VENDOR" ]; then setprop ro.product.bliss.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.bliss.brand "$VENDOR"; fi
+	if [ -z "$PRODUCT" ]; then setprop ro.product.bliss.model "$BOARD"; else setprop ro.product.bliss.model "$PRODUCT"; fi
 	setprop ro.serialno "$(cat $DMIPATH/product_serial)"
 
 	# a hack for USB modem
@@ -275,11 +278,21 @@ function init_hal_hwcomposer()
 function init_hal_media()
 {
 	if [ "$FFMPEG_CODEC" -ge "1" ]; then
+	    set_property media.sf.omx-plugin libffmpeg_omx.so
+    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
 	    set_property media.sf.hwaccel 1
 		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
 			set_property debug.ffmpeg.loglevel verbose
 		fi
+		if [ "$FFMPEG_PREFER_C2" -ge "1" ]; then
+			set_property debug.ffmpeg-codec2.rank 0
+		else
+			set_property debug.ffmpeg-codec2.rank 4294967295		
+		fi
 	else
+		set_property debug.ffmpeg-codec2.rank 4294967295
+	    set_property media.sf.omx-plugin ""
+    	set_property media.sf.extractor-plugin ""
 	    set_property media.sf.hwaccel 0
 	fi
 }
@@ -288,7 +301,11 @@ function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*i915)
-			set_property ro.hardware.vulkan intel
+			if [ "$INTEL_HASVK" -ge "1" ]; then
+				set_property ro.hardware.vulkan intel_hasvk
+			else
+				set_property ro.hardware.vulkan intel
+			fi
 			;;
 		*amdgpu)
 			set_property ro.hardware.vulkan radeon
@@ -676,7 +693,18 @@ function do_bootcomplete()
             chown 1010.1010 $FILE_CHECK
             chmod 660 $FILE_CHECK
 	fi
-	
+
+	POST_INST=/data/vendor/post_inst_complete
+	USER_APPS=/system/etc/user_app/*
+
+	if [ ! -f "$POST_INST" ]; then
+		for apk in $USER_APPS
+		do		
+			pm install $apk
+		done
+		touch /data/vendor/post_inst_complete
+	fi
+
 	post_bootcomplete
 }
 

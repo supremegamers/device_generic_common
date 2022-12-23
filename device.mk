@@ -21,8 +21,6 @@ PRODUCT_PROPERTY_OVERRIDES := \
     ro.ril.gprsclass=10 \
     keyguard.no_require_sim=true \
     ro.com.android.dataroaming=true \
-    media.sf.omx-plugin=libffmpeg_omx.so \
-    media.sf.extractor-plugin=libffmpeg_extractor.so \
     ro.lmk.kill_timeout_ms=100 \
     ro.arch=x86 \
     persist.rtc_local_time=1 \
@@ -142,9 +140,6 @@ $(foreach f,$(wildcard $(LOCAL_PATH)/permissions/*.xml),\
 
 # Get Android 8.0 HIDL HALs
 $(call inherit-product,$(LOCAL_PATH)/treble.mk)
-
-# Get the firmwares
-$(call inherit-product,device/generic/firmware/firmware.mk)
 
 # Get the touchscreen calibration tool
 $(call inherit-product-if-exists,external/tslib/tslib.mk)
