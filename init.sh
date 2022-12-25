@@ -301,7 +301,8 @@ function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*i915)
-			if [ "$INTEL_HASVK" -ge "1" ]; then
+			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen'
+-e 'graphics version' | awk '{print $NF}')" -lt 9 ]; then
 				set_property ro.hardware.vulkan intel_hasvk
 			else
 				set_property ro.hardware.vulkan intel
