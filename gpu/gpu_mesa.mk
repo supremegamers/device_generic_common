@@ -17,6 +17,7 @@ PRODUCT_PACKAGES := \
     libtxc_dxtn     \
     modetest \
     vulkan.intel \
+    vulkan.intel_hasvk \
     vulkan.radeon \
     vulkan.virtio \
     libEGL_angle \
