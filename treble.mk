@@ -56,8 +56,8 @@ PRODUCT_PACKAGES += \
 
 # Health HAL
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.1-impl \
-    android.hardware.health@2.1-service
+    android.hardware.health-service.example \
+    android.hardware.health@2.1-impl-intel
 
 # Keymaster HAL
 PRODUCT_PACKAGES += \
