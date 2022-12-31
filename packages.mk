@@ -127,3 +127,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libaptX_encoder \
     libaptXHD_encoder
+
+## Enable hidden features on Android
+PRODUCT_PACKAGES += \
+	pc.xml \
+	hpe.xml

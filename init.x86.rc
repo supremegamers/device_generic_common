@@ -11,6 +11,7 @@ on early-init
     export INTEL_DEBUG noccs,heur32
     export VIRGL_DEBUG nocoherent
 #   export EGL_DRIVERS egl_dri2
+    exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh feature_setup
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
 
 on early-init && property:mesa.gles.override=*
