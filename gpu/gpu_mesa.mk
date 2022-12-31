@@ -52,9 +52,6 @@ PRODUCT_PACKAGES += \
     vainfo \
     amdgpu.ids
 
-PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version = 196608
-
 PRODUCT_VENDOR_PROPERTIES += \
     debug.angle.feature_overrides_enabled=preferLinearFilterForYUV
 
