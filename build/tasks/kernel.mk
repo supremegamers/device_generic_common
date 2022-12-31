@@ -8,7 +8,7 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
-TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r468909b/bin
+TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r450784d/bin
 
 ifneq ($(TARGET_NO_KERNEL),true)
 ifeq ($(TARGET_PREBUILT_KERNEL),)
@@ -24,7 +24,6 @@ TARGET_KERNEL_CONFIG ?= android-$(TARGET_KERNEL_ARCH)_defconfig
 KERNEL_CONFIG_DIR := arch/x86/configs
 
 ifeq ($(TARGET_KERNEL_ARCH),x86_64)
-CROSS_COMPILE := $(abspath $(TARGET_TOOLS_PREFIX))
 KERNEL_CLANG_FLAGS := \
         LLVM=1 \
         CC=$(abspath $(TARGET_CLANG_PATH)/clang) \
