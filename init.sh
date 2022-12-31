@@ -216,7 +216,7 @@ function init_hal_gralloc()
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			video=${video:-1280x768}
 			;&
-		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
+		*i915|*radeon|*nouveau|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
@@ -227,6 +227,7 @@ function init_hal_gralloc()
 			init_uvesafb
 			;&
 		*)
+			export HWACCEL=0
 			;;
 	esac
 
@@ -271,6 +272,37 @@ function init_egl()
 		set_property ro.hardware.vulkan pastel
 		fi
 	fi
+
+	# Set OpenGLES version
+	case "$FORCE_GLES" in
+		*3.1*)
+    		set_property ro.opengles.version 196609
+			export MESA_GLES_VERSION_OVERRIDE=3.1
+		;;
+		*3.2*)
+    		set_property ro.opengles.version 196610
+			export MESA_GLES_VERSION_OVERRIDE=3.2
+		;;
+		*)
+    		set_property ro.opengles.version 196608
+		;;
+	esac
+
+	# Set RenderEngine backend
+	case "$FORCE_RENDERENGINE" in
+		*gles*)
+	    	set_property debug.renderengine.backend gles
+		;;
+		*skiagl)
+	    	set_property debug.renderengine.backend skiagl
+	    ;;
+		*skiaglthreaded*)	
+			set_property debug.renderengine.backend skiaglthreaded
+	    ;;
+		*)
+			set_property debug.renderengine.backend threaded
+		;;
+	esac
 }
 
 function init_hal_hwcomposer()
@@ -313,8 +345,7 @@ function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*i915)
-			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen'
--e 'graphics version' | awk '{print $NF}')" -lt 9 ]; then
+			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen' -e 'graphics version' | awk '{print $NF}')" -lt 9 ]; then
 				set_property ro.hardware.vulkan intel_hasvk
 			else
 				set_property ro.hardware.vulkan intel

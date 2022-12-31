@@ -14,9 +14,6 @@ on early-init
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh feature_setup
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
 
-on early-init && property:mesa.gles.override=*
-    export MESA_GLES_VERSION_OVERRIDE ${mesa.gles.override}
-
 on early-init && property:mesa.loader.override=*
     export MESA_LOADER_DRIVER_OVERRIDE ${mesa.loader.override}
 
