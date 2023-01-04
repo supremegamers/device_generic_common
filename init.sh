@@ -32,6 +32,10 @@ function init_aosp_feature()
 	if [ "$HPE" -gt "0" ]; then
 		mount --bind /system/etc/hidden_xml/hpe.xml /system/etc/sysconfig/hpe.xml
 	fi
+
+	if [ "$FFMPEG_CODEC" -gt "0" ]; then
+	mount --bind /system/etc/hidden_xml/manifest_media_c2_V1_2_ffmpeg.xml /system/vendor/etc/vintf/manifest/manifest_media_c2_V1_2_ffmpeg.xml
+	fi
 }
 
 function init_misc()
@@ -325,6 +329,7 @@ function init_hal_media()
 	    set_property media.sf.omx-plugin libffmpeg_omx.so
     	set_property media.sf.extractor-plugin libffmpeg_extractor.so
 	    set_property media.sf.hwaccel 1
+		start android-hardware-media-c2-hal-1-2
 		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
 			set_property debug.ffmpeg.loglevel verbose
 		fi
