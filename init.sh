@@ -279,6 +279,10 @@ function init_egl()
 
 	# Set OpenGLES version
 	case "$FORCE_GLES" in
+        *3.0*)
+    	    set_property ro.opengles.version 196608
+            export MESA_GLES_VERSION_OVERRIDE=3.0
+		;;
 		*3.1*)
     		set_property ro.opengles.version 196609
 			export MESA_GLES_VERSION_OVERRIDE=3.1
