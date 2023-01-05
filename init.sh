@@ -293,20 +293,11 @@ function init_egl()
 	esac
 
 	# Set RenderEngine backend
-	case "$FORCE_RENDERENGINE" in
-		*gles*)
-	    	set_property debug.renderengine.backend gles
-		;;
-		*skiagl)
-	    	set_property debug.renderengine.backend skiagl
-	    ;;
-		*skiaglthreaded*)	
-			set_property debug.renderengine.backend skiaglthreaded
-	    ;;
-		*)
-			set_property debug.renderengine.backend threaded
-		;;
-	esac
+	if [ -z ${FORCE_RENDERENGINE+x} ]; then
+		set_property debug.renderengine.backend threaded
+	else
+		set_property debug.renderengine.backend $FORCE_RENDERENGINE
+	fi
 }
 
 function init_hal_hwcomposer()
