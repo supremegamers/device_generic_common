@@ -61,6 +61,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml \
     $(LOCAL_PATH)/pciids/pci.ids:system/vendor/etc/pci.ids \
     $(LOCAL_PATH)/usbids/usb.ids:system/vendor/etc/usb.ids \
+    $(LOCAL_PATH)/fstab.internal.x86:system/vendor/etc/fstab.internal.x86 \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:system/etc/media_codecs_google_c2.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:system/etc/media_codecs_google_c2_audio.xml \
