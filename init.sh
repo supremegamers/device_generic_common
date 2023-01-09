@@ -22,22 +22,6 @@ function rmmod_if_exist()
 	done
 }
 
-function init_aosp_feature()
-{
-	# Enabling AOSP features for PC
-	if [ "$PC_MODE" -gt "0" ]; then
-		mount --bind /system/etc/hidden_xml/pc.xml /system/etc/permissions/pc.xml
-	fi
-
-	if [ "$HPE" -gt "0" ]; then
-		mount --bind /system/etc/hidden_xml/hpe.xml /system/etc/sysconfig/hpe.xml
-	fi
-
-	if [ "$FFMPEG_CODEC" -gt "0" ]; then
-	mount --bind /system/etc/hidden_xml/manifest_media_c2_V1_1_ffmpeg.xml /system/vendor/etc/vintf/manifest/manifest_media_c2_V1_1_ffmpeg.xml
-	fi
-}
-
 function init_misc()
 {
 	# device information
@@ -807,9 +791,6 @@ hw_sh=/vendor/etc/init.sh
 [ -e $hw_sh ] && source $hw_sh
 
 case "$1" in
-	feature_setup)
-		init_aosp_feature
-		;;
 	eglsetup)
 		init_egl
 		;;
