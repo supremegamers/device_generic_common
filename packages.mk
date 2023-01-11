@@ -131,4 +131,5 @@ PRODUCT_PACKAGES += \
 ## Enable hidden features on Android
 PRODUCT_PACKAGES += \
 	pc.xml \
-	hpe.xml
+	hpe.xml \
+	device.prop
