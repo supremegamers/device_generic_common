@@ -26,19 +26,8 @@ PRODUCT_PACKAGES := \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
-    vulkan.ranchu \
-    libvulkan_enc \
     vulkan.pastel \
-    hwcomposer.ranchu \
-    libandroidemu \
-    libOpenglCodecCommon \
-    libOpenglSystemCommon \
-    libGLESv1_CM_emulation \
-    lib_renderControl_enc \
-    libEGL_emulation \
-    libGLESv2_enc \
-    libGLESv2_emulation \
-    libGLESv1_enc
+    vulkan.pastel_legacy \
 
 PRODUCT_PACKAGES += \
     libEGL_mesa \
