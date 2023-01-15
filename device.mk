@@ -135,6 +135,9 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 $(foreach f,$(wildcard $(LOCAL_PATH)/permissions/*.xml),\
     $(eval PRODUCT_COPY_FILES += $(f):$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/$(notdir $f)))
 
+$(foreach f,$(wildcard $(LOCAL_PATH)/permissions_product/*.xml),\
+    $(eval PRODUCT_COPY_FILES += $(f):$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/$(notdir $f)))
+
 # Get emulated storage settings
 #$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
