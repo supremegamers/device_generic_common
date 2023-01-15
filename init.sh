@@ -236,7 +236,14 @@ function init_hal_gralloc()
 
 function init_egl()
 {
-
+	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
+		*i915|*radeon|*nouveau|*amdgpu|*virtio_gpu)
+			;;
+		*)
+			export HWACCEL=0
+			;;
+	esac
+	
 	if [ "$HWACCEL" != "0" ]; then
 		if [ "$ANGLE" == "1" ]; then
 			set_property ro.hardware.egl angle
