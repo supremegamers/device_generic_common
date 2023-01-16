@@ -243,6 +243,7 @@ function init_egl()
 		else
 			set_property ro.hardware.egl mesa
 		fi
+		set_property ro.graphics.colors_swap true
 	else
 		if [ "$ANGLE" == "1" ]; then
 			set_property ro.hardware.egl angle
@@ -250,6 +251,7 @@ function init_egl()
 			set_property ro.hardware.egl swiftshader
 		fi
 		set_property ro.hardware.vulkan pastel
+		set_property ro.graphics.colors_swap false
 		start vendor.hwcomposer-2-1
 	fi
 
