@@ -17,7 +17,7 @@ BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
 #BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/generic/common/bluetooth
 BOARD_SEPOLICY_DIRS += system/bt/vendor_libs/linux/sepolicy
-
+BOARD_HAVE_BLUETOOTH_INTEL_ICNV := true
 BOARD_USE_LEGACY_UI := true
 
 # customize the malloced address to be 16-byte aligned
