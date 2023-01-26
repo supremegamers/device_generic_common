@@ -296,6 +296,11 @@ function init_hal_hwcomposer()
 
 function init_hal_media()
 {
+	# Check if we want to set codec2
+	if [ -n ${CODEC2_LEVEL+x} ]; then
+		set_property debug.stagefright.ccodec $CODEC2_LEVEL
+	fi
+
 	if [ "$FFMPEG_CODEC" -ge "1" ]; then
 	    set_property media.sf.omx-plugin libffmpeg_omx.so
     	set_property media.sf.extractor-plugin libffmpeg_extractor.so
