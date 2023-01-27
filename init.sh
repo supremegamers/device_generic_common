@@ -281,7 +281,9 @@ function init_egl()
 	fi
 
 	# Set default GPU render
-	if [ -n ${GPU_OVERRIDE+x} ]; then
+	if [ -z ${GPU_OVERRIDE+x} ]; then
+		echo ""
+	else
 		set_property gralloc.gbm.device /dev/dri/$GPU_OVERRIDE
 		set_property vendor.hwc.drm.device /dev/dri/$GPU_OVERRIDE
 		set_property hwc.drm.device /dev/dri/$GPU_OVERRIDE
@@ -306,7 +308,9 @@ function init_hal_hwcomposer()
 function init_hal_media()
 {
 	# Check if we want to set codec2
-	if [ -n ${CODEC2_LEVEL+x} ]; then
+	if [ -z ${CODEC2_LEVEL+x} ]; then
+		echo ""
+	else
 		set_property debug.stagefright.ccodec $CODEC2_LEVEL
 	fi
 
