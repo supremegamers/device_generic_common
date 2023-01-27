@@ -58,6 +58,11 @@ function init_misc()
 	##mgLRU tweak
     echo y > /sys/kernel/mm/lru_gen/enabled
     echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
+
+	#Auto activate XtMapper
+	env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
+	CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
+	/system/bin xtr.keymapper.server.InputService
 }
 
 function init_hal_audio()
