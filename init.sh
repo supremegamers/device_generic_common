@@ -193,7 +193,7 @@ function init_hal_gralloc()
 		*virtio_gpu)
 			HWC=${HWC:-drm_minigbm}
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
-			video=${video:-1280x768}
+			#video=${video:-1280x768}
 			;&
 		*i915|*radeon|*nouveau|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
