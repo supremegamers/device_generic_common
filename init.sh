@@ -301,6 +301,15 @@ function init_hal_hwcomposer()
 		else
 			set_property debug.sf.hwc_service_name default
 			start vendor.hwcomposer-2-4
+
+			if [[ "$HWC" == "drm_celadon" || "$HWC" == "drm_minigbm_celadon" ]]; then
+				set_property vendor.hwcomposer.planes.enabling $MULTI_PLANE
+				set_property vendor.hwcomposer.planes.num $MULTI_PLANE_NUM
+				set_property vendor.hwcomposer.preferred.mode.limit $HWC_PREFER_MODE
+				set_property vendor.hwcomposer.connector.id $CONNECTOR_ID
+				set_property vendor.hwcomposer.mode.id $MODE_ID
+				set_property vendor.hwcomposer.connector.multi_refresh_rate $MULTI_REFRESH_RATE
+			fi
 		fi
 	fi
 }
