@@ -71,7 +71,8 @@ PRODUCT_PACKAGES += \
     thermsys \
     thermal-daemon \
 	thermsys \
-	batsys
+	batsys \
+    usb_otg_switch
 
 # Stagefright FFMPEG plugins
 PRODUCT_PACKAGES += \
