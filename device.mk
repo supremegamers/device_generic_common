@@ -26,7 +26,7 @@ PRODUCT_PROPERTY_OVERRIDES := \
     persist.rtc_local_time=1 \
     bluetooth.rfkill=1 \
     dalvik.vm.useautofastjni=true \
-    debug.renderengine.backend=threaded
+    ro.surface_flinger.max_frame_buffer_acquired_buffers=3
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
@@ -62,6 +62,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/external_camera_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/external_camera_config.xml \
     $(LOCAL_PATH)/pciids/pci.ids:system/vendor/etc/pci.ids \
     $(LOCAL_PATH)/usbids/usb.ids:system/vendor/etc/usb.ids \
+    $(LOCAL_PATH)/fstab.internal.x86:system/vendor/etc/fstab.internal.x86 \
+    $(LOCAL_PATH)/init.configfs_x86.rc:root/init.configfs_x86.rc \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:system/etc/media_codecs_google_c2.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:system/etc/media_codecs_google_c2_audio.xml \
@@ -71,6 +73,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
+    frameworks/native/data/etc/android.hardware.camera.external.xml:system/etc/permissions/android.hardware.camera.external.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.camera.xml:system/etc/permissions/android.hardware.camera.xml \
@@ -135,6 +138,9 @@ PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
 $(foreach f,$(wildcard $(LOCAL_PATH)/permissions/*.xml),\
     $(eval PRODUCT_COPY_FILES += $(f):$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/$(notdir $f)))
 
+$(foreach f,$(wildcard $(LOCAL_PATH)/permissions_product/*.xml),\
+    $(eval PRODUCT_COPY_FILES += $(f):$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/$(notdir $f)))
+
 # Get emulated storage settings
 #$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
@@ -169,6 +175,12 @@ endif
 ifeq ($(USE_CROS_HOUDINI_NB),true)
 $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/houdini.mk)
 $(call inherit-product-if-exists, vendor/google/chromeos-x86/target/native_bridge_arm_on_x86.mk)
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
+endif
+
+ifeq ($(ANDROID_USE_NDK_TRANSLATION),true)
+$(call inherit-product-if-exists, vendor/google/proprietary/ndk_translation-prebuilt/libndk_translation.mk)
+$(call inherit-product-if-exists, vendor/google/proprietary/ndk_translation-prebuilt/native_bridge_arm_on_x86.mk)
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += persist.sys.nativebridge=1
 endif
 

@@ -1,4 +1,4 @@
-import /init.kokoro.rc
+import /init.configfs_x86.rc
 
 on early-init
     write /proc/sys/kernel/ctrl-alt-del 1
@@ -12,9 +12,6 @@ on early-init
     export VIRGL_DEBUG nocoherent
 #   export EGL_DRIVERS egl_dri2
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
-
-on early-init && property:mesa.gles.override=*
-    export MESA_GLES_VERSION_OVERRIDE ${mesa.gles.override}
 
 on early-init && property:mesa.loader.override=*
     export MESA_LOADER_DRIVER_OVERRIDE ${mesa.loader.override}

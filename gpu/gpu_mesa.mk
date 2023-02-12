@@ -9,7 +9,7 @@
 #
 
 PRODUCT_PACKAGES := \
-    hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
+    hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.drm_celadon hwcomposer.drm_minigbm_celadon \
     gralloc.minigbm_dmabuf gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
     gralloc.gbm gralloc.gbm_nohack gralloc.gbm_noscanout \
 	hwcomposer.cutf_cvm_ashmem hwcomposer.cutf_hwc2 hwcomposer-stats \
@@ -17,25 +17,16 @@ PRODUCT_PACKAGES := \
     libtxc_dxtn     \
     modetest \
     vulkan.intel \
+    vulkan.intel_hasvk \
     vulkan.radeon \
     vulkan.virtio \
     libEGL_angle \
     libGLESv1_CM_angle \
     libGLESv2_angle \
     libEGL_swiftshader \
-    libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
-    libvulkan_enc \
     vulkan.pastel \
-    libandroidemu \
-    libOpenglCodecCommon \
-    libOpenglSystemCommon \
-    libGLESv1_CM_emulation \
-    lib_renderControl_enc \
-    libEGL_emulation \
-    libGLESv2_enc \
-    libGLESv2_emulation \
-    libGLESv1_enc
+    vulkan.pastel_legacy \
 
 PRODUCT_PACKAGES += \
     libEGL_mesa \
@@ -50,9 +41,6 @@ PRODUCT_PACKAGES += \
     libgallium_drv_video \
     vainfo \
     amdgpu.ids
-
-PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version = 196608
 
 PRODUCT_VENDOR_PROPERTIES += \
     debug.angle.feature_overrides_enabled=preferLinearFilterForYUV

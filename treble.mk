@@ -28,14 +28,16 @@ PRODUCT_PACKAGES += \
 # Bluetooth HAL
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-service.vbt \
+    android.hardware.bluetooth.audio@2.1-impl \
 #    android.hardware.bluetooth@1.1-service.btlinux \
-#    android.hardware.bluetooth.audio@2.1-impl \
-#	android.hardware.bluetooth@1.0-impl \
 
 
 # Camera HAL
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.5-external-service
+    android.hardware.camera.provider@2.4-external-service \
+	android.hardware.camera.provider@2.4-service_64 \
+	android.hardware.camera.provider@2.4-impl \
+    camera.x86
 
 # Media codec
 PRODUCT_PACKAGES += \
@@ -54,7 +56,7 @@ PRODUCT_PACKAGES += \
 
 # Health HAL
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.1-impl \
+    android.hardware.health@2.1-impl-intel \
     android.hardware.health@2.1-service
 
 # Keymaster HAL
@@ -89,7 +91,8 @@ PRODUCT_PACKAGES += \
 # USB HAL
 PRODUCT_PACKAGES += \
     android.hardware.usb@1.0-impl \
-    android.hardware.usb@1.0-service
+    android.hardware.usb@1.0-service \
+    com.android.future.usb.accessory
 
 # Drm HAL
 PRODUCT_PACKAGES += \

@@ -4,14 +4,14 @@
 
 TARGET_BOARD_PLATFORM := android-x86
 
-## Switch to EROFS image instead of Squashfs
-USE_SQUASHFS := 0
-USE_EROFS := 1
+## Use EROFS image or SquashFS
+USE_SQUASHFS := 1
+USE_EROFS := 0
 
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/generic/common/bluetooth
+#BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/generic/common/bluetooth
 BOARD_SEPOLICY_DIRS += system/bt/vendor_libs/linux/sepolicy
 
 BOARD_USE_LEGACY_UI := true
@@ -128,3 +128,8 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 #endif
 
 STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE
+
+# Properties
+BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
+

@@ -24,16 +24,6 @@ function rmmod_if_exist()
 
 function init_misc()
 {
-	# device information
-	VENDOR=$(cat $DMIPATH/sys_vendor)
-	setprop ro.product.vendor.manufacturer "$(cat $DMIPATH/board_vendor)"
-	if [ -z "$VENDOR" ]; then setprop ro.product.vendor.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.vendor.brand "$VENDOR"; fi
-	if [ -z "$PRODUCT" ]; then setprop ro.product.vendor.model "$BOARD"; else setprop ro.product.vendor.model "$PRODUCT"; fi
-	setprop ro.product.bliss.manufacturer "$(cat $DMIPATH/board_vendor)"
-	if [ -z "$VENDOR" ]; then setprop ro.product.bliss.brand "$(cat $DMIPATH/board_vendor)"; else setprop ro.product.bliss.brand "$VENDOR"; fi
-	if [ -z "$PRODUCT" ]; then setprop ro.product.bliss.model "$BOARD"; else setprop ro.product.bliss.model "$PRODUCT"; fi
-	setprop ro.serialno "$(cat $DMIPATH/product_serial)"
-
 	# a hack for USB modem
 	lsusb | grep 1a8d:1000 && eject
 
@@ -68,6 +58,13 @@ function init_misc()
 	##mgLRU tweak
     echo y > /sys/kernel/mm/lru_gen/enabled
     echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
+
+	##WIP: Enable USB as device support
+    modprobe roles
+    modprobe xhci-hcd
+    modprobe xhci-pci
+    modprobe dwc3
+    modprobe dwc3-pci
 }
 
 function init_hal_audio()
@@ -202,9 +199,9 @@ function init_hal_gralloc()
 		*virtio_gpu)
 			HWC=${HWC:-drm_minigbm}
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
-			video=${video:-1280x768}
+			#video=${video:-1280x768}
 			;&
-		*i915|*radeon|*nouveau|*vmwgfx|*amdgpu)
+		*i915|*radeon|*nouveau|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
@@ -215,6 +212,7 @@ function init_hal_gralloc()
 			init_uvesafb
 			;&
 		*)
+			export HWACCEL=0
 			;;
 	esac
 
@@ -247,18 +245,56 @@ function init_egl()
 {
 
 	if [ "$HWACCEL" != "0" ]; then
-		set_property ro.hardware.egl mesa
-	else
-		if [ "$SWANGLE" == "1" ]; then
+		if [ "$ANGLE" == "1" ]; then
 			set_property ro.hardware.egl angle
-			set_property ro.hardware.vulkan pastel
-			set_property ro.cpuvulkan.version 4198400
 		else
-		start vendor.hwcomposer-2-1
-		set_property ro.hardware.egl swiftshader
-		set_property ro.hardware.vulkan pastel
+			set_property ro.hardware.egl mesa
 		fi
+	else
+		if [ "$ANGLE" == "1" ]; then
+			set_property ro.hardware.egl angle
+		else
+			set_property ro.hardware.egl swiftshader
+		fi
+		set_property ro.hardware.vulkan pastel
+		start vendor.hwcomposer-2-1
 	fi
+
+	# Set OpenGLES version
+	case "$FORCE_GLES" in
+        *3.0*)
+    	    set_property ro.opengles.version 196608
+            export MESA_GLES_VERSION_OVERRIDE=3.0
+		;;
+		*3.1*)
+    		set_property ro.opengles.version 196609
+			export MESA_GLES_VERSION_OVERRIDE=3.1
+		;;
+		*3.2*)
+    		set_property ro.opengles.version 196610
+			export MESA_GLES_VERSION_OVERRIDE=3.2
+		;;
+		*)
+    		set_property ro.opengles.version 196608
+		;;
+	esac
+
+	# Set RenderEngine backend
+	if [ -z ${FORCE_RENDERENGINE+x} ]; then
+		set_property debug.renderengine.backend threaded
+	else
+		set_property debug.renderengine.backend $FORCE_RENDERENGINE
+	fi
+
+	# Set default GPU render
+	if [ -z ${GPU_OVERRIDE+x} ]; then
+		echo ""
+	else
+		set_property gralloc.gbm.device /dev/dri/$GPU_OVERRIDE
+		set_property vendor.hwc.drm.device /dev/dri/$GPU_OVERRIDE
+		set_property hwc.drm.device /dev/dri/$GPU_OVERRIDE
+	fi
+
 }
 
 function init_hal_hwcomposer()
@@ -271,29 +307,62 @@ function init_hal_hwcomposer()
 		else
 			set_property debug.sf.hwc_service_name default
 			start vendor.hwcomposer-2-4
+
+			if [[ "$HWC" == "drm_celadon" || "$HWC" == "drm_minigbm_celadon" ]]; then
+				set_property vendor.hwcomposer.planes.enabling $MULTI_PLANE
+				set_property vendor.hwcomposer.planes.num $MULTI_PLANE_NUM
+				set_property vendor.hwcomposer.preferred.mode.limit $HWC_PREFER_MODE
+				set_property vendor.hwcomposer.connector.id $CONNECTOR_ID
+				set_property vendor.hwcomposer.mode.id $MODE_ID
+				set_property vendor.hwcomposer.connector.multi_refresh_rate $MULTI_REFRESH_RATE
+			fi
 		fi
 	fi
 }
 
 function init_hal_media()
 {
+	# Check if we want to set codec2
+	if [ -z ${CODEC2_LEVEL+x} ]; then
+		echo ""
+	else
+		set_property debug.stagefright.ccodec $CODEC2_LEVEL
+	fi
+
 	if [ "$FFMPEG_CODEC" -ge "1" ]; then
 	    set_property media.sf.omx-plugin libffmpeg_omx.so
     	set_property media.sf.extractor-plugin libffmpeg_extractor.so
 	    set_property media.sf.hwaccel 1
+		start android-hardware-media-c2-hal-1-2
+		if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
+			set_property media.sf.hwaccel 0
+		else
+			set_property media.sf.hwaccel 1
+		fi
+		if [ "$FFMPEG_OMX_DISABLE" -ge "1" ]; then
+			set_property debug.ffmpeg-omx.disable 1
+		else
+			set_property debug.ffmpeg-omx.disable 0
+		fi
 		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
 			set_property debug.ffmpeg.loglevel verbose
 		fi
 		if [ "$FFMPEG_PREFER_C2" -ge "1" ]; then
 			set_property debug.ffmpeg-codec2.rank 0
 		else
-			set_property debug.ffmpeg-codec2.rank 4294967295		
+			set_property debug.ffmpeg-codec2.rank 4294967295
 		fi
 	else
 		set_property debug.ffmpeg-codec2.rank 4294967295
 	    set_property media.sf.omx-plugin ""
     	set_property media.sf.extractor-plugin ""
-	    set_property media.sf.hwaccel 0
+	    set_property debug.ffmpeg-omx.disable 0
+	fi
+
+	if [ "$NO_YUV420" -ge "1" ]; then
+		set_property ro.yuv420.disable true
+	else
+		set_property ro.yuv420.disable false
 	fi
 }
 
@@ -301,7 +370,7 @@ function init_hal_vulkan()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
 		*i915)
-			if [ "$INTEL_HASVK" -ge "1" ]; then
+			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen' -e 'graphics version' | awk '{print $NF}')" -lt 9 ]; then
 				set_property ro.hardware.vulkan intel_hasvk
 			else
 				set_property ro.hardware.vulkan intel
@@ -727,6 +796,11 @@ function do_bootcomplete()
 		done
 		touch /data/vendor/post_inst_complete
 	fi
+
+	#Auto activate XtMapper
+	env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
+	CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
+	/system/bin xtr.keymapper.server.InputService
 
 	post_bootcomplete
 }
