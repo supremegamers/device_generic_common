@@ -14,8 +14,5 @@ if [[ $changed_device != $hidraw_device ]]; then
     setprop persist.ipts.device $changed_device
     start iptsd
     sleep 2
-else
-    echo "the device stayed the same"
-    sleep 2
 fi
 done

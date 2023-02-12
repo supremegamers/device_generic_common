@@ -492,17 +492,39 @@ function init_hal_sensors()
 		has_sensors=true
 	fi
 	
-	# TODO close Surface Pro 4 sensor until bugfix 
-	case "$(cat $DMIPATH/uevent)" in 
-		*SurfacePro4*) 
-		  hal_sensors=kbd 
-		  ;; 
-		*) 
-		  ;; 
-	esac
-
 	set_property ro.hardware.sensors $hal_sensors
 	set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
+}
+
+function init_hal_surface()
+{
+	case "$UEVENT" in
+		*Surface*Pro*4*|*Surface*Pro*5*|*Surface*Pro*6*|*Surface*Book*|*Surface*Laptop*1*|*Surface*Laptop*2*|*Surface*Laptop*3*)
+			rmmod_if_exist ipts
+			rmmod_if_exist ithc
+			modprobe ipts
+			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
+			;;
+		*Surface*Pro*7*)
+			if [ "$UEVENT" = *Surface*Pro*7*+* ]; then
+				rmmod_if_exist ipts
+				rmmod_if_exist ithc
+				modprobe ithc
+				nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
+			else
+			rmmod_if_exist ipts
+			rmmod_if_exist ithc
+			modprobe ipts
+			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
+			fi
+			;;
+		*Surface*Pro*8*|*Surface*Pro*9*|*Surface*Laptop*4*|*Surface*Laptop*Studio*)
+			rmmod_if_exist ipts
+			rmmod_if_exist ithc
+			modprobe ithc
+			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
+			;;
+	esac
 }
 
 function create_pointercal()
@@ -598,6 +620,7 @@ function do_init()
 	init_hal_power
 	init_hal_thermal
 	init_hal_sensors
+	init_hal_surface
 	init_tscal
 	init_ril
 	post_init
