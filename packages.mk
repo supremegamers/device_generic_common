@@ -70,13 +70,15 @@ PRODUCT_PACKAGES += \
     hcitool \
     thermsys \
     thermal-daemon \
+	thermsys \
+	batsys \
+    usb_otg_switch
 
 # Stagefright FFMPEG plugins
 PRODUCT_PACKAGES += \
     libffmpeg_extractor \
     libffmpeg_omx \
-    media_codecs_ffmpeg.xml \
-    android.hardware.media.c2@1.1-ffmpeg-service
+    media_codecs_ffmpeg.xml
 
 # Third party apps
 PRODUCT_PACKAGES += \
@@ -129,3 +131,9 @@ PRODUCT_PACKAGES += hidrawcheck iptsd iptsd-find-hidraw
 PRODUCT_PACKAGES += \
     libaptX_encoder \
     libaptXHD_encoder
+
+## Enable hidden features on Android
+PRODUCT_PACKAGES += \
+	pc.xml \
+	hpe.xml \
+	device.prop

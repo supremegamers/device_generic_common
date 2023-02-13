@@ -4,6 +4,10 @@
 
 TARGET_BOARD_PLATFORM := android-x86
 
+## Use EROFS image or SquashFS
+USE_SQUASHFS := 1
+USE_EROFS := 0
+
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
@@ -85,8 +89,9 @@ endif
 
 BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
+BOARD_MESA3D_BUILD_LIBGBM := true
 BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl
-BOARD_MESA3D_VULKAN_DRIVERS := amd intel virtio-experimental
+BOARD_MESA3D_VULKAN_DRIVERS := amd intel intel_hasvk virtio-experimental
 BUILD_EMULATOR_OPENGL := true
 
 BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
@@ -103,11 +108,12 @@ BOARD_SEPOLICY_DIRS += device/generic/common/sepolicy/nonplat \
                        device/generic/common/sepolicy/celadon/graphics/mesa \
                        device/generic/common/sepolicy/celadon/thermal \
                        vendor/intel/proprietary/houdini/sepolicy \
+                       vendor/google/proprietary/widevine-prebuilt/sepolicy
 
 BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
 
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
-BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 41000000
+BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 42000000
 BOARD_USES_OEMIMAGE := true
 BUILD_BROKEN_USES_NETWORK := true
 USE_XML_AUDIO_POLICY_CONF := 1
@@ -121,3 +127,8 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 #endif
 
 STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE
+
+# Properties
+BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
+

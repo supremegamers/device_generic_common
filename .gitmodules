@@ -3,7 +3,7 @@
 	url = https://github.com/pciutils/pciids
 [submodule "usbids"]
 	path = usbids
-	url = https://github.com/usbids/usbids
+	url = https://github.com/supremegamers/usbids
 [submodule "iptsd"]
 	path = iptsd
 	url = https://github.com/hmtheboy154/iptsd

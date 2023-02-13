@@ -15,10 +15,12 @@ ifeq ($(TARGET_PREBUILT_KERNEL),)
 ifneq ($(filter x86%,$(TARGET_ARCH)),)
 
 KERNEL_DIR ?= kernel
+FIRMWARE_DIR := device/generic/firmware
+COPY_FIRMWARE_SCRIPT := $(FIRMWARE_DIR)/copy-firmware.sh
 
 TARGET_KERNEL_ARCH := $(TARGET_ARCH)
 KERNEL_TARGET := bzImage
-TARGET_KERNEL_CONFIG ?= android-$(TARGET_KERNEL_ARCH)_defconfig
+TARGET_KERNEL_CONFIG ?= android-$(TARGET_KERNEL_ARCH)_11_defconfig
 KERNEL_CONFIG_DIR := arch/x86/configs
 
 ifeq ($(TARGET_KERNEL_ARCH),x86_64)
@@ -78,6 +80,7 @@ $(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE) $(M4) $(LEX) $(BISON)
 	# A dirty hack to use ar & ld
 	$(mk_kernel) olddefconfig
 	$(mk_kernel) $(KERNEL_TARGET) $(if $(MOD_ENABLED),modules)
+	$(COPY_FIRMWARE_SCRIPT) -v $(abspath $(TARGET_OUT))/lib/firmware
 	$(if $(FIRMWARE_ENABLED),$(mk_kernel) INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) firmware_install)
 
 ifneq ($(MOD_ENABLED),)

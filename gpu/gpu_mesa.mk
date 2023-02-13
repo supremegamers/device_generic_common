@@ -9,14 +9,15 @@
 #
 
 PRODUCT_PACKAGES := \
-    hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.intel \
-    gralloc.gbm gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
-    gralloc.minigbm_dmabuf \
+    hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.drm_celadon hwcomposer.drm_minigbm_celadon \
+    gralloc.minigbm_dmabuf gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
+    gralloc.gbm gralloc.gbm_nohack gralloc.gbm_noscanout \
 	hwcomposer.cutf_cvm_ashmem hwcomposer.cutf_hwc2 hwcomposer-stats \
     libGLES_mesa    \
     libtxc_dxtn     \
     modetest \
     vulkan.intel \
+    vulkan.intel_hasvk \
     vulkan.radeon \
     vulkan.virtio \
     libEGL_angle \
@@ -25,19 +26,8 @@ PRODUCT_PACKAGES := \
     libEGL_swiftshader \
     libGLESv1_CM_swiftshader \
     libGLESv2_swiftshader \
-    vulkan.ranchu \
-    libvulkan_enc \
     vulkan.pastel \
-    hwcomposer.ranchu \
-    libandroidemu \
-    libOpenglCodecCommon \
-    libOpenglSystemCommon \
-    libGLESv1_CM_emulation \
-    lib_renderControl_enc \
-    libEGL_emulation \
-    libGLESv2_enc \
-    libGLESv2_emulation \
-    libGLESv1_enc
+    vulkan.pastel_legacy \
 
 PRODUCT_PACKAGES += \
     libEGL_mesa \
@@ -50,10 +40,8 @@ PRODUCT_PACKAGES += \
     crocus_drv_video \
     iHD_drv_video \
     libgallium_drv_video \
-    vainfo
-
-PRODUCT_PROPERTY_OVERRIDES := \
-    ro.opengles.version = 196608
+    vainfo \
+    amdgpu.ids
 
 PRODUCT_VENDOR_PROPERTIES += \
     debug.angle.feature_overrides_enabled=preferLinearFilterForYUV
@@ -70,5 +58,5 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:system/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version.xml \
-    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml
-    
+    frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute.xml \
+    frameworks/native/data/etc/android.software.vulkan.deqp.level-2020-03-01.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.vulkan.deqp.level.xml

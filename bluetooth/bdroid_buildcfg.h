@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android-x86 Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,23 +23,26 @@
 #define HCILP_INCLUDED                 FALSE
 #define KERNEL_MISSING_CLOCK_BOOTTIME_ALARM TRUE
 
-// Disable HFP on Tablet (0x00000040) / only enable HSP (0x00000020)
-#define BTIF_HF_SERVICES 0x00000020
+/* Default class of device
+* {SERVICE_CLASS, MAJOR_CLASS, MINOR_CLASS}
+*
+* SERVICE_CLASS:0x1A (Bit17 -Networking,Bit19 - Capturing,Bit20 -Object Transfer)
+* MAJOR_CLASS:0x01 - COMPUTER
+* MINOR_CLASS:0x1C - TABLET
+*/
 
-/* Default Bluetooth Class of Device/Service:
- * MAJOR_SERVICE:0x1A - Networking / Capturing / Object Transfer
- * MAJOR_CLASS:0x01 - Computer
- * MINOR_CLASS:0x14 - Palm sized PC/PDA
- */
-#define BTA_DM_COD {0x1A, 0x01, 0x14}
+
+#define BTA_DM_COD {0x1A, 0x01, 0x1C}
+
+#define PRELOAD_MAX_RETRY_ATTEMPTS 1
 
 /* Enable Interleave scan on Intel Controller */
 #define BTA_HOST_INTERLEAVE_SEARCH    TRUE
 
-/* Framework BT ON timeout is about 8s.
- * We can retry one time if internal bluedroid timeout is 3500ms.
- */
 #define PRELOAD_START_TIMEOUT_MS 3500
-#define PRELOAD_MAX_RETRY_ATTEMPTS 1
+
+#define BLE_VND_INCLUDED FALSE
+
+#define BTM_SSR_INCLUDED FALSE
 
 #endif
