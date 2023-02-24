@@ -58,6 +58,13 @@ function init_misc()
 	##mgLRU tweak
     echo y > /sys/kernel/mm/lru_gen/enabled
     echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
+
+	##WIP: Enable USB as device support
+    modprobe roles
+    modprobe xhci-hcd
+    modprobe xhci-pci
+    modprobe dwc3
+    modprobe dwc3-pci
 }
 
 function init_hal_audio()
@@ -192,7 +199,7 @@ function init_hal_gralloc()
 		*virtio_gpu)
 			HWC=${HWC:-drm_minigbm}
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
-			video=${video:-1280x768}
+			#video=${video:-1280x768}
 			;&
 		*i915|*radeon|*nouveau|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
@@ -278,6 +285,16 @@ function init_egl()
 	else
 		set_property debug.renderengine.backend $FORCE_RENDERENGINE
 	fi
+
+	# Set default GPU render
+	if [ -z ${GPU_OVERRIDE+x} ]; then
+		echo ""
+	else
+		set_property gralloc.gbm.device /dev/dri/$GPU_OVERRIDE
+		set_property vendor.hwc.drm.device /dev/dri/$GPU_OVERRIDE
+		set_property hwc.drm.device /dev/dri/$GPU_OVERRIDE
+	fi
+
 }
 
 function init_hal_hwcomposer()
@@ -290,12 +307,28 @@ function init_hal_hwcomposer()
 		else
 			set_property debug.sf.hwc_service_name default
 			start vendor.hwcomposer-2-4
+
+			if [[ "$HWC" == "drm_celadon" || "$HWC" == "drm_minigbm_celadon" ]]; then
+				set_property vendor.hwcomposer.planes.enabling $MULTI_PLANE
+				set_property vendor.hwcomposer.planes.num $MULTI_PLANE_NUM
+				set_property vendor.hwcomposer.preferred.mode.limit $HWC_PREFER_MODE
+				set_property vendor.hwcomposer.connector.id $CONNECTOR_ID
+				set_property vendor.hwcomposer.mode.id $MODE_ID
+				set_property vendor.hwcomposer.connector.multi_refresh_rate $MULTI_REFRESH_RATE
+			fi
 		fi
 	fi
 }
 
 function init_hal_media()
 {
+	# Check if we want to set codec2
+	if [ -z ${CODEC2_LEVEL+x} ]; then
+		echo ""
+	else
+		set_property debug.stagefright.ccodec $CODEC2_LEVEL
+	fi
+
 	if [ "$FFMPEG_CODEC" -ge "1" ]; then
 	    set_property media.sf.omx-plugin libffmpeg_omx.so
     	set_property media.sf.extractor-plugin libffmpeg_extractor.so
@@ -740,6 +773,11 @@ function do_bootcomplete()
 		done
 		touch /data/vendor/post_inst_complete
 	fi
+
+	#Auto activate XtMapper
+	env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
+	CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
+	/system/bin xtr.keymapper.server.InputService
 
 	post_bootcomplete
 }

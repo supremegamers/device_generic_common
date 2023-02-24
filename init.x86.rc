@@ -1,4 +1,4 @@
-import /init.kokoro.rc
+import /init.configfs_x86.rc
 
 on early-init
     write /proc/sys/kernel/ctrl-alt-del 1
