@@ -39,6 +39,9 @@ on post-fs
     chown system system /dev/ion
 
 on post-fs-data
+    # HACK: Temporary remove dGPU node. We will have a better solution for hybrid laptop later
+    rm /dev/dri/card1
+	rm /dev/dri/renderD129
     # Create the directories used by the Wireless subsystem
     mkdir /data/vendor/wifi 0771 wifi wifi
     mkdir /data/vendor/wifi/wpa 0770 wifi wifi
