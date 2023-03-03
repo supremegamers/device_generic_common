@@ -568,29 +568,7 @@ function init_hal_sensors()
 function init_hal_surface()
 {
 	case "$UEVENT" in
-		*Surface*Pro*4*|*Surface*Pro*5*|*Surface*Pro*6*|*Surface*Book*|*Surface*Laptop*1*|*Surface*Laptop*2*|*Surface*Laptop*3*)
-			rmmod_if_exist ipts
-			rmmod_if_exist ithc
-			modprobe ipts
-			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
-			;;
-		*Surface*Pro*7*)
-			if [ "$UEVENT" = *Surface*Pro*7*+* ]; then
-				rmmod_if_exist ipts
-				rmmod_if_exist ithc
-				modprobe ithc
-				nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
-			else
-			rmmod_if_exist ipts
-			rmmod_if_exist ithc
-			modprobe ipts
-			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
-			fi
-			;;
-		*Surface*Pro*8*|*Surface*Pro*9*|*Surface*Laptop*4*|*Surface*Laptop*Studio*)
-			rmmod_if_exist ipts
-			rmmod_if_exist ithc
-			modprobe ithc
+		*Surface*Pro*[4-9]*|*Surface*Book*|*Surface*Laptop*[1~4]*|*Surface*Laptop*Studio*)
 			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
 			;;
 	esac
