@@ -123,7 +123,6 @@ DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Enforce privapp-permissions whitelist
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.control_privapp_permissions=log \
     ro.sys.sdcardfs=false \
     persist.sys.sdcardfs=force_off
 
