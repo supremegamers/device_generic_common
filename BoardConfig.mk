@@ -131,4 +131,5 @@ STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE
 # Properties
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
+TARGET_SYSTEM_PROP += device/generic/common/system.prop
 
