@@ -188,8 +188,8 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
-# Inherit common Bliss stuff
-$(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet.mk)
+# Inherit common LMODroid stuff
+$(call inherit-product-if-exists,vendor/lmodroid/config/common_full_tablet_wifionly.mk)
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
