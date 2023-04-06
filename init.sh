@@ -788,6 +788,9 @@ for c in `cat /proc/cmdline`; do
 					SET_SF_ROTATION=*)
 						set_property ro.sf.hwrotation "$SET_SF_ROTATION"
 						;;
+					SET_OVERRIDE_FORCED_ORIENT=*)
+						set_property config.override_forced_orient "$SET_OVERRIDE_FORCED_ORIENT"
+						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
