@@ -791,6 +791,13 @@ for c in `cat /proc/cmdline`; do
 					SET_OVERRIDE_FORCED_ORIENT=*)
 						set_property config.override_forced_orient "$SET_OVERRIDE_FORCED_ORIENT"
 						;;
+					SET_SYS_APP_ROTATION=*)
+						# property: persist.sys.app.rotation has three cases:
+						# 1.force_land: always show with landscape, if a portrait apk, system will scale up it
+						# 2.middle_port: if a portrait apk, will show in the middle of the screen, left and right will show black
+						# 3.original: original orientation, if a portrait apk, will rotate 270 degree
+						set_property persist.sys.app.rotation "$SET_SYS_APP_ROTATION"
+						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
