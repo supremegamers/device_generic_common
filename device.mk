@@ -30,15 +30,10 @@ PRODUCT_PROPERTY_OVERRIDES := \
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.lmk.low=1001 \
-    ro.lmk.medium=800 \
-    ro.lmk.critical=0 \
-    ro.lmk.critical_upgrade=false \
-    ro.lmk.upgrade_pressure=100 \
-    ro.lmk.downgrade_pressure=100 \
-    ro.lmk.kill_heaviest_task=true \
-    ro.lmk.kill_timeout_ms=100 \
-    ro.lmk.use_minfree_levels=true
+    ro.lmk.critical_upgrade=true \
+    ro.lmk.use_minfree_levels=true \
+    ro.lmk.use_psi=true \
+    ro.lmk.use_new_strategy=false
 
 PRODUCT_COPY_FILES := \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR)init.rc:root/init.rc) \
