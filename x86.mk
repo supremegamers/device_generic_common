@@ -30,4 +30,9 @@ $(call inherit-product,$(SRC_TARGET_DIR)/product/languages_full.mk)
 $(call inherit-product,$(SRC_TARGET_DIR)/product/generic.mk)
 
 # Get some sounds
+
+ifeq ($(IS_GO_VERSION),true)
+$(call inherit-product-if-exists, frameworks/base/data/sounds/AudioPackageGo.mk)
+else
 $(call inherit-product-if-exists,frameworks/base/data/sounds/AudioPackage6.mk)
+endif

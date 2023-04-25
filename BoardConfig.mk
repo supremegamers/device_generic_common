@@ -139,6 +139,11 @@ BOARD_KERNEL_CMDLINE += intel_idle.max_cstate=2 cstate=1 tsc=reliable force_tsc_
 
 endif
 
+ifeq ($(IS_GO_VERSION), true)
+# SVELTE
+MALLOC_SVELTE := true
+endif
+
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true
 ZIP_OPTIMIZATION_NO_INTEGRITY := true

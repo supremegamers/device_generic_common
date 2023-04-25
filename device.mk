@@ -55,11 +55,13 @@ PRODUCT_PROPERTY_OVERRIDES := \
     persist.device_config.mglru_native.lru_gen_config=all
 
 # LMKd
+ifneq ($(IS_GO_VERSION),true)
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.lmk.critical_upgrade=true \
     ro.lmk.use_minfree_levels=true \
     ro.lmk.use_psi=true \
     ro.lmk.use_new_strategy=false
+endif
 
 PRODUCT_COPY_FILES := \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR)init.rc:root/init.rc) \
@@ -221,13 +223,24 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
 # Inherit common Bliss stuff
+ifeq ($(IS_GO_VERSION),true)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet.mk)
+else
+$(call inherit-product-if-exists,vendor/bliss/config/common_mini.mk)
+endif
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
 ##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
 #BLISS_BUILD_VARIANT := foss
 WITH_SU := false
+
+ifeq ($(IS_GO_VERSION),true)
+# Inherit common Android Go configurations
+$(call inherit-product, build/target/product/go_defaults.mk)
+PRODUCT_TYPE := go
+DONT_UNCOMPRESS_PRIV_APPS_DEXS := true
+endif
 
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
