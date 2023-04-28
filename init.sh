@@ -821,6 +821,17 @@ for c in `cat /proc/cmdline`; do
 						# 3.original: original orientation, if a portrait apk, will rotate 270 degree
 						set_property persist.sys.app.rotation "$SET_SYS_APP_ROTATION"
 						;;
+					# Battery Stats
+					SET_FAKE_BATTERY_LEVEL=*)
+						# Let us fake the total battery percentage
+						# Range: 0-100
+						dumpsys battery set level "$SET_FAKE_BATTERY_LEVEL"
+						;;
+					SET_FAKE_CHARGING_STATUS=*)
+						# Allow forcing battery charging status
+						# Off: 0  On: 1
+						dumpsys battery set ac "$SET_FAKE_CHARGING_STATUS"
+						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
