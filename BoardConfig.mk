@@ -4,9 +4,9 @@
 
 TARGET_BOARD_PLATFORM := android-x86
 
-## Use EROFS image or SquashFS
-USE_SQUASHFS := 1
-USE_EROFS := 0
+## Switch to EROFS image instead of Squashfs
+USE_SQUASHFS := 0
+USE_EROFS := 1
 
 # Architecture
 TARGET_CPU_VARIANT := generic
