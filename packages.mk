@@ -17,21 +17,12 @@
 # Common packages for Android-x86 platform.
 
 PRODUCT_PACKAGES := \
-    Taskbar \
-    chat \
     com.android.future.usb.accessory \
     drmserver \
-    eject \
     gps.default \
     gps.huawei \
-    hwcomposer.x86 \
-    icu.dat \
     io_switch \
-    libGLES_android \
-    libhuaweigeneric-ril \
     lights.default \
-    make_ext4fs \
-    parted \
     rtk_hciattach \
     scp \
     sftp \
@@ -43,10 +34,8 @@ PRODUCT_PACKAGES := \
 
 PRODUCT_PACKAGES += \
     libwpa_client \
-    hostapd \
     wificond \
     wpa_supplicant \
-    wpa_supplicant.conf \
 
 PRODUCT_PACKAGES += \
     badblocks \
@@ -56,10 +45,6 @@ PRODUCT_PACKAGES += \
     mke2fs \
     make_f2fs \
     mkfs.exfat \
-    mkntfs \
-    mount.exfat \
-    ntfs-3g \
-    ntfsfix \
     resize2fs \
     tune2fs \
 
@@ -68,7 +53,6 @@ PRODUCT_PACKAGES += \
 	btmon \
     hciconfig \
     hcitool \
-    thermsys \
     thermal-daemon \
     usb_otg_switch
 
@@ -80,12 +64,9 @@ PRODUCT_PACKAGES += \
 
 # Third party apps
 PRODUCT_PACKAGES += \
-    Eleven \
     TSCalibration2 \
-    native_bridge_stub_library_defaults \
     libnativebridge-headers \
     libnativeloader-headers \
-    libqemupipe \
     libandroidemu
 
 PRODUCT_HOST_PACKAGES, += \
@@ -114,18 +95,10 @@ PRODUCT_HOST_PACKAGES := \
 #
 PRODUCT_PACKAGES += \
     ip \
-    sleep \
     tcpdump \
     libbt-vendor \
     iw \
-    iw_vendor \
-    iw_common \
-    external_iw_license
-
-# aptX/aptX HD encoders
-PRODUCT_PACKAGES += \
-    libaptX_encoder \
-    libaptXHD_encoder
+    iw_vendor
 
 ## Enable hidden features on Android
 PRODUCT_PACKAGES += \

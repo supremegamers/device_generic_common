@@ -12,7 +12,6 @@ PRODUCT_PACKAGES := \
     hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.drm_celadon hwcomposer.drm_minigbm_celadon \
     gralloc.minigbm_dmabuf gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
     gralloc.gbm gralloc.gbm_nohack gralloc.gbm_noscanout \
-	hwcomposer.cutf_cvm_ashmem hwcomposer.cutf_hwc2 hwcomposer-stats \
     libGLES_mesa    \
     libtxc_dxtn     \
     modetest \
@@ -29,13 +28,10 @@ PRODUCT_PACKAGES := \
     vulkan.pastel_legacy \
 
 PRODUCT_PACKAGES += \
-    libEGL_mesa \
-    libGLESv1_CM_mesa \
-    libGLESv2_mesa \
+    libGLES_mesa \
     libgallium_dri \
     libglapi \
     libgbm_mesa_wrapper \
-    i965_drv_video \
     crocus_drv_video \
     iHD_drv_video \
     libgallium_drv_video \

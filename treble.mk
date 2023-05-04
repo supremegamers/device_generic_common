@@ -12,8 +12,6 @@ PRODUCT_PACKAGES += \
 
 # HWComposer HAL
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.composer@2.1-impl \
-    android.hardware.graphics.composer@2.4-impl \
     android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.composer@2.4-service \
     android.hardware.graphics.composer@2.1-drmfb-service
@@ -41,13 +39,11 @@ PRODUCT_PACKAGES += \
 
 # Media codec
 PRODUCT_PACKAGES += \
-    android.hardware.media.c2@1.1-service \
     android.hardware.media.c2@1.2-ffmpeg-service \
     android.hardware.media.omx@1.0-service
 
 # DumpState HAL
 PRODUCT_PACKAGES += \
-    android.hardware.dumpstate@1.0-impl \
     android.hardware.dumpstate@1.0-service.example
 
 # Gatekeeper HAL
@@ -90,7 +86,6 @@ PRODUCT_PACKAGES += \
 
 # USB HAL
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-impl \
     android.hardware.usb@1.0-service \
     com.android.future.usb.accessory
 

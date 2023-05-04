@@ -613,16 +613,7 @@ function init_tscal()
 
 function init_ril()
 {
-	case "$UEVENT" in
-		*TEGA*|*2010:svnIntel:*|*Lucid-MWE*)
-			set_property rild.libpath /system/lib/libhuaweigeneric-ril.so
-			set_property rild.libargs "-d /dev/ttyUSB2 -v /dev/ttyUSB1"
-			set_property ro.radio.noril no
-			;;
-		*)
-			set_property ro.radio.noril yes
-			;;
-	esac
+	set_property ro.radio.noril yes
 }
 
 function init_cpu_governor()
