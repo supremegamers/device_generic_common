@@ -764,13 +764,17 @@ function do_bootcomplete()
 
 	POST_INST=/data/vendor/post_inst_complete
 	USER_APPS=/system/etc/user_app/*
+	BUILD_DATETIME=$(getprop ro.build.date.utc)
+	POST_INST_NUM=$(cat $POST_INST)
 
-	if [ ! -f "$POST_INST" ]; then
+	if [ ! "$BUILD_DATETIME" == "$POST_INST_NUM" ]; then
 		for apk in $USER_APPS
 		do		
 			pm install $apk
 		done
-		touch /data/vendor/post_inst_complete
+		rm "$POST_INST"
+		touch "$POST_INST"
+		echo $BUILD_DATETIME > "$POST_INST"
 	fi
 
 	#Auto activate XtMapper
