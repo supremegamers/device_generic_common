@@ -201,7 +201,10 @@ function init_hal_gralloc()
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			#video=${video:-1280x768}
 			;&
-		*i915|*radeon|*nouveau|*amdgpu)
+		*nouveau)
+			GRALLOC=${GRALLOC:-gbm_hack}
+			;&
+		*i915|*radeon|*amdgpu)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
@@ -358,7 +361,7 @@ function init_hal_media()
 	    set_property debug.ffmpeg-omx.disable 0
 	fi
 
-	if [ "$NO_YUV420" -ge "1" ]; then
+	if [ "$OMX_NO_YUV420" -ge "1" ]; then
 		set_property ro.yuv420.disable true
 	else
 		set_property ro.yuv420.disable false
