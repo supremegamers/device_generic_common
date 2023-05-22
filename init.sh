@@ -774,9 +774,9 @@ function do_bootcomplete()
 	fi
 
 	#Auto activate XtMapper
-	env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
-	CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
-	/system/bin xtr.keymapper.server.InputService
+	#nohup env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
+	#CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
+	#/system/bin xtr.keymapper.server.InputService > /dev/null 2>&1 &
 
 	post_bootcomplete
 }
