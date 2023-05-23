@@ -429,151 +429,87 @@ function init_hal_thermal()
 
 function init_hal_sensors()
 {
-	# if we have sensor module for our hardware, use it
-	ro_hardware=$(getprop ro.hardware)
-	[ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
+    if [ "$SENSORS_FORCE_KBDSENSOR" == "1" ]; then
+        # Option to force kbd sensor
+        hal_sensors=kbd
+        has_sensors=true
+    else
+        # if we have sensor module for our hardware, use it
+        ro_hardware=$(getprop ro.hardware)
+        [ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
 
-	local hal_sensors=kbd
-	local has_sensors=true
-	case "$UEVENT" in
-		*Lucid-MWE*)
-			set_property ro.ignore_atkbd 1
-			hal_sensors=hdaps
-			;;
-		*ICONIA*W5*)
-			hal_sensors=w500
-			;;
-		*S10-3t*)
-			hal_sensors=s103t
-			;;
-		*Inagua*)
-			#setkeycodes 0x62 29
-			#setkeycodes 0x74 56
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 2
-			;;
-		*TEGA*|*2010:svnIntel:*)
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 1
-			io_switch 0x0 0x1
-			setkeycodes 0x6d 125
-			;;
-		*DLI*)
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 1
-			setkeycodes 0x64 1
-			setkeycodes 0x65 172
-			setkeycodes 0x66 120
-			setkeycodes 0x67 116
-			setkeycodes 0x68 114
-			setkeycodes 0x69 115
-			setkeycodes 0x6c 114
-			setkeycodes 0x6d 115
-			;;
-		*tx2*)
-			setkeycodes 0xb1 138
-			setkeycodes 0x8a 152
-			set_property hal.sensors.kbd.type 6
-			set_property poweroff.doubleclick 0
-			set_property qemu.hw.mainkeys 1
-			;;
-		*MS-N0E1*)
-			set_property ro.ignore_atkbd 1
-			set_property poweroff.doubleclick 0
-			setkeycodes 0xa5 125
-			setkeycodes 0xa7 1
-			setkeycodes 0xe3 142
-			;;
-		*Aspire1*25*)
-			modprobe lis3lv02d_i2c
-			echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
-			;;
-		*Aspire*SW5-012*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.anglvel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			;;
-		*ThinkPad*Tablet*)
-			modprobe hdaps
-			hal_sensors=hdaps
-			;;
-		*LenovoideapadD330*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			set_property ro.ignore_atkbd 1
-			;&
-		*LINX1010B*)
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.z.opt_scale -1
-			;;
-		*i7-WN*|*SP111-33*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*i7Stylus*|*M80TA*)
-			set_property ro.iio.accel.x.opt_scale -1
-			;;
-		*LenovoMIIX320*|*ONDATablet*)
-			set_property ro.iio.accel.order 102
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*SP111-33*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*Venue*8*Pro*3845*)
-			set_property ro.iio.accel.order 102
-			;;
-		*ST70416-6*)
-			set_property ro.iio.accel.order 102
-			;;
-		*e-tabPro*|*pnEZpad*|*TECLAST:rntPAD*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*T*0*TA*|*M80TA*)
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*TECLAST*X4*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*SwitchSA5-271*|*SwitchSA5-271P*)
-			set_property ro.ignore_atkbd 1
-			has_sensors=true
-			hal_sensors=iio
-			;&
-		*)
-			has_sensors=false
-			;;
-	esac
+        local hal_sensors=kbd
+        local has_sensors=true
+        case "$UEVENT" in
+            *MS-N0E1*)
+                set_property ro.ignore_atkbd 1
+                set_property poweroff.doubleclick 0
+                setkeycodes 0xa5 125
+                setkeycodes 0xa7 1
+                setkeycodes 0xe3 142
+                ;;
+            *Aspire1*25*)
+                modprobe lis3lv02d_i2c
+                echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
+                ;;
+            *Aspire*SW5-012*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *LenovoideapadD330*)
+                set_property ro.iio.accel.order 102
+                set_property ro.ignore_atkbd 1
+                ;&
+            *LINX1010B*)
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.z.opt_scale -1
+                ;;
+            *i7Stylus*|*M80TA*)
+                set_property ro.iio.accel.x.opt_scale -1
+                ;;
+            *LenovoMIIX320*|*ONDATablet*)
+                set_property ro.iio.accel.order 102
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+            *Venue*8*Pro*3845*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *ST70416-6*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *T*0*TA*|*M80TA*)
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+            *TECLAST*X4*)
+                set_property ro.iio.accel.order 102
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+            *SwitchSA5-271*|*SwitchSA5-271P*)
+                set_property ro.ignore_atkbd 1
+                has_sensors=true
+                hal_sensors=iio
+                ;&
+            *)
+                has_sensors=false
+                ;;
+        esac
 
-	# has iio sensor-hub?
-	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
-		toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
-		[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
-		hal_sensors=iio
-	elif lsmod | grep -q hid_sensor_accel_3d; then
-		hal_sensors=hsb
-		has_sensors=true
-	elif lsmod | grep -q lis3lv02d_i2c; then
-		hal_sensors=hdaps
-		has_sensors=true
-	elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
-		has_sensors=true
-	fi
-	
-	# TODO close Surface Pro 4 sensor until bugfix 
-	case "$(cat $DMIPATH/uevent)" in 
-		*SurfacePro4*) 
-		  hal_sensors=kbd 
-		  ;; 
-		*) 
-		  ;; 
-	esac
+            # has iio sensor-hub?
+            if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
+                toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+                [ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
+                hal_sensors=iio
+            elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
+                has_sensors=true
+            fi
+    fi
 
-	set_property ro.hardware.sensors $hal_sensors
-	set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
+    set_property ro.iio.accel.quirks "no-trig,no-event"
+    set_property ro.iio.anglvel.quirks "no-trig,no-event"
+    set_property ro.iio.magn.quirks "no-trig,no-event"
+    set_property ro.hardware.sensors $hal_sensors
+    set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
 }
 
 function create_pointercal()
