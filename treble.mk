@@ -86,6 +86,8 @@ PRODUCT_PACKAGES += \
 
 # Sensors HAL
 PRODUCT_PACKAGES += \
+    android.hardware.sensors@2.1-service.intel \
+    android.hardware.sensors@1.0-service \
     android.hardware.sensors@1.0-impl
 
 # USB HAL

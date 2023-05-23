@@ -133,12 +133,9 @@
     </hal>
     <hal format="hidl">
         <name>android.hardware.sensors</name>
-        <transport arch="32+64">passthrough</transport>
-        <version>1.0</version>
-        <interface>
-            <name>ISensors</name>
-            <instance>default</instance>
-        </interface>
+        <transport>hwbinder</transport>
+        <fqname>@1.0::ISensors/default</fqname>
+        <fqname>@2.1::ISensors/default</fqname>
     </hal>
     <hal format="hidl">
         <name>android.hardware.soundtrigger</name>

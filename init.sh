@@ -421,87 +421,100 @@ function init_hal_thermal()
 
 function init_hal_sensors()
 {
-    if [ "$SENSORS_FORCE_KBDSENSOR" == "1" ]; then
-        # Option to force kbd sensor
-        hal_sensors=kbd
-        has_sensors=true
-    else
-        # if we have sensor module for our hardware, use it
-        ro_hardware=$(getprop ro.hardware)
-        [ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
+	if [ "$SENSORS_NEW_IIO_HAL" -ge "1" ]; then
+		set_property debug.sensors.use_legacy false
+		start vendor.sensors-hal-2-1-intel
+		if [ "$SENSORS_REVERSE_ACCEL" -ge "1" ]; then
+			set_property vendor.intel.accel_3d.reverse_scale false
+		else
+			set_property vendor.intel.accel_3d.reverse_scale true
+		fi
+	else
+		set_property debug.sensors.use_legacy true
+		start vendor.sensors-hal-1-0
+		
+		if [ "$SENSORS_FORCE_KBDSENSOR" == "1" ]; then
+			# Option to force kbd sensor
+			hal_sensors=kbd
+			has_sensors=true
+		else
+			# if we have sensor module for our hardware, use it
+			ro_hardware=$(getprop ro.hardware)
+			[ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
 
-        local hal_sensors=kbd
-        local has_sensors=true
-        case "$UEVENT" in
-            *MS-N0E1*)
-                set_property ro.ignore_atkbd 1
-                set_property poweroff.doubleclick 0
-                setkeycodes 0xa5 125
-                setkeycodes 0xa7 1
-                setkeycodes 0xe3 142
-                ;;
-            *Aspire1*25*)
-                modprobe lis3lv02d_i2c
-                echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
-                ;;
-            *Aspire*SW5-012*)
-                set_property ro.iio.accel.order 102
-                ;;
-            *LenovoideapadD330*)
-                set_property ro.iio.accel.order 102
-                set_property ro.ignore_atkbd 1
-                ;&
-            *LINX1010B*)
-                set_property ro.iio.accel.x.opt_scale -1
-                set_property ro.iio.accel.z.opt_scale -1
-                ;;
-            *i7Stylus*|*M80TA*)
-                set_property ro.iio.accel.x.opt_scale -1
-                ;;
-            *LenovoMIIX320*|*ONDATablet*)
-                set_property ro.iio.accel.order 102
-                set_property ro.iio.accel.x.opt_scale -1
-                set_property ro.iio.accel.y.opt_scale -1
-                ;;
-            *Venue*8*Pro*3845*)
-                set_property ro.iio.accel.order 102
-                ;;
-            *ST70416-6*)
-                set_property ro.iio.accel.order 102
-                ;;
-            *T*0*TA*|*M80TA*)
-                set_property ro.iio.accel.y.opt_scale -1
-                ;;
-            *TECLAST*X4*)
-                set_property ro.iio.accel.order 102
-                set_property ro.iio.accel.x.opt_scale -1
-                set_property ro.iio.accel.y.opt_scale -1
-                ;;
-            *SwitchSA5-271*|*SwitchSA5-271P*)
-                set_property ro.ignore_atkbd 1
-                has_sensors=true
-                hal_sensors=iio
-                ;&
-            *)
-                has_sensors=false
-                ;;
-        esac
+			local hal_sensors=kbd
+			local has_sensors=true
+			case "$UEVENT" in
+				*MS-N0E1*)
+					set_property ro.ignore_atkbd 1
+					set_property poweroff.doubleclick 0
+					setkeycodes 0xa5 125
+					setkeycodes 0xa7 1
+					setkeycodes 0xe3 142
+					;;
+				*Aspire1*25*)
+					modprobe lis3lv02d_i2c
+					echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
+					;;
+				*Aspire*SW5-012*)
+					set_property ro.iio.accel.order 102
+					;;
+				*LenovoideapadD330*)
+					set_property ro.iio.accel.order 102
+					set_property ro.ignore_atkbd 1
+					;&
+				*LINX1010B*)
+					set_property ro.iio.accel.x.opt_scale -1
+					set_property ro.iio.accel.z.opt_scale -1
+					;;
+				*i7Stylus*|*M80TA*)
+					set_property ro.iio.accel.x.opt_scale -1
+					;;
+				*LenovoMIIX320*|*ONDATablet*)
+					set_property ro.iio.accel.order 102
+					set_property ro.iio.accel.x.opt_scale -1
+					set_property ro.iio.accel.y.opt_scale -1
+					;;
+				*Venue*8*Pro*3845*)
+					set_property ro.iio.accel.order 102
+					;;
+				*ST70416-6*)
+					set_property ro.iio.accel.order 102
+					;;
+				*T*0*TA*|*M80TA*)
+					set_property ro.iio.accel.y.opt_scale -1
+					;;
+				*TECLAST*X4*)
+					set_property ro.iio.accel.order 102
+					set_property ro.iio.accel.x.opt_scale -1
+					set_property ro.iio.accel.y.opt_scale -1
+					;;
+				*SwitchSA5-271*|*SwitchSA5-271P*)
+					set_property ro.ignore_atkbd 1
+					has_sensors=true
+					hal_sensors=iio
+					;&
+				*)
+					has_sensors=false
+					;;
+			esac
 
-            # has iio sensor-hub?
-            if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
-                toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
-                [ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
-                hal_sensors=iio
-            elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
-                has_sensors=true
-            fi
-    fi
+				# has iio sensor-hub?
+				if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
+					toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+					[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
+					hal_sensors=iio
+				elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
+					has_sensors=true
+				fi
+		fi
 
-    set_property ro.iio.accel.quirks "no-trig,no-event"
-    set_property ro.iio.anglvel.quirks "no-trig,no-event"
-    set_property ro.iio.magn.quirks "no-trig,no-event"
-    set_property ro.hardware.sensors $hal_sensors
-    set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
+		set_property ro.iio.accel.quirks "no-trig,no-event"
+		set_property ro.iio.anglvel.quirks "no-trig,no-event"
+		set_property ro.iio.magn.quirks "no-trig,no-event"
+		set_property ro.hardware.sensors $hal_sensors
+		set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
+	fi
 }
 
 function create_pointercal()
