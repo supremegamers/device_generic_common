@@ -34,9 +34,6 @@ PRODUCT_PACKAGES += \
 
 # Camera HAL
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-external-service \
-	android.hardware.camera.provider@2.4-service_64 \
-	android.hardware.camera.provider@2.4-impl \
     camera.x86
 
 # Media codec

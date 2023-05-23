@@ -95,7 +95,7 @@ ifneq ($(strip $(BOARD_GPU_DRIVERS)),)
 TARGET_HARDWARE_3D := true
 endif
 
-BOARD_MESA3D_USES_MESON_BUILD := true
+#BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
 BOARD_MESA3D_BUILD_LIBGBM := true
 BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl
@@ -142,3 +142,5 @@ BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
 TARGET_SYSTEM_PROP += device/generic/common/system.prop
 
+# Include GloDroid components
+include device/generic/common/glodroid/BoardConfig_glodroid.mk
