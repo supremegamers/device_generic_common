@@ -204,7 +204,17 @@ function init_hal_gralloc()
 		*nouveau)
 			GRALLOC=${GRALLOC:-gbm_hack}
 			;&
-		*i915|*radeon|*amdgpu)
+		*i915)
+			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen' -e 'graphics version' | awk '{print $NF}')" -gt 9 ]; then
+				HWC=${HWC:-drm_minigbm_celadon}
+				GRALLOC=${GRALLOC:-minigbm}
+			fi
+			;&
+		*amdgpu)
+			HWC=${HWC:-drm_minigbm_celadon}
+			GRALLOC=${GRALLOC:-minigbm}
+			;&
+		*radeon)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
