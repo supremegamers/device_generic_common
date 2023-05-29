@@ -335,48 +335,66 @@ function init_hal_hwcomposer()
 
 function init_hal_media()
 {
-	# Check if we want to set codec2
+	# Check if we want to use codec2
 	if [ -z ${CODEC2_LEVEL+x} ]; then
 		echo ""
 	else
 		set_property debug.stagefright.ccodec $CODEC2_LEVEL
 	fi
 
-	if [ "$FFMPEG_CODEC" -ge "1" ]; then
-	    set_property media.sf.omx-plugin libffmpeg_omx.so
-    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
-	    set_property media.sf.hwaccel 1
-		start android-hardware-media-c2-hal-1-2
-		if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
-			set_property media.sf.hwaccel 0
-		else
-			set_property media.sf.hwaccel 1
-		fi
-		if [ "$FFMPEG_OMX_DISABLE" -ge "1" ]; then
-			set_property debug.ffmpeg-omx.disable 1
-		else
-			set_property debug.ffmpeg-omx.disable 0
-		fi
-		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
-			set_property debug.ffmpeg.loglevel verbose
-		fi
-		if [ "$FFMPEG_PREFER_C2" -ge "1" ]; then
-			set_property debug.ffmpeg-codec2.rank 0
-		else
-			set_property debug.ffmpeg-codec2.rank 4294967295
-		fi
-	else
-		set_property debug.ffmpeg-codec2.rank 4294967295
-	    set_property media.sf.omx-plugin ""
-    	set_property media.sf.extractor-plugin ""
-	    set_property debug.ffmpeg-omx.disable 0
-	fi
-
+	# Disable YUV420 planar on OMX codecs
 	if [ "$OMX_NO_YUV420" -ge "1" ]; then
 		set_property ro.yuv420.disable true
 	else
 		set_property ro.yuv420.disable false
 	fi
+
+#FFMPEG Codec Setup
+## Turn on/off FFMPEG OMX by default
+	if [ "$FFMPEG_OMX_CODEC" -ge "1" ]; then
+	    set_property media.sf.omx-plugin libffmpeg_omx.so
+    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
+	else
+	    set_property media.sf.omx-plugin ""
+    	set_property media.sf.extractor-plugin ""
+	    set_property debug.ffmpeg-omx.disable 1
+	fi
+
+## Enable logging
+    if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
+        set_property debug.ffmpeg.loglevel verbose
+    fi	
+## Disable HWAccel (currently only VA-API) and use software rendering
+    if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
+        set_property media.sf.hwaccel 0
+    else
+        set_property media.sf.hwaccel 1
+    fi
+## Put c2.ffmpeg to the highest rank amongst the media codecs
+    if [ "$FFMPEG_CODEC2_PREFER" -ge "1" ]; then
+        set_property debug.ffmpeg-codec2.rank 0
+    else
+        set_property debug.ffmpeg-codec2.rank 4294967295
+    fi
+## FFMPEG deinterlace, we will put both software mode and VA-API one here
+	if [ -z "${FFMPEG_CODEC2_DEINTERLACE+x}" ]; then
+		echo ""
+	else
+		set_property debug.ffmpeg-codec2.deinterlace $FFMPEG_CODEC2_DEINTERLACE
+	fi
+	if [ -z "${FFMPEG_CODEC2_DEINTERLACE_VAAPI+x}" ]; then
+		echo ""
+	else
+		set_property debug.ffmpeg-codec2.deinterlace.vaapi $FFMPEG_CODEC2_DEINTERLACE_VAAPI
+	fi
+## Handle DRM prime on ffmpeg codecs, we will disable by default due to 
+## the fact that it doesn't work with gbm_gralloc yet
+	if [ "$FFMPEG_CODEC2_DRM" -ge "1" ]; then
+	    set_property debug.ffmpeg-codec2.hwaccel.drm 1
+	else
+	    set_property debug.ffmpeg-codec2.hwaccel.drm 0
+	fi
+
 }
 
 function init_hal_vulkan()
