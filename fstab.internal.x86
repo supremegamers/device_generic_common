@@ -4,9 +4,7 @@ none			/cache		tmpfs	nosuid,nodev,noatime	defaults
 /devices/*/usb*/*		auto	auto	defaults		voldmanaged=usb:auto,noemulatedsd
 /devices/*/mmc0:a*/*		auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/*/*sdmmc*/*		auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
-/devices/*/80860F14:01/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
-/devices/*/80860F14:02/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
-/devices/*/80860F16:00/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
+/devices/*/80860F*:*/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/*/PNP0FFF:00/mmc_*	auto	auto	defaults		voldmanaged=sdcard1:auto,encryptable=userdata
 /devices/*/*/sd*		auto	auto	defaults,uid=1000,gid=1000		voldmanaged=usbdisk,noemulatedsd
 /devices/*/*/hd*		auto	auto	defaults,uid=1000,gid=1000		voldmanaged=usbdisk,noemulatedsd
