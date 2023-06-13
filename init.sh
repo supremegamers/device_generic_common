@@ -214,7 +214,7 @@ function init_hal_gralloc()
 			HWC=${HWC:-drm_minigbm_celadon}
 			GRALLOC=${GRALLOC:-minigbm}
 			;&
-		*radeon)
+		*radeon|*vmwgfx*)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
