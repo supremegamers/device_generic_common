@@ -11,8 +11,7 @@
 PRODUCT_PACKAGES := \
     hwcomposer.drm hwcomposer.drm_minigbm hwcomposer.drm_celadon hwcomposer.drm_minigbm_celadon \
     gralloc.minigbm_dmabuf gralloc.minigbm gralloc.minigbm_arcvm gralloc.minigbm_gbm_mesa \
-    gralloc.gbm gralloc.gbm_nohack gralloc.gbm_noscanout \
-	hwcomposer.cutf_cvm_ashmem hwcomposer.cutf_hwc2 hwcomposer-stats \
+    gralloc.gbm gralloc.gbm_hack gralloc.gbm_noscanout \
     libGLES_mesa    \
     libtxc_dxtn     \
     modetest \
