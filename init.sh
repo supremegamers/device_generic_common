@@ -201,7 +201,20 @@ function init_hal_gralloc()
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			#video=${video:-1280x768}
 			;&
-		*i915|*radeon|*nouveau|*amdgpu)
+		*nouveau)
+			GRALLOC=${GRALLOC:-gbm_hack}
+			;&
+		*i915)
+			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen' -e 'graphics version' | awk '{print $NF}')" -gt 9 ]; then
+				HWC=${HWC:-drm_minigbm_celadon}
+				GRALLOC=${GRALLOC:-minigbm}
+			fi
+			;&
+		*amdgpu)
+			HWC=${HWC:-drm_minigbm_celadon}
+			GRALLOC=${GRALLOC:-minigbm}
+			;&
+		*radeon)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
@@ -322,47 +335,66 @@ function init_hal_hwcomposer()
 
 function init_hal_media()
 {
-	# Check if we want to set codec2
+	# Check if we want to use codec2
 	if [ -z ${CODEC2_LEVEL+x} ]; then
 		echo ""
 	else
 		set_property debug.stagefright.ccodec $CODEC2_LEVEL
 	fi
 
-	if [ "$FFMPEG_CODEC" -ge "1" ]; then
-	    set_property media.sf.omx-plugin libffmpeg_omx.so
-    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
-		start android-hardware-media-c2-hal-1-1
-		if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
-			set_property media.sf.hwaccel 0
-		else
-			set_property media.sf.hwaccel 1
-		fi
-		if [ "$FFMPEG_OMX_DISABLE" -ge "1" ]; then
-			set_property debug.ffmpeg-omx.disable 1
-		else
-			set_property debug.ffmpeg-omx.disable 0
-		fi
-		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
-			set_property debug.ffmpeg.loglevel verbose
-		fi
-		if [ "$FFMPEG_PREFER_C2" -ge "1" ]; then
-			set_property debug.ffmpeg-codec2.rank 0
-		else
-			set_property debug.ffmpeg-codec2.rank 4294967295
-		fi
-	else
-		set_property debug.ffmpeg-codec2.rank 4294967295
-	    set_property media.sf.omx-plugin ""
-    	set_property media.sf.extractor-plugin ""
-	    set_property debug.ffmpeg-omx.disable 0
-	fi
-
-	if [ "$NO_YUV420" -ge "1" ]; then
+	# Disable YUV420 planar on OMX codecs
+	if [ "$OMX_NO_YUV420" -ge "1" ]; then
 		set_property ro.yuv420.disable true
 	else
 		set_property ro.yuv420.disable false
 	fi
+
+#FFMPEG Codec Setup
+## Turn on/off FFMPEG OMX by default
+	if [ "$FFMPEG_OMX_CODEC" -ge "1" ]; then
+	    set_property media.sf.omx-plugin libffmpeg_omx.so
+    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
+	else
+	    set_property media.sf.omx-plugin ""
+    	set_property media.sf.extractor-plugin ""
+	    set_property debug.ffmpeg-omx.disable 1
+	fi
+
+## Enable logging
+    if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
+        set_property debug.ffmpeg.loglevel verbose
+    fi	
+## Disable HWAccel (currently only VA-API) and use software rendering
+    if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
+        set_property media.sf.hwaccel 0
+    else
+        set_property media.sf.hwaccel 1
+    fi
+## Put c2.ffmpeg to the highest rank amongst the media codecs
+    if [ "$FFMPEG_CODEC2_PREFER" -ge "1" ]; then
+        set_property debug.ffmpeg-codec2.rank 0
+    else
+        set_property debug.ffmpeg-codec2.rank 4294967295
+    fi
+## FFMPEG deinterlace, we will put both software mode and VA-API one here
+	if [ -z "${FFMPEG_CODEC2_DEINTERLACE+x}" ]; then
+		echo ""
+	else
+		set_property debug.ffmpeg-codec2.deinterlace $FFMPEG_CODEC2_DEINTERLACE
+	fi
+	if [ -z "${FFMPEG_CODEC2_DEINTERLACE_VAAPI+x}" ]; then
+		echo ""
+	else
+		set_property debug.ffmpeg-codec2.deinterlace.vaapi $FFMPEG_CODEC2_DEINTERLACE_VAAPI
+	fi
+## Handle DRM prime on ffmpeg codecs, we will disable by default due to 
+## the fact that it doesn't work with gbm_gralloc yet
+	if [ "$FFMPEG_CODEC2_DRM" -ge "1" ]; then
+	    set_property debug.ffmpeg-codec2.hwaccel.drm 1
+	else
+	    set_property debug.ffmpeg-codec2.hwaccel.drm 0
+	fi
+
 }
 
 function init_hal_vulkan()
@@ -426,142 +458,90 @@ function init_hal_thermal()
 
 function init_hal_sensors()
 {
-	# if we have sensor module for our hardware, use it
-	ro_hardware=$(getprop ro.hardware)
-	[ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
+    if [ "$SENSORS_FORCE_KBDSENSOR" == "1" ]; then
+        # Option to force kbd sensor
+        hal_sensors=kbd
+        has_sensors=true
+    else
+        # if we have sensor module for our hardware, use it
+        ro_hardware=$(getprop ro.hardware)
+        [ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
 
-	local hal_sensors=kbd
-	local has_sensors=true
-	case "$UEVENT" in
-		*Lucid-MWE*)
-			set_property ro.ignore_atkbd 1
-			hal_sensors=hdaps
-			;;
-		*ICONIA*W5*)
-			hal_sensors=w500
-			;;
-		*S10-3t*)
-			hal_sensors=s103t
-			;;
-		*Inagua*)
-			#setkeycodes 0x62 29
-			#setkeycodes 0x74 56
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 2
-			;;
-		*TEGA*|*2010:svnIntel:*)
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 1
-			io_switch 0x0 0x1
-			setkeycodes 0x6d 125
-			;;
-		*DLI*)
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 1
-			setkeycodes 0x64 1
-			setkeycodes 0x65 172
-			setkeycodes 0x66 120
-			setkeycodes 0x67 116
-			setkeycodes 0x68 114
-			setkeycodes 0x69 115
-			setkeycodes 0x6c 114
-			setkeycodes 0x6d 115
-			;;
-		*tx2*)
-			setkeycodes 0xb1 138
-			setkeycodes 0x8a 152
-			set_property hal.sensors.kbd.type 6
-			set_property poweroff.doubleclick 0
-			set_property qemu.hw.mainkeys 1
-			;;
-		*MS-N0E1*)
-			set_property ro.ignore_atkbd 1
-			set_property poweroff.doubleclick 0
-			setkeycodes 0xa5 125
-			setkeycodes 0xa7 1
-			setkeycodes 0xe3 142
-			;;
-		*Aspire1*25*)
-			modprobe lis3lv02d_i2c
-			echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
-			;;
-		*Aspire*SW5-012*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.anglvel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			;;
-		*ThinkPad*Tablet*)
-			modprobe hdaps
-			hal_sensors=hdaps
-			;;
-		*LenovoideapadD330*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			set_property ro.ignore_atkbd 1
-			;&
-		*LINX1010B*)
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.z.opt_scale -1
-			;;
-		*i7-WN*|*SP111-33*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*i7Stylus*|*M80TA*)
-			set_property ro.iio.accel.x.opt_scale -1
-			;;
-		*LenovoMIIX320*|*ONDATablet*)
-			set_property ro.iio.accel.order 102
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*SP111-33*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*Venue*8*Pro*3845*)
-			set_property ro.iio.accel.order 102
-			;;
-		*ST70416-6*)
-			set_property ro.iio.accel.order 102
-			;;
-		*e-tabPro*|*pnEZpad*|*TECLAST:rntPAD*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*T*0*TA*|*M80TA*)
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*TECLAST*X4*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*SwitchSA5-271*|*SwitchSA5-271P*)
-			set_property ro.ignore_atkbd 1
-			has_sensors=true
-			hal_sensors=iio
-			;&
-		*)
-			has_sensors=false
-			;;
-	esac
+        local hal_sensors=kbd
+        local has_sensors=true
+        case "$UEVENT" in
+            *MS-N0E1*)
+                set_property ro.ignore_atkbd 1
+                set_property poweroff.doubleclick 0
+                setkeycodes 0xa5 125
+                setkeycodes 0xa7 1
+                setkeycodes 0xe3 142
+                ;;
+            *Aspire1*25*)
+                modprobe lis3lv02d_i2c
+                echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
+                ;;
+            *Aspire*SW5-012*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *LenovoideapadD330*)
+                set_property ro.iio.accel.order 102
+                set_property ro.ignore_atkbd 1
+                ;&
+            *LINX1010B*)
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.z.opt_scale -1
+                ;;
+            *i7Stylus*|*M80TA*)
+                set_property ro.iio.accel.x.opt_scale -1
+                ;;
+            *LenovoMIIX320*|*ONDATablet*)
+                set_property ro.iio.accel.order 102
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+            *Venue*8*Pro*3845*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *ST70416-6*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *T*0*TA*|*M80TA*)
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+			*Akoya*P2213T*)
+				set_property ro.iio.accel.order 102
+				;;
+            *TECLAST*X4*)
+                set_property ro.iio.accel.order 102
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+            *SwitchSA5-271*|*SwitchSA5-271P*)
+                set_property ro.ignore_atkbd 1
+                has_sensors=true
+                hal_sensors=iio
+                ;&
+            *)
+                has_sensors=false
+                ;;
+        esac
 
-	# has iio sensor-hub?
-	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
-		toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
-		[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
-		hal_sensors=iio
-	elif lsmod | grep -q hid_sensor_accel_3d; then
-		hal_sensors=hsb
-		has_sensors=true
-	elif lsmod | grep -q lis3lv02d_i2c; then
-		hal_sensors=hdaps
-		has_sensors=true
-	elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
-		has_sensors=true
-	fi
-	
-	set_property ro.hardware.sensors $hal_sensors
-	set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
+            # has iio sensor-hub?
+            if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
+                toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+                [ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
+                hal_sensors=iio
+            elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
+                has_sensors=true
+            fi
+    fi
+
+    set_property ro.iio.accel.quirks "no-trig,no-event"
+    set_property ro.iio.anglvel.quirks "no-trig,no-event"
+    set_property ro.iio.magn.quirks "no-trig,no-event"
+    set_property ro.hardware.sensors $hal_sensors
+    set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
 }
 
 function init_hal_surface()
@@ -622,7 +602,7 @@ function init_tscal()
 
 	for usbts in $(lsusb | awk '{ print $6 }'); do
 		case "$usbts" in
-			0596:0001|0eef:0001)
+			0596:0001|0eef:0001|14e1:6000|14e1:5000)
 				create_pointercal
 				return
 				;;
@@ -710,37 +690,6 @@ function do_bootcomplete()
 	lsmod | grep -Ehq "brcmfmac|rtl8723be" && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
-		1866???|1867???|1869???) # ThinkPad X41 Tablet
-			start tablet-mode
-			start wacom-input
-			setkeycodes 0x6d 115
-			setkeycodes 0x6e 114
-			setkeycodes 0x69 28
-			setkeycodes 0x6b 158
-			setkeycodes 0x68 172
-			setkeycodes 0x6c 127
-			setkeycodes 0x67 217
-			;;
-		6363???|6364???|6366???) # ThinkPad X60 Tablet
-			;&
-		7762???|7763???|7767???) # ThinkPad X61 Tablet
-			start tablet-mode
-			start wacom-input
-			setkeycodes 0x6d 115
-			setkeycodes 0x6e 114
-			setkeycodes 0x69 28
-			setkeycodes 0x6b 158
-			setkeycodes 0x68 172
-			setkeycodes 0x6c 127
-			setkeycodes 0x67 217
-			;;
-		7448???|7449???|7450???|7453???) # ThinkPad X200 Tablet
-			start tablet-mode
-			start wacom-input
-			setkeycodes 0xe012 158
-			setkeycodes 0x66 172
-			setkeycodes 0x6b 127
-			;;
 		Surface*Go)
 			echo on > /sys/devices/pci0000:00/0000:00:15.1/i2c_designware.1/power/control
 			;;
@@ -787,19 +736,23 @@ function do_bootcomplete()
 
 	POST_INST=/data/vendor/post_inst_complete
 	USER_APPS=/system/etc/user_app/*
+	BUILD_DATETIME=$(getprop ro.build.date.utc)
+	POST_INST_NUM=$(cat $POST_INST)
 
-	if [ ! -f "$POST_INST" ]; then
+	if [ ! "$BUILD_DATETIME" == "$POST_INST_NUM" ]; then
 		for apk in $USER_APPS
 		do		
 			pm install $apk
 		done
-		touch /data/vendor/post_inst_complete
+		rm "$POST_INST"
+		touch "$POST_INST"
+		echo $BUILD_DATETIME > "$POST_INST"
 	fi
 
 	#Auto activate XtMapper
-	env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
-	CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
-	/system/bin xtr.keymapper.server.InputService
+	#nohup env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
+	#CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
+	#/system/bin xtr.keymapper.server.InputService > /dev/null 2>&1 &
 
 	post_bootcomplete
 }

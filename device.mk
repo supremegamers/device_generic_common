@@ -30,15 +30,10 @@ PRODUCT_PROPERTY_OVERRIDES := \
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.lmk.low=1001 \
-    ro.lmk.medium=800 \
-    ro.lmk.critical=0 \
-    ro.lmk.critical_upgrade=false \
-    ro.lmk.upgrade_pressure=100 \
-    ro.lmk.downgrade_pressure=100 \
-    ro.lmk.kill_heaviest_task=true \
-    ro.lmk.kill_timeout_ms=100 \
-    ro.lmk.use_minfree_levels=true
+    ro.lmk.critical_upgrade=true \
+    ro.lmk.use_minfree_levels=true \
+    ro.lmk.use_psi=true \
+    ro.lmk.use_new_strategy=false
 
 PRODUCT_COPY_FILES := \
     $(if $(wildcard $(PRODUCT_DIR)init.rc),$(PRODUCT_DIR)init.rc:root/init.rc) \
@@ -129,7 +124,6 @@ DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
 # Enforce privapp-permissions whitelist
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
-    ro.control_privapp_permissions=log \
     ro.sys.sdcardfs=false \
     persist.sys.sdcardfs=force_off
 
@@ -241,7 +235,5 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # DRM service opt-in
 PRODUCT_VENDOR_PROPERTIES += drm.service.enabled=true
 
-PRODUCT_SHIPPING_API_LEVEL := 24
-DISABLE_RILD_OEM_HOOK := true
 PRODUCT_REQUIRES_INSECURE_EXECMEM_FOR_SWIFTSHADER := true
 
