@@ -123,7 +123,12 @@ PRODUCT_PACKAGES += \
     iw_common \
     external_iw_license
 
-PRODUCT_PACKAGES += hidrawcheck iptsd iptsd-find-hidraw
+PRODUCT_PACKAGES += hidrawcheck iptsd \
+                    iptsd-find-hidraw \
+                    iptsd-calibrate \
+                    iptsd-check-device \
+                    iptsd-dump \
+                    iptsd-perf
 
 # aptX/aptX HD encoders
 PRODUCT_PACKAGES += \
