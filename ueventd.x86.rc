@@ -1,7 +1,7 @@
 /dev/ttyS*                0660  system        radio
 /dev/ttyACM*              0660  system        radio
 /dev/ttyUSB*              0660  radio         radio
-/dev/video*       		  0660  system        camera
+/dev/video*       		  0660  cameraserver  system
 /dev/iio:device*          0660  system        system
 /dev/ion                  0664  system        system
 
