@@ -119,12 +119,6 @@ service btattach /system/vendor/bin/btattach
     oneshot
     seclabel u:r:bluetooth:s0
 
-service rtk_hciattach /vendor/bin/rtk_hciattach -n -s 115200 /dev/rtk_h5 rtk_h5
-    class main
-    disabled
-    oneshot
-    seclabel u:r:bluetooth:s0
-
 service wacom-input /system/bin/wacom-input
     disabled
     oneshot
