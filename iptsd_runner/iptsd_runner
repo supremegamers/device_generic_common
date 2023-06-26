@@ -1,0 +1,5 @@
+#!/system/bin/sh
+
+PATH=/system/bin:/system/xbin:/system/vendor/bin:/vendor/bin
+
+iptsd $(iptsd-find-hidraw)

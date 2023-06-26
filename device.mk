@@ -52,7 +52,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ppp/ip-up:$(TARGET_COPY_OUT_SYSTEM)/etc/ppp/ip-up \
     $(LOCAL_PATH)/ppp/ip-down:$(TARGET_COPY_OUT_SYSTEM)/etc/ppp/ip-down \
     $(LOCAL_PATH)/ppp/peers/gprs:$(TARGET_COPY_OUT_SYSTEM)/etc/ppp/peers/gprs \
-    $(LOCAL_PATH)/iptsd-service.sh:$(TARGET_COPY_OUT_VENDOR)/bin/iptsd-service.sh \
     $(LOCAL_PATH)/media_codecs.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs.xml \
     $(LOCAL_PATH)/media_profiles.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_profiles.xml \
     $(LOCAL_PATH)/pciids/pci.ids:$(TARGET_COPY_OUT_SYSTEM)/vendor/etc/pci.ids \

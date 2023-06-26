@@ -141,10 +141,10 @@ service ctrl-alt-del /system/bin/input keyevent --longpress POWER
     keycodes 97 100 111
     seclabel u:r:init:s0
 
-service iptsd /system/vendor/bin/iptsd ${persist.ipts.device}
+service iptsd_runner /system/vendor/bin/iptsd_runner
+    class main
     disabled
-    oneshot
-    seclabel u:r:inputflinger:s0
+    seclabel u:r:zygote:s0
 
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking
