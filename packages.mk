@@ -123,7 +123,7 @@ PRODUCT_PACKAGES += \
     iw_common \
     external_iw_license
 
-PRODUCT_PACKAGES += hidrawcheck iptsd \
+PRODUCT_PACKAGES += iptsd_runner iptsd \
                     iptsd-find-hidraw \
                     iptsd-calibrate \
                     iptsd-check-device \

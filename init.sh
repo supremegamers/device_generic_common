@@ -548,7 +548,7 @@ function init_hal_surface()
 {
 	case "$UEVENT" in
 		*Surface*Pro*[4-9]*|*Surface*Book*|*Surface*Laptop*[1~4]*|*Surface*Laptop*Studio*)
-			nohup sh /system/vendor/bin/iptsd-service.sh > /dev/null 2>&1 &
+			start iptsd_runner
 			;;
 	esac
 }
