@@ -103,7 +103,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.webview.xml:system/etc/permissions/android.software.webview.xml \
     external/thermal_daemon/data/thermal-conf.xml:/system/vendor/etc/thermal-daemon/thermal-conf.xml \
     external/thermal_daemon/data/thermal-cpu-cdev-order.xml:/system/vendor/etc/thermal-daemon/thermal-cpu-cdev-order.xml \
-    external/mesa/src/util/00-mesa-defaults.conf:system/etc/drirc \
+    external/mesa/src/util/00-mesa-defaults.conf:$(TARGET_COPY_OUT_VENDOR)/etc/drirc \
     $(LOCAL_PATH)/OEMBlackList:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.OEMBlackList \
     $(LOCAL_PATH)/OEMWhiteList:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.OEMWhiteList \
     $(LOCAL_PATH)/ThirdPartySO:$(TARGET_COPY_OUT_VENDOR)/etc/misc/.ThirdPartySO \
