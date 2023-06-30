@@ -75,9 +75,6 @@ TARGET_USES_HWC2 ?= true
 
 USE_CAMERA_STUB ?= false
 
-SUPERUSER_EMBEDDED := true
-SUPERUSER_PACKAGE_PREFIX := com.android.settings.cyanogenmod.superuser
-
 # This enables the wpa wireless driver
 BOARD_WPA_SUPPLICANT_DRIVER ?= NL80211
 WPA_SUPPLICANT_VERSION ?= VER_2_1_DEVEL
@@ -90,7 +87,7 @@ endif
 BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
 BOARD_MESA3D_BUILD_LIBGBM := true
-BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl
+BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl zink
 BOARD_MESA3D_VULKAN_DRIVERS := amd intel intel_hasvk virtio-experimental
 BUILD_EMULATOR_OPENGL := true
 
