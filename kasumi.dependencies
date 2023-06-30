@@ -1,8 +1,0 @@
-[
-  {
-    "repository": "vendor_intel_proprietary_houdini",
-    "target_path": "vendor/intel/proprietary/houdini",
-    "branch": "wsa",
-    "remote": "sg"
-  }
-]
