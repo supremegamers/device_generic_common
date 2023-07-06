@@ -55,10 +55,6 @@ function init_misc()
 		fi
 	fi
 
-	##mgLRU tweak
-    echo y > /sys/kernel/mm/lru_gen/enabled
-    echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
-
 	##WIP: Enable USB as device support
     modprobe roles
     modprobe xhci-hcd
