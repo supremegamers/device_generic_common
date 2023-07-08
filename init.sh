@@ -183,7 +183,7 @@ function init_uvesafb()
 function init_hal_gralloc()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
-		*virtio_gpu)
+		*virtio_gpu|*virtio-pci)
 			HWC=${HWC:-drm_minigbm}
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			#video=${video:-1280x768}
