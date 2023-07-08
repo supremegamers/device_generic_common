@@ -61,6 +61,9 @@ function init_misc()
     modprobe xhci-pci
     modprobe dwc3
     modprobe dwc3-pci
+
+	#Set CPU name into a property
+	setprop ro.bliss.cpuname "$(grep "model name" /proc/cpuinfo | sort -u | cut -d : -f 2 | cut -c2-)"
 }
 
 function init_hal_audio()
