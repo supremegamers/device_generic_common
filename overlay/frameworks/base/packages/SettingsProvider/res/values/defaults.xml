@@ -22,4 +22,6 @@
     <integer name="def_screen_off_timeout">900000</integer>
     <integer name="def_sleep_timeout">86400000</integer>    
     <bool name="def_accelerometer_rotation">true</bool>
+    <!-- default setting for Settings.System.POWERMENU_ADVANCED -->
+    <bool name="def_powermenu_advanced">false</bool>
 </resources>
