@@ -36,12 +36,16 @@ PRODUCT_PACKAGES += \
     libgallium_dri \
     libglapi \
     libgbm_mesa_wrapper \
-    i965_drv_video \
-    crocus_drv_video \
-    iHD_drv_video \
     libgallium_drv_video \
     vainfo \
     amdgpu.ids
+
+ifneq ($(filter x86%,$(TARGET_ARCH)),)
+PRODUCT_PACKAGES += \
+    i965_drv_video \
+    crocus_drv_video \
+    iHD_drv_video
+endif
 
 PRODUCT_VENDOR_PROPERTIES += \
     debug.angle.feature_overrides_enabled=preferLinearFilterForYUV

@@ -107,8 +107,13 @@ PRODUCT_PACKAGES_DEBUG := \
     mcaptest \
     rctest \
 
+ifneq ($(filter x86%,$(TARGET_ARCH)),)
 PRODUCT_HOST_PACKAGES := \
-    qemu-android \
+    qemu-android
+
+PRODUCT_PACKAGES += \
+    v86d
+endif
 
 #
 # Packages for AOSP-available stuff we use from the framework
