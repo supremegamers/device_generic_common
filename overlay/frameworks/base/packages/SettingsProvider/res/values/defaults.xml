@@ -24,4 +24,6 @@
     <bool name="def_accelerometer_rotation">true</bool>
     <!-- default setting for Settings.System.POWERMENU_ADVANCED -->
     <bool name="def_powermenu_advanced">false</bool>
+    <!-- SeedVault Backup -->
+    <string name="def_backup_transport">com.stevesoltys.seedvault.transport.ConfigurableBackupTransport</string>
 </resources>
