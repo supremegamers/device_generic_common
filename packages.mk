@@ -132,3 +132,10 @@ PRODUCT_PACKAGES += \
 	pc.xml \
 	hpe.xml \
 	device.prop
+
+ifeq ($(USE_BLISS_SETUPWIZARD), true)
+
+PRODUCT_PACKAGES += \
+    BlissSetupWizard
+    
+endif
