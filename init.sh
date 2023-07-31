@@ -647,10 +647,33 @@ function init_prepare_ota()
 	fi
 }
 
+
+function set_custom_timezone()
+{
+	for c in `cat /proc/cmdline`; do
+		case $c in
+			*=*)
+				eval $c
+				if [ -z "$1" ]; then
+					case $c in
+						# Set TimeZone
+						SET_TZ_LOCATION=*)
+							settings put global time_zone "$SET_TZ_LOCATION"
+							setprop persist.sys.timezone "$SET_TZ_LOCATION"
+							;;
+					esac
+				fi
+				;;
+		esac
+	done
+	
+}
+
 function do_init()
 {
 	init_misc
 	set_lowmem
+	set_custom_timezone
 	init_hal_audio
 	set_custom_ota
 	init_hal_bluetooth
