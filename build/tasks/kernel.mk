@@ -11,6 +11,9 @@
 TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r450784/bin
 
 ifneq ($(TARGET_NO_KERNEL),true)
+
+INSTALLED_KERNELIMAGE_TARGET := $(PRODUCT_OUT)/kernel.img
+
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 ifneq ($(filter x86%,$(TARGET_ARCH)),)
 
@@ -82,6 +85,7 @@ $(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE) $(M4) $(LEX) $(BISON)
 	$(mk_kernel) $(KERNEL_TARGET) $(if $(MOD_ENABLED),modules)
 	$(COPY_FIRMWARE_SCRIPT) -v $(abspath $(TARGET_OUT))/lib/firmware
 	$(if $(FIRMWARE_ENABLED),$(mk_kernel) INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) firmware_install)
+	$(hide) cp $@ $(INSTALLED_KERNELIMAGE_TARGET)
 
 ifneq ($(MOD_ENABLED),)
 KERNEL_MODULES_DEP := $(firstword $(wildcard $(TARGET_OUT)/lib/modules/*/modules.dep))
@@ -118,10 +122,13 @@ endif # TARGET_PREBUILT_KERNEL
 #ifndef LINEAGE_BUILD
 $(INSTALLED_KERNEL_TARGET): $(TARGET_PREBUILT_KERNEL) | $(ACP)
 	$(copy-file-to-new-target)
+	$(hide) cp $@ $(INSTALLED_KERNELIMAGE_TARGET)
 ifdef TARGET_PREBUILT_MODULES
 	mkdir -p $(TARGET_OUT)/lib
 	$(hide) cp -r $(TARGET_PREBUILT_MODULES) $(TARGET_OUT)/lib
 endif
 #endif # LINEAGE_BUILD
+
+INSTALLED_RADIOIMAGE_TARGET += $(INSTALLED_KERNELIMAGE_TARGET)
 
 endif # TARGET_NO_KERNEL
