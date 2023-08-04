@@ -608,6 +608,24 @@ function set_lowmem()
 	fi
 }
 
+function init_loop_links()
+{
+	mkdir -p /dev/block/by-name
+	for part in kernel initrd system; do
+		for suffix in _a _b; do
+			loop_device=$(losetup -a | grep "$part$suffix" | cut -d ":" -f1)
+			if [ ! -z "$loop_device" ]; then
+				ln -s $loop_device /dev/block/by-name/$part$suffix
+			fi
+		done
+	done
+	loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
+	ln -s $loop_device /dev/block/by-name/misc
+
+	ln -s /dev/block/by-name/kernel_a /dev/block/by-name/boot_a
+	ln -s /dev/block/by-name/kernel_b /dev/block/by-name/boot_b
+}
+
 function do_init()
 {
 	init_misc
@@ -626,6 +644,7 @@ function do_init()
 	init_hal_sensors
 	init_tscal
 	init_ril
+	init_loop_links
 	post_init
 }
 
