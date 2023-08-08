@@ -595,6 +595,26 @@ function set_lowmem()
 	fi
 }
 
+function set_custom_ota()
+{
+	for c in `cat /proc/cmdline`; do
+		case $c in
+			*=*)
+				eval $c
+				if [ -z "$1" ]; then
+					case $c in
+						# Set TimeZone
+						SET_CUSTOM_OTA_URI=*)
+							setprop bliss.updater.uri "$SET_CUSTOM_OTA_URI"
+							;;
+					esac
+				fi
+				;;
+		esac
+	done
+	
+}
+
 function init_loop_links()
 {
 	mkdir -p /dev/block/by-name
@@ -618,6 +638,7 @@ function do_init()
 	init_misc
 	set_lowmem
 	init_hal_audio
+	set_custom_ota
 	init_hal_bluetooth
 	init_hal_camera
 	init_hal_gps
