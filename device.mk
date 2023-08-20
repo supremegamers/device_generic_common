@@ -27,7 +27,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
     bluetooth.rfkill=1 \
     dalvik.vm.useautofastjni=true \
     ro.surface_flinger.max_frame_buffer_acquired_buffers=3 \
-    audio.safemedia.bypass=true
+    audio.safemedia.bypass=true \
+    persist.device_config.mglru_native.lru_gen_config=all
 
 # LMKd
 PRODUCT_PRODUCT_PROPERTIES += \
