@@ -79,7 +79,7 @@ $(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE) $(M4) $(LEX) $(BISON)
 	# A dirty hack to use ar & ld
 	$(mk_kernel) olddefconfig
 	$(mk_kernel) $(KERNEL_TARGET) $(if $(MOD_ENABLED),modules)
-	$(COPY_FIRMWARE_SCRIPT) -v $(abspath $(TARGET_OUT))/lib/firmware
+	$(COPY_FIRMWARE_SCRIPT) -v $(abspath $(TARGET_OUT_VENDOR))/firmware
 	$(if $(FIRMWARE_ENABLED),$(mk_kernel) INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) firmware_install)
 
 ifneq ($(MOD_ENABLED),)
