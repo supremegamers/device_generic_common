@@ -139,3 +139,7 @@ TARGET_SYSTEM_PROP += device/generic/common/system.prop
 
 # Include GloDroid components
 include device/generic/common/glodroid/BoardConfig_glodroid.mk
+
+# For sof-firmware
+SOF_FIRMWARE_PATH := v2.6.x
+SOF_FIRMWARE_VERSION := v2.6
