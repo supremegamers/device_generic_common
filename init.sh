@@ -656,6 +656,7 @@ function do_bootcomplete()
 			alsa_amixer -c $c set Master 100%
 			alsa_amixer -c $c set Headphone on
 			alsa_amixer -c $c set Headphone 100%
+			alsa_amixer -c $c set Speaker on
 			alsa_amixer -c $c set Speaker 100%
 			alsa_amixer -c $c set Capture 80%
 			alsa_amixer -c $c set Capture cap
