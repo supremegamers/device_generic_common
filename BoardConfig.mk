@@ -131,5 +131,4 @@ TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
 TARGET_SYSTEM_PROP += device/generic/common/system.prop
 
 # For sof-firmware
-SOF_FIRMWARE_PATH := v2.6.x
-SOF_FIRMWARE_VERSION := v2.6
+SOF_FIRMWARE_VERSION := v2.2.6
