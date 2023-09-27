@@ -107,6 +107,36 @@ BUILD_EMULATOR_OPENGL := true
 BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
 TARGET_KERNEL_DIFFCONFIG := device/generic/common/selinux_diffconfig
 
+# Atom specific
+ifeq ($(IS_INTEL_ATOM),true)
+
+# from celadon tablet
+BOARD_KERNEL_CMDLINE += \
+	intel_pstate=passive
+
+BOARD_KERNEL_CMDLINE += \
+	no_timer_check \
+	noxsaves \
+	reboot_panic=p,w \
+	i915.hpd_sense_invert=0x7 \
+	intel_iommu=off
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+BOARD_KERNEL_CMDLINE += console=tty0
+endif
+
+ifneq ($(TARGET_BUILD_VARIANT),user)
+BOARD_KERNEL_CMDLINE += console=ttyUSB0,115200n8
+endif
+
+# Fix screen off when s2idle is entered
+BOARD_KERNEL_CMDLINE += vga=current drm.atomic=1 i915.nuclear_pageflip=1 drm.vblankoffdelay=1 i915.fastboot=1
+
+# Fix timeout suspend from preventing wake events
+BOARD_KERNEL_CMDLINE += intel_idle.max_cstate=2 cstate=1 tsc=reliable force_tsc_stable=1 clocksource_failover=tsc
+
+endif
+
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true
 ZIP_OPTIMIZATION_NO_INTEGRITY := true
