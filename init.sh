@@ -518,6 +518,13 @@ function init_hal_sensors()
             elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
                 has_sensors=true
             fi
+
+            # is steam deck?
+            if [ "$BOARD" == "Jupiter" ]
+            then
+                hal_sensors=deck
+                has_sensors=true
+            fi
     fi
 
     set_property ro.iio.accel.quirks "no-trig,no-event"
