@@ -73,6 +73,51 @@ function init_hal_audio()
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
 			;;
 	esac
+
+	if [ "$BOARD" == "Jupiter" ]
+	then
+		fifo_path=/data/local/tmp/ucm_fifo
+		rm -f $fifo_path
+		mkfifo -m 600 $fifo_path
+		chown audioserver $fifo_path
+		nohup bash -c "while true; do echo 'open Valve-Jupiter-1 set _verb HiFi' > $fifo_path & while true; do cat $fifo_path; echo; done | alsaucm -n -i 1>/dev/null 2>/dev/null;done" &
+
+		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
+		# headset microphone on d0, 32bit only
+		set_property hal.audio.in.headset "pcmC${pcm_card}D0c"
+		set_property hal.audio.in.headset.format 1
+		#set_property hal.audio.in.headset.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Headset"
+		set_property hal.audio.in.headset.command "echo set _disdev Mic set _enadev Headset > $fifo_path"
+
+		# internal microphone on d0, 32bit only
+		set_property hal.audio.in.mic "pcmC${pcm_card}D0c"
+		set_property hal.audio.in.mic.format 1
+		#set_property hal.audio.in.mic.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Mic"
+		set_property hal.audio.in.mic.command "echo set _disdev Headset set _enadev Mic > $fifo_path"
+
+		# headphone jack on d0, 32bit only
+		set_property hal.audio.out.headphone "pcmC${pcm_card}D0p"
+		set_property hal.audio.out.headphone.format 1
+		#set_property hal.audio.out.headphone.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Headphones"
+		set_property hal.audio.out.headphone.command "echo set _disdev Speaker set _enadev Headphones > $fifo_path"
+
+		# speaker on d1, 16bit only
+		set_property hal.audio.out.speaker "pcmC${pcm_card}D1p"
+		set_property hal.audio.out.speaker.format 0
+		#set_property hal.audio.out.speaker.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Speaker"
+		set_property hal.audio.out.speaker.command "echo set _disdev Headphones set _enadev Speaker > $fifo_path"
+
+		# enable hdmi audio on the 3rd output, but it really depends on how docks wire things
+		# to make matters worse, jack detection on alsa does not seem to always work on my setup, so a dedicated hdmi hal might want to send data to all ports instead of just probing
+		pcm_card=$(cat /proc/asound/cards | grep HDA-Intel | awk '{print $1}')
+		set_property hal.audio.out.hdmi "pcmC${pcm_card}D8p"
+
+		# unmute them all
+		amixer -c ${pcm_card} sset 'IEC958',0 on
+		amixer -c ${pcm_card} sset 'IEC958',1 on
+		amixer -c ${pcm_card} sset 'IEC958',2 on
+		amixer -c ${pcm_card} sset 'IEC958',3 on
+	fi
 }
 
 function init_hal_bluetooth()
@@ -522,7 +567,7 @@ function init_hal_sensors()
             # is steam deck?
             if [ "$BOARD" == "Jupiter" ]
             then
-                hal_sensors=deck
+                hal_sensors=jupiter
                 has_sensors=true
             fi
     fi
