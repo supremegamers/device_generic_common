@@ -567,6 +567,7 @@ function init_hal_sensors()
             # is steam deck?
             if [ "$BOARD" == "Jupiter" ]
             then
+                set_property poweroff.disable_virtual_power_button 1
                 hal_sensors=jupiter
                 has_sensors=true
             fi
