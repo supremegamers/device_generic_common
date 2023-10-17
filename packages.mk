@@ -144,3 +144,5 @@ endif
 PRODUCT_PACKAGES += \
     Seedvault
 
+# Some additional CLI programs
+PRODUCT_PACKAGES += tput dialog alsa-info.sh tree lspci dmidecode
