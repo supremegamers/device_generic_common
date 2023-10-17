@@ -646,6 +646,15 @@ function init_loop_links()
 	ln -s /dev/block/by-name/kernel_b /dev/block/by-name/boot_b
 }
 
+function init_prepare_ota()
+{
+	# If there's slot set, turn on bootctrl
+	# If not, disable the OTA app (in bootcomplete)
+	if [ "$(getprop ro.boot.slot_suffix)" ]; then
+		start vendor.boot-hal-1-2
+	fi
+}
+
 function do_init()
 {
 	init_misc
@@ -666,6 +675,7 @@ function do_init()
 	init_tscal
 	init_ril
 	init_loop_links
+	init_prepare_ota
 	post_init
 }
 
@@ -749,6 +759,10 @@ function do_bootcomplete()
 	#nohup env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
 	#CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
 	#/system/bin xtr.keymapper.server.InputService > /dev/null 2>&1 &
+
+	if [ ! "$(getprop ro.boot.slot_suffix)" ]; then
+		pm disable org.lineageos.updater
+	fi
 
 	post_bootcomplete
 }
