@@ -785,6 +785,9 @@ for c in `cat /proc/cmdline`; do
 					DPI=*)
 						set_property ro.sf.lcd_density "$DPI"
 						;;
+					SET_SF_ROTATION=*)
+						set_property ro.sf.hwrotation "$SET_SF_ROTATION"
+						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
