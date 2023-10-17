@@ -21,8 +21,6 @@
 PRODUCT_PROPERTY_OVERRIDES := \
     ro.com.android.dateformat=MM-dd-yyyy \
 
-PRODUCT_USE_DYNAMIC_PARTITION_SIZE := true
-
 $(call inherit-product,$(LOCAL_PATH)/device.mk)
 
 # Get a list of languages.
