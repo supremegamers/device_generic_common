@@ -371,6 +371,11 @@ function init_hal_media()
 		set_property ro.yuv420.disable false
 	fi
 
+	if [ "$BOARD" == "Jupiter" ]
+	then
+		FFMPEG_CODEC2_PREFER=${FFMPEG_CODEC2_PREFER:-1}
+	fi
+
 #FFMPEG Codec Setup
 ## Turn on/off FFMPEG OMX by default
 	if [ "$FFMPEG_OMX_CODEC" -ge "1" ]; then
