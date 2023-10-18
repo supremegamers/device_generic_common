@@ -832,6 +832,11 @@ for c in `cat /proc/cmdline`; do
 						# Off: 0  On: 1
 						dumpsys battery set ac "$SET_FAKE_CHARGING_STATUS"
 						;;
+					FORCE_DISABLE_NAVIGATION=*)
+						# Force disable navigation bar
+						# options: true, false
+						set_property persist.bliss.disable_navigation_bar "$FORCE_DISABLE_NAVIGATION"
+						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
