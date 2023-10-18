@@ -76,36 +76,35 @@ function init_hal_audio()
 
 	if [ "$BOARD" == "Jupiter" ]
 	then
-		fifo_path=/data/local/tmp/ucm_fifo
-		rm -f $fifo_path
-		mkfifo -m 600 $fifo_path
-		chown audioserver $fifo_path
-		nohup bash -c "while true; do echo 'open Valve-Jupiter-1 set _verb HiFi' > $fifo_path & while true; do cat $fifo_path; echo; done | alsaucm -n -i 1>/dev/null 2>/dev/null;done" &
+		alsaucm -c Valve-Jupiter-1 set _verb HiFi
 
 		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
 		# headset microphone on d0, 32bit only
 		set_property hal.audio.in.headset "pcmC${pcm_card}D0c"
 		set_property hal.audio.in.headset.format 1
-		#set_property hal.audio.in.headset.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Headset"
-		set_property hal.audio.in.headset.command "echo set _disdev Mic set _enadev Headset > $fifo_path"
+		amixer -c ${pcm_card} sset 'Headset Mic',0 on
 
 		# internal microphone on d0, 32bit only
 		set_property hal.audio.in.mic "pcmC${pcm_card}D0c"
 		set_property hal.audio.in.mic.format 1
-		#set_property hal.audio.in.mic.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Mic"
-		set_property hal.audio.in.mic.command "echo set _disdev Headset set _enadev Mic > $fifo_path"
+		amixer -c ${pcm_card} sset 'Int Mic',0 on
+		amixer -c ${pcm_card} sset 'DMIC Enable',0 on
 
 		# headphone jack on d0, 32bit only
 		set_property hal.audio.out.headphone "pcmC${pcm_card}D0p"
 		set_property hal.audio.out.headphone.format 1
-		#set_property hal.audio.out.headphone.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Headphones"
-		set_property hal.audio.out.headphone.command "echo set _disdev Speaker set _enadev Headphones > $fifo_path"
+		amixer -c ${pcm_card} sset 'Headphone',0 on
 
 		# speaker on d1, 16bit only
 		set_property hal.audio.out.speaker "pcmC${pcm_card}D1p"
 		set_property hal.audio.out.speaker.format 0
-		#set_property hal.audio.out.speaker.command "alsaucm -c Valve-Jupiter-1 set _verb HiFi set _enadev Speaker"
-		set_property hal.audio.out.speaker.command "echo set _disdev Headphones set _enadev Speaker > $fifo_path"
+		amixer -c ${pcm_card} sset 'Left DSP RX1 Source',0 ASPRX1
+		amixer -c ${pcm_card} sset 'Right DSP RX1 Source',0 ASPRX2
+		amixer -c ${pcm_card} sset 'Left DSP RX2 Source',0 ASPRX1
+		amixer -c ${pcm_card} sset 'Right DSP RX2 Source',0 ASPRX2
+		amixer -c ${pcm_card} sset 'Left DSP1 Preload',0 on
+		amixer -c ${pcm_card} sset 'Right DSP1 Preload',0 on
+
 
 		# enable hdmi audio on the 3rd output, but it really depends on how docks wire things
 		# to make matters worse, jack detection on alsa does not seem to always work on my setup, so a dedicated hdmi hal might want to send data to all ports instead of just probing
