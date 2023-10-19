@@ -837,6 +837,11 @@ for c in `cat /proc/cmdline`; do
 						# options: true, false
 						set_property persist.bliss.disable_navigation_bar "$FORCE_DISABLE_NAVIGATION"
 						;;
+					FORCE_DISABLE_NAV_HANDLE=*)
+						# Force disable navigation handle
+						# options: true, false
+						set_property persist.bliss.disable_navigation_handle "$FORCE_DISABLE_NAV_HANDLE"
+						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED
 			fi
