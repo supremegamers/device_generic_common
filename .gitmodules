@@ -3,4 +3,4 @@
 	url = https://github.com/pciutils/pciids
 [submodule "usbids"]
 	path = usbids
-	url = https://github.com/supremegamers/usbids
+	url = https://github.com/usbids/usbids
