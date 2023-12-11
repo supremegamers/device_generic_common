@@ -8,7 +8,7 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
-TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r450784/bin
+TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r498229b/bin
 
 ifneq ($(TARGET_NO_KERNEL),true)
 
