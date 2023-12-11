@@ -2,9 +2,6 @@ blocklist evbug
 deferred nouveau
 deferred amdgpu
 deferred radeon
-blocklist rtw_usb
-blocklist rtw88_usb
-blocklist rtw88_8723du
 blocklist rtw88_8821cu
 blocklist rtw88_8822bu
 blocklist rtw88_8822cu
