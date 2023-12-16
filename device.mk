@@ -154,6 +154,10 @@ PRODUCT_AAPT_PREF_CONFIG := mdpi
 
 DEVICE_PACKAGE_OVERLAYS := $(LOCAL_PATH)/overlay
 
+ifeq ($(IS_GO_VERSION),true)
+DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay-go
+endif
+
 # Enforce privapp-permissions whitelist
 PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
     ro.sys.sdcardfs=false \
