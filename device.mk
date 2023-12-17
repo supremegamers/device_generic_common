@@ -232,7 +232,7 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
 # Inherit common Bliss stuff
-ifeq ($(IS_GO_VERSION),true)
+ifneq ($(IS_GO_VERSION),true)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet.mk)
 else
 $(call inherit-product-if-exists,vendor/bliss/config/common_mini.mk)
