@@ -31,6 +31,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES_DEBUG += \
     bootctl
 
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.2-x86impl \
+    android.hardware.boot@1.2-x86impl.recovery \
+    android.hardware.boot@1.2-service
+
 # Update engine
 PRODUCT_PACKAGES += \
     update_engine \
