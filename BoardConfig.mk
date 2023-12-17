@@ -100,7 +100,7 @@ endif
 #BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
 BOARD_MESA3D_BUILD_LIBGBM := true
-BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl zink
+BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl zink swrast
 BOARD_MESA3D_VULKAN_DRIVERS := amd intel intel_hasvk virtio
 BOARD_MESA3D_GALLIUM_VA := enabled
 BOARD_MESA3D_VIDEO_CODES := h264dec,h264enc,h265dec,h265enc,vc1dec
