@@ -28,15 +28,12 @@ PRODUCT_PACKAGES += \
 # Bluetooth HAL
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-service.vbt \
-    android.hardware.bluetooth.audio-impl \
+    android.hardware.bluetooth.audio@2.1-impl \
 #    android.hardware.bluetooth@1.1-service.btlinux \
 
 
 # Camera HAL
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-external-service \
-	android.hardware.camera.provider@2.4-service_64 \
-	android.hardware.camera.provider@2.4-impl \
     camera.x86
 
 # Media codec
@@ -112,3 +109,6 @@ PRODUCT_PACKAGES += \
 # Thermal HAL
 PRODUCT_PACKAGES += \
     android.hardware.thermal@2.0-service.intel
+
+# vndservicemanager
+PRODUCT_PACKAGES += vndservicemanager

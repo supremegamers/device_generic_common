@@ -3,7 +3,6 @@
 #
 
 persist.bluetooth.enablenewavrcp=true
-audio.safemedia.bypass=true
 
 # Set the Bluetooth Class of Device
 # Service Field: 0x5A -> 90

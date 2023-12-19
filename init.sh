@@ -72,16 +72,7 @@ function init_hal_audio()
 		VirtualBox*|Bochs*)
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
 			;;
-		TS10*)
-			set_prop_if_empty hal.audio.out pcmC0D2p
-			;;
 	esac
-	
-	# choose the first connected HDMI port on card 0 or 1
-	pcm=$(alsa_ctl store -f - 0 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC0D${pcm}p"
-	pcm=$(alsa_ctl store -f - 1 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC1D${pcm}p"
 }
 
 function init_hal_bluetooth()
@@ -607,11 +598,59 @@ function set_lowmem()
 	fi
 }
 
+function set_custom_ota()
+{
+	for c in `cat /proc/cmdline`; do
+		case $c in
+			*=*)
+				eval $c
+				if [ -z "$1" ]; then
+					case $c in
+						# Set TimeZone
+						SET_CUSTOM_OTA_URI=*)
+							setprop bliss.updater.uri "$SET_CUSTOM_OTA_URI"
+							;;
+					esac
+				fi
+				;;
+		esac
+	done
+	
+}
+
+function init_loop_links()
+{
+	mkdir -p /dev/block/by-name
+	for part in kernel initrd system; do
+		for suffix in _a _b; do
+			loop_device=$(losetup -a | grep "$part$suffix" | cut -d ":" -f1)
+			if [ ! -z "$loop_device" ]; then
+				ln -s $loop_device /dev/block/by-name/$part$suffix
+			fi
+		done
+	done
+	loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
+	ln -s $loop_device /dev/block/by-name/misc
+
+	ln -s /dev/block/by-name/kernel_a /dev/block/by-name/boot_a
+	ln -s /dev/block/by-name/kernel_b /dev/block/by-name/boot_b
+}
+
+function init_prepare_ota()
+{
+	# If there's slot set, turn on bootctrl
+	# If not, disable the OTA app (in bootcomplete)
+	if [ "$(getprop ro.boot.slot_suffix)" ]; then
+		start vendor.boot-hal-1-2
+	fi
+}
+
 function do_init()
 {
 	init_misc
 	set_lowmem
 	init_hal_audio
+	set_custom_ota
 	init_hal_bluetooth
 	init_hal_camera
 	init_hal_gps
@@ -625,6 +664,8 @@ function do_init()
 	init_hal_sensors
 	init_tscal
 	init_ril
+	init_loop_links
+	init_prepare_ota
 	post_init
 }
 
@@ -668,6 +709,7 @@ function do_bootcomplete()
 			alsa_amixer -c $c set Master 100%
 			alsa_amixer -c $c set Headphone on
 			alsa_amixer -c $c set Headphone 100%
+			alsa_amixer -c $c set Speaker on
 			alsa_amixer -c $c set Speaker 100%
 			alsa_amixer -c $c set Capture 80%
 			alsa_amixer -c $c set Capture cap
@@ -707,6 +749,10 @@ function do_bootcomplete()
 	#nohup env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
 	#CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
 	#/system/bin xtr.keymapper.server.InputService > /dev/null 2>&1 &
+
+	if [ ! "$(getprop ro.boot.slot_suffix)" ]; then
+		pm disable org.lineageos.updater
+	fi
 
 	post_bootcomplete
 }
