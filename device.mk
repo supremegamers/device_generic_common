@@ -235,7 +235,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 ifneq ($(IS_GO_VERSION),true)
 $(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet.mk)
 else
-$(call inherit-product-if-exists,vendor/bliss/config/common_mini.mk)
+$(call inherit-product-if-exists,vendor/bliss/config/common_mini_tablet.mk)
 endif
 TARGET_FACE_UNLOCK_SUPPORTED := false
 TARGET_WANTS_FOD_ANIMATIONS := false
