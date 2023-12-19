@@ -12,8 +12,7 @@ BCC_PATH := $(patsubst $(CURDIR)/%,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)
 #BOARD_LIBCAMERA_PIPELINES := uvcvideo ipu3
 BOARD_BUILD_AOSPEXT_MESA3D := true
 BOARD_MESA3D_SRC_DIR := external/mesa
-BOARD_MESA3D_GALLIUM_VA := enabled
-BOARD_MESA3D_GALLIUM_VA_CODECS := h264dec h264enc h265dec h265enc vc1dec
+MESON_GEN_LLVM_STUB := true
 BOARD_BUILD_AOSPEXT_DAV1D := true
 BOARD_DAV1D_SRC_DIR := glodroid/dav1d
 

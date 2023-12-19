@@ -489,11 +489,16 @@ function init_hal_sensors()
 			*Akoya*P2213T*)
 				set_property ro.iio.accel.order 102
 				;;
-            *TECLAST*X4*)
+            *TECLAST*X4*|*SF133AYR110*)
                 set_property ro.iio.accel.order 102
                 set_property ro.iio.accel.x.opt_scale -1
                 set_property ro.iio.accel.y.opt_scale -1
                 ;;
+			*TAIFAElimuTab*)
+				set_property ro.ignore_atkbd 1
+				set_property ro.iio.accel.quirks no-trig
+				set_property ro.iio.accel.order 102
+				;;
             *SwitchSA5-271*|*SwitchSA5-271P*)
                 set_property ro.ignore_atkbd 1
                 has_sensors=true
@@ -645,10 +650,32 @@ function init_prepare_ota()
 	fi
 }
 
+function set_custom_timezone()
+{
+	for c in `cat /proc/cmdline`; do
+		case $c in
+			*=*)
+				eval $c
+				if [ -z "$1" ]; then
+					case $c in
+						# Set TimeZone
+						SET_TZ_LOCATION=*)
+							settings put global time_zone "$SET_TZ_LOCATION"
+							setprop persist.sys.timezone "$SET_TZ_LOCATION"
+							;;
+					esac
+				fi
+				;;
+		esac
+	done
+	
+}
+
 function do_init()
 {
 	init_misc
 	set_lowmem
+	set_custom_timezone
 	init_hal_audio
 	set_custom_ota
 	init_hal_bluetooth
@@ -782,6 +809,55 @@ for c in `cat /proc/cmdline`; do
 						;;
 					DPI=*)
 						set_property ro.sf.lcd_density "$DPI"
+						;;
+					SET_SF_ROTATION=*)
+						set_property ro.sf.hwrotation "$SET_SF_ROTATION"
+						;;
+					SET_OVERRIDE_FORCED_ORIENT=*)
+						set_property config.override_forced_orient "$SET_OVERRIDE_FORCED_ORIENT"
+						;;
+					SET_SYS_APP_ROTATION=*)
+						# property: persist.sys.app.rotation has three cases:
+						# 1.force_land: always show with landscape, if a portrait apk, system will scale up it
+						# 2.middle_port: if a portrait apk, will show in the middle of the screen, left and right will show black
+						# 3.original: original orientation, if a portrait apk, will rotate 270 degree
+						set_property persist.sys.app.rotation "$SET_SYS_APP_ROTATION"
+						;;
+					# Battery Stats
+					SET_FAKE_BATTERY_LEVEL=*)
+						# Let us fake the total battery percentage
+						# Range: 0-100
+						dumpsys battery set level "$SET_FAKE_BATTERY_LEVEL"
+						;;
+					SET_FAKE_CHARGING_STATUS=*)
+						# Allow forcing battery charging status
+						# Off: 0  On: 1
+						dumpsys battery set ac "$SET_FAKE_CHARGING_STATUS"
+						;;
+					FORCE_DISABLE_NAVIGATION=*)
+						# Force disable navigation bar
+						# options: true, false
+						set_property persist.bliss.disable_navigation_bar "$FORCE_DISABLE_NAVIGATION"
+						;;
+					FORCE_DISABLE_NAV_HANDLE=*)
+						# Force disable navigation handle
+						# options: true, false
+						set_property persist.bliss.disable_navigation_handle "$FORCE_DISABLE_NAV_HANDLE"
+						;;
+					FORCE_DISABLE_NAV_TASKBAR=*)
+						# Force disable navigation taskbar
+						# options: true, false
+						set_property persist.bliss.disable_taskbar "$FORCE_DISABLE_NAV_TASKBAR"
+						;;
+					FORCE_DISABLE_STATUSBAR=*)
+						# Force disable statusbar
+						# options: true, false
+						set_property persist.bliss.disable_statusbar "$FORCE_DISABLE_STATUSBAR"
+						;;
+					FORCE_DISABLE_RECENTS=*)
+						# Force disable recents
+						# options: true, false
+						set_property persist.bliss.disable_recents "$FORCE_DISABLE_RECENTS"
 						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED

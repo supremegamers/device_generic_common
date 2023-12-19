@@ -23,6 +23,17 @@ AB_OTA_PARTITIONS += \
 # Rootfs
 BOARD_ROOT_EXTRA_FOLDERS := grub
 
+# A/B
+AB_OTA_UPDATER := true
+
+AB_OTA_PARTITIONS += \
+    system \
+    initrd \
+    kernel
+
+# Rootfs
+BOARD_ROOT_EXTRA_FOLDERS := grub
+
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
@@ -104,14 +115,49 @@ endif
 #BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
 BOARD_MESA3D_BUILD_LIBGBM := true
-BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl zink
+BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl zink swrast
 BOARD_MESA3D_VULKAN_DRIVERS := amd intel intel_hasvk virtio
 BOARD_MESA3D_GALLIUM_VA := enabled
-BOARD_MESA3D_VIDEO_CODES := h264dec,h264enc,h265dec,h265enc,vc1dec
+BOARD_MESA3D_VIDEO_CODECS := h264dec h264enc h265dec h265enc vc1dec
 BUILD_EMULATOR_OPENGL := true
 
 BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
 TARGET_KERNEL_DIFFCONFIG := device/generic/common/selinux_diffconfig
+
+# Atom specific
+ifeq ($(IS_INTEL_ATOM),true)
+
+# from celadon tablet
+BOARD_KERNEL_CMDLINE += \
+	intel_pstate=passive
+
+BOARD_KERNEL_CMDLINE += \
+	no_timer_check \
+	noxsaves \
+	reboot_panic=p,w \
+	i915.hpd_sense_invert=0x7 \
+	intel_iommu=off
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+BOARD_KERNEL_CMDLINE += console=tty0
+endif
+
+ifneq ($(TARGET_BUILD_VARIANT),user)
+BOARD_KERNEL_CMDLINE += console=ttyUSB0,115200n8
+endif
+
+# Fix screen off when s2idle is entered
+BOARD_KERNEL_CMDLINE += vga=current drm.atomic=1 i915.nuclear_pageflip=1 drm.vblankoffdelay=1 i915.fastboot=1
+
+# Fix timeout suspend from preventing wake events
+BOARD_KERNEL_CMDLINE += intel_idle.max_cstate=2 cstate=1 tsc=reliable force_tsc_stable=1 clocksource_failover=tsc
+
+endif
+
+ifeq ($(IS_GO_VERSION), true)
+# SVELTE
+MALLOC_SVELTE := true
+endif
 
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true

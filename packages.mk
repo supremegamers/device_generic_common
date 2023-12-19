@@ -41,6 +41,21 @@ PRODUCT_PACKAGES := \
     v86d \
     wacom-input \
 
+ifeq ($(IS_GO_VERSION), true)
+
+ifeq ($(USE_TREBUCHET), true)
+
+PRODUCT_PACKAGES += \
+    TrebuchetQuickstepGo
+    
+else 
+
+PRODUCT_PACKAGES += \
+    Launcher3GoIconRecents
+
+endif
+endif
+
 PRODUCT_PACKAGES += \
     libwpa_client \
     hostapd \
