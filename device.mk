@@ -57,7 +57,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
     dalvik.vm.useautofastjni=true \
     ro.surface_flinger.max_frame_buffer_acquired_buffers=3 \
     audio.safemedia.bypass=true \
-    persist.device_config.mglru_native.lru_gen_config=all
+    persist.device_config.mglru_native.lru_gen_config=all \
+    persist.sys.zram_enabled=1
 
 # LMKd
 ifneq ($(IS_GO_VERSION),true)
