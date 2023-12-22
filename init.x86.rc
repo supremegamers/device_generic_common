@@ -76,6 +76,11 @@ on boot
     # workaround for h.265 slowness
     setprop sys.media.vdec.drop 0
 
+    # mapping properties
+    setprop ro.hardware.audio.primary ${ro.boot.hardware.audio.primary}
+    setprop ro.hardware.audio ${ro.boot.hardware.audio}
+    setprop ro.hardware.power ${ro.boot.hardware.power}
+
     #Celadon thermal HAL
     chown system system /sys/devices/system/cpu/intel_pstate/max_perf_pct
     chown system system /sys/devices/system/cpu/intel_pstate/min_perf_pct
