@@ -4,3 +4,6 @@
 [submodule "usbids"]
 	path = usbids
 	url = https://github.com/usbids/usbids
+[submodule "iptsd"]
+	path = iptsd
+	url = https://github.com/android-generic/iptsd

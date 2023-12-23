@@ -252,6 +252,11 @@ PRODUCT_TYPE := go
 DONT_UNCOMPRESS_PRIV_APPS_DEXS := true
 endif
 
+# Surface specific
+ifeq ($(BOARD_IS_SURFACE_BUILD),true)
+BLISS_SPECIAL_VARIANT := -surface
+endif
+
 # Widevine addons
 ifeq ($(USE_LIBNDK_TRANSLATION_NB),true)
 $(call inherit-product-if-exists, vendor/google/emu-x86/target/widevine.mk)

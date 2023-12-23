@@ -150,3 +150,13 @@ PRODUCT_PACKAGES += \
     
 # Some additional CLI programs
 PRODUCT_PACKAGES += tput dialog alsa-info.sh tree lspci dmidecode
+
+# Surface specific
+ifeq ($(BOARD_IS_SURFACE_BUILD),true)
+PRODUCT_PACKAGES += iptsd_runner iptsd \
+                    iptsd-find-hidraw \
+                    iptsd-calibrate \
+                    iptsd-check-device \
+                    iptsd-dump \
+                    iptsd-perf
+endif

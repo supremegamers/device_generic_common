@@ -137,6 +137,11 @@ service ctrl-alt-del /system/bin/input keyevent --longpress POWER
     keycodes 97 100 111
     seclabel u:r:init:s0
 
+service iptsd_runner /system/vendor/bin/iptsd_runner
+    class main
+    disabled
+    seclabel u:r:zygote:s0
+
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking
     write /dev/tty0 "[?17;0;0c"

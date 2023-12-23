@@ -159,6 +159,11 @@ ifeq ($(IS_GO_VERSION), true)
 MALLOC_SVELTE := true
 endif
 
+# Surface specific
+ifeq ($(BOARD_IS_SURFACE_BUILD),true)
+KERNEL_DIR := kernel-surface
+endif
+
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true
 ZIP_OPTIMIZATION_NO_INTEGRITY := true
