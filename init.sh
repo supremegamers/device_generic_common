@@ -756,6 +756,10 @@ function do_bootcomplete()
 			alsa_amixer -c $c set 'Mic Boost' 1
 			alsa_amixer -c $c set 'Internal Mic Boost' 1
 		fi
+		d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
+		if [ -e $d ]; then
+			alsa_ctl -f $d restore $c
+		else
 	done
 
 	# check wifi setup
