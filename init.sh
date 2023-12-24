@@ -180,6 +180,7 @@ function init_hal_gralloc()
 			;&
 		*nouveau)
 			GRALLOC=${GRALLOC:-gbm_hack}
+			HWC=${HWC:-drm_celadon}
 			;&
 		*i915)
 			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen' -e 'graphics version' | awk '{print $NF}')" -gt 9 ]; then
