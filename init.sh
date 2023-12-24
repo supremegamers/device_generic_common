@@ -760,7 +760,7 @@ function do_bootcomplete()
 		d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
 		if [ -e $d ]; then
 			alsa_ctl -f $d restore $c
-		else
+		fi
 	done
 
 	# check wifi setup
