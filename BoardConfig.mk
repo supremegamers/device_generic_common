@@ -154,7 +154,7 @@ BOARD_KERNEL_CMDLINE += intel_idle.max_cstate=2 cstate=1 tsc=reliable force_tsc_
 
 endif
 
-ifeq ($(IS_GO_VERSION), true)
+ifeq ($(BOARD_IS_GO_BUILD), true)
 # SVELTE
 MALLOC_SVELTE := true
 endif
