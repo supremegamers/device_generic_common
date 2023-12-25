@@ -251,13 +251,14 @@ $(error "Go build should not be mixed with Surface build")
 endif
 # Inherit common Android Go configurations
 $(call inherit-product, build/target/product/go_defaults.mk)
+BLISS_SPECIAL_VARIANT := -Go
 PRODUCT_TYPE := go
 DONT_UNCOMPRESS_PRIV_APPS_DEXS := true
 endif
 
 # Surface specific
 ifeq ($(BOARD_IS_SURFACE_BUILD),true)
-BLISS_SPECIAL_VARIANT := -surface
+BLISS_SPECIAL_VARIANT := -Surface
 endif
 
 # Widevine addons
