@@ -13,6 +13,11 @@ on early-init
 #   export EGL_DRIVERS egl_dri2
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
 
+    # mapping properties
+    setprop ro.hardware.audio.primary ${ro.boot.hardware.audio.primary}
+    setprop ro.hardware.audio ${ro.boot.hardware.audio}
+    setprop ro.hardware.power ${ro.boot.hardware.power}
+
 on early-init && property:mesa.loader.override=*
     export MESA_LOADER_DRIVER_OVERRIDE ${mesa.loader.override}
 
@@ -75,11 +80,6 @@ on boot
     setprop persist.sys.strictmode.disable 1
     # workaround for h.265 slowness
     setprop sys.media.vdec.drop 0
-
-    # mapping properties
-    setprop ro.hardware.audio.primary ${ro.boot.hardware.audio.primary}
-    setprop ro.hardware.audio ${ro.boot.hardware.audio}
-    setprop ro.hardware.power ${ro.boot.hardware.power}
 
     #Celadon thermal HAL
     chown system system /sys/devices/system/cpu/intel_pstate/max_perf_pct
