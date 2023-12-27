@@ -164,6 +164,11 @@ ifeq ($(BOARD_IS_SURFACE_BUILD),true)
 KERNEL_DIR := kernel-surface
 endif
 
+# Zenith
+ifeq ($(BOARD_IS_ZENITH_BUILD),true)
+KERNEL_DIR := kernel-zenith
+endif
+
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true
 ZIP_OPTIMIZATION_NO_INTEGRITY := true
