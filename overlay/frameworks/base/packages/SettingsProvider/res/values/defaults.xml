@@ -18,7 +18,7 @@
 -->
 <resources>
     <bool name="def_bluetooth_on">false</bool>
-    <bool name="def_lockscreen_disabled">true</bool>
+    <bool name="def_lockscreen_disabled">false</bool>
     <integer name="def_screen_off_timeout">600000000</integer>
     <integer name="def_sleep_timeout">86400000</integer>    
     <bool name="def_accelerometer_rotation">true</bool>
