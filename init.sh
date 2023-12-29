@@ -117,6 +117,33 @@ function init_hal_audio()
 		amixer -c ${pcm_card} sset 'IEC958',2 on
 		amixer -c ${pcm_card} sset 'IEC958',3 on
 	fi
+
+#	[ -d /proc/asound/card0 ] || modprobe snd-dummy
+	for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
+		f=/system/etc/alsa/$(cat /proc/asound/card$c/id).state
+		if [ -e $f ]; then
+			alsa_ctl -f $f restore $c
+		else
+			alsa_ctl init $c
+			alsa_amixer -c $c set Master on
+			alsa_amixer -c $c set Master 100%
+			alsa_amixer -c $c set Headphone on
+			alsa_amixer -c $c set Headphone 100%
+			alsa_amixer -c $c set Speaker on
+			alsa_amixer -c $c set Speaker 100%
+			alsa_amixer -c $c set Capture 80%
+			alsa_amixer -c $c set Capture cap
+			alsa_amixer -c $c set PCM 100% unmute
+			alsa_amixer -c $c set SPO unmute
+			alsa_amixer -c $c set IEC958 on
+			alsa_amixer -c $c set 'Mic Boost' 1
+			alsa_amixer -c $c set 'Internal Mic Boost' 1
+		fi
+		d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
+		if [ -e $d ]; then
+			alsa_ctl -f $d restore $c
+		fi
+	done
 }
 
 function init_hal_bluetooth()
@@ -792,33 +819,6 @@ function do_bootcomplete()
 		*)
 			;;
 	esac
-
-#	[ -d /proc/asound/card0 ] || modprobe snd-dummy
-	for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
-		f=/system/etc/alsa/$(cat /proc/asound/card$c/id).state
-		if [ -e $f ]; then
-			alsa_ctl -f $f restore $c
-		else
-			alsa_ctl init $c
-			alsa_amixer -c $c set Master on
-			alsa_amixer -c $c set Master 100%
-			alsa_amixer -c $c set Headphone on
-			alsa_amixer -c $c set Headphone 100%
-			alsa_amixer -c $c set Speaker on
-			alsa_amixer -c $c set Speaker 100%
-			alsa_amixer -c $c set Capture 80%
-			alsa_amixer -c $c set Capture cap
-			alsa_amixer -c $c set PCM 100% unmute
-			alsa_amixer -c $c set SPO unmute
-			alsa_amixer -c $c set IEC958 on
-			alsa_amixer -c $c set 'Mic Boost' 1
-			alsa_amixer -c $c set 'Internal Mic Boost' 1
-		fi
-		d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
-		if [ -e $d ]; then
-			alsa_ctl -f $d restore $c
-		fi
-	done
 
 	# check wifi setup
 	FILE_CHECK=/data/misc/wifi/wpa_supplicant.conf
