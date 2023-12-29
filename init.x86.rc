@@ -14,8 +14,6 @@ on early-init
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
 
     # mapping properties
-    setprop ro.hardware.audio.primary ${ro.boot.hardware.audio.primary}
-    setprop ro.hardware.audio ${ro.boot.hardware.audio}
     setprop ro.hardware.power ${ro.boot.hardware.power}
 
 on early-init && property:mesa.loader.override=*
