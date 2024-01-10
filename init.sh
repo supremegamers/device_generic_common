@@ -472,7 +472,7 @@ function init_hal_vulkan()
 			fi
 			;;
 		*amdgpu)
-			set_property ro.hardware.vulkan radeon
+			set_property ro.hardware.vulkan amd
 			;;
 		*virtio_gpu)
 			set_property ro.hardware.vulkan virtio
