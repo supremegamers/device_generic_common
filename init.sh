@@ -421,7 +421,6 @@ function init_hal_media()
 	else
 	    set_property media.sf.omx-plugin ""
     	set_property media.sf.extractor-plugin ""
-	    set_property debug.ffmpeg-omx.disable 1
 	fi
 
 ## Enable logging
