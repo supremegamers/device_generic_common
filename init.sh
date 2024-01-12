@@ -495,11 +495,14 @@ function init_hal_power()
 
 	# TODO
 	case "$PRODUCT" in
-		HP*Omni*|OEMB|Standard*PC*|Surface*3|T10*TA|VMware*)
+		HP*Omni*|OEMB|Standard*PC*|Surface*3|VMware*)
 			set_prop_if_empty sleep.state none
 			;;
 		e-tab*Pro)
 			set_prop_if_empty sleep.state force
+			;;
+		T10*TA)
+			set_prop_if_empty sleep.state freeze
 			;;
 		*)
 			;;
