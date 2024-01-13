@@ -91,7 +91,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/pciids/pci.ids:$(TARGET_COPY_OUT_SYSTEM)/vendor/etc/pci.ids \
     $(LOCAL_PATH)/usbids/usb.ids:$(TARGET_COPY_OUT_SYSTEM)/vendor/etc/usb.ids \
     $(LOCAL_PATH)/fstab.internal.x86:$(TARGET_COPY_OUT_SYSTEM)/vendor/etc/fstab.internal.x86 \
-    $(LOCAL_PATH)/init.configfs_x86.rc:root/init.configfs_x86.rc \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_c2.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_c2_audio.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/media_codecs_google_c2_audio.xml \

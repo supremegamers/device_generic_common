@@ -84,8 +84,7 @@ PRODUCT_PACKAGES += \
     hciconfig \
     hcitool \
     thermsys \
-    thermal-daemon \
-    usb_otg_switch
+    thermal-daemon
 
 # Stagefright FFMPEG plugins
 PRODUCT_PACKAGES += \

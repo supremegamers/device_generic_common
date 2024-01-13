@@ -55,13 +55,6 @@ function init_misc()
 		fi
 	fi
 
-	##WIP: Enable USB as device support
-    modprobe roles
-    modprobe xhci-hcd
-    modprobe xhci-pci
-    modprobe dwc3
-    modprobe dwc3-pci
-
 	#Set CPU name into a property
 	setprop ro.bliss.cpuname "$(grep "model name" /proc/cpuinfo | sort -u | cut -d : -f 2 | cut -c2-)"
 }
