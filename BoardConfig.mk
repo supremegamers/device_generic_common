@@ -12,6 +12,28 @@ USE_EROFS := 1
 TARGET_CPU_VARIANT := generic
 TARGET_2ND_CPU_VARIANT := generic
 
+# A/B
+AB_OTA_UPDATER := true
+
+AB_OTA_PARTITIONS += \
+    system \
+    initrd \
+    kernel
+
+# Rootfs
+BOARD_ROOT_EXTRA_FOLDERS := grub
+
+# A/B
+AB_OTA_UPDATER := true
+
+AB_OTA_PARTITIONS += \
+    system \
+    initrd \
+    kernel
+
+# Rootfs
+BOARD_ROOT_EXTRA_FOLDERS := grub
+
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
@@ -34,14 +56,16 @@ endif
 TARGET_PRELINK_MODULE := false
 TARGET_NO_KERNEL ?= false
 TARGET_NO_RECOVERY ?= true
-TARGET_EXTRA_KERNEL_MODULES := tp_smapi
+TARGET_EXTRA_KERNEL_MODULES := 
 ifneq ($(filter efi_img,$(MAKECMDGOALS)),)
 TARGET_KERNEL_ARCH ?= x86_64
 endif
 TARGET_USES_64_BIT_BINDER := true
 
 BOARD_USES_GENERIC_AUDIO ?= false
-BOARD_USES_ALSA_AUDIO ?= true
+BOARD_USES_ALSA_AUDIO := true
+BOARD_USES_TINY_ALSA_AUDIO := true
+INTEL_AUDIO_HAL := audio
 BUILD_WITH_ALSA_UTILS ?= true
 BOARD_HAS_GPS_HARDWARE ?= true
 
@@ -79,9 +103,6 @@ TARGET_USES_HWC2 ?= true
 
 USE_CAMERA_STUB ?= false
 
-SUPERUSER_EMBEDDED := true
-SUPERUSER_PACKAGE_PREFIX := com.android.settings.cyanogenmod.superuser
-
 # This enables the wpa wireless driver
 BOARD_WPA_SUPPLICANT_DRIVER ?= NL80211
 WPA_SUPPLICANT_VERSION ?= VER_2_1_DEVEL
@@ -91,15 +112,62 @@ ifneq ($(strip $(BOARD_GPU_DRIVERS)),)
 TARGET_HARDWARE_3D := true
 endif
 
-BOARD_MESA3D_USES_MESON_BUILD := true
+#BOARD_MESA3D_USES_MESON_BUILD := true
 #BOARD_MESA3D_CLASSIC_DRIVERS := i965
 BOARD_MESA3D_BUILD_LIBGBM := true
-BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl
-BOARD_MESA3D_VULKAN_DRIVERS := amd intel intel_hasvk virtio-experimental
+BOARD_MESA3D_GALLIUM_DRIVERS := crocus iris i915 nouveau r600 radeonsi svga virgl zink swrast
+BOARD_MESA3D_VULKAN_DRIVERS := amd intel intel_hasvk virtio
+BOARD_MESA3D_GALLIUM_VA := enabled
+BOARD_MESA3D_VIDEO_CODECS := h264dec h264enc h265dec h265enc vc1dec
 BUILD_EMULATOR_OPENGL := true
 
 BOARD_KERNEL_CMDLINE := root=/dev/ram0$(if $(filter x86_64,$(TARGET_ARCH) $(TARGET_KERNEL_ARCH)),, vmalloc=192M)
 TARGET_KERNEL_DIFFCONFIG := device/generic/common/selinux_diffconfig
+
+# Atom specific
+ifeq ($(IS_INTEL_ATOM),true)
+
+# from celadon tablet
+BOARD_KERNEL_CMDLINE += \
+	intel_pstate=passive
+
+BOARD_KERNEL_CMDLINE += \
+	no_timer_check \
+	noxsaves \
+	reboot_panic=p,w \
+	i915.hpd_sense_invert=0x7 \
+	intel_iommu=off
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+BOARD_KERNEL_CMDLINE += console=tty0
+endif
+
+ifneq ($(TARGET_BUILD_VARIANT),user)
+BOARD_KERNEL_CMDLINE += console=ttyUSB0,115200n8
+endif
+
+# Fix screen off when s2idle is entered
+BOARD_KERNEL_CMDLINE += vga=current drm.atomic=1 i915.nuclear_pageflip=1 drm.vblankoffdelay=1 i915.fastboot=1
+
+# Fix timeout suspend from preventing wake events
+BOARD_KERNEL_CMDLINE += intel_idle.max_cstate=2 cstate=1 tsc=reliable force_tsc_stable=1 clocksource_failover=tsc
+
+endif
+
+ifeq ($(BOARD_IS_GO_BUILD), true)
+# SVELTE
+MALLOC_SVELTE := true
+endif
+
+# Surface specific
+ifeq ($(BOARD_IS_SURFACE_BUILD),true)
+KERNEL_DIR := kernel-surface
+endif
+
+# Zenith
+ifeq ($(BOARD_IS_ZENITH_BUILD),true)
+KERNEL_DIR := kernel-zenith
+endif
 
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true
@@ -114,10 +182,11 @@ DEVICE_MANIFEST_FILE := device/generic/common/manifest.xml
 #                       vendor/intel/proprietary/houdini/sepolicy \
 #                       vendor/google/proprietary/widevine-prebuilt/sepolicy
 #
-#BOARD_PLAT_PRIVATE_SEPOLICY_DIR := device/generic/common/sepolicy/plat_private
+SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := device/generic/common/sepolicy/plat_private
 
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
-BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 42000000
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4294967290
+TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
 BOARD_USES_OEMIMAGE := true
 BUILD_BROKEN_USES_NETWORK := true
 USE_XML_AUDIO_POLICY_CONF := 1
@@ -137,4 +206,7 @@ STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
 TARGET_SYSTEM_PROP += device/generic/common/system.prop
+
+# Include GloDroid components
+include device/generic/common/glodroid/BoardConfig_glodroid.mk
 

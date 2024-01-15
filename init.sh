@@ -55,16 +55,8 @@ function init_misc()
 		fi
 	fi
 
-	##mgLRU tweak
-    echo y > /sys/kernel/mm/lru_gen/enabled
-    echo 1000 > /sys/kernel/mm/lru_gen/min_ttl_ms
-
-	##WIP: Enable USB as device support
-    modprobe roles
-    modprobe xhci-hcd
-    modprobe xhci-pci
-    modprobe dwc3
-    modprobe dwc3-pci
+	#Set CPU name into a property
+	setprop ro.bliss.cpuname "$(grep "model name" /proc/cpuinfo | sort -u | cut -d : -f 2 | cut -c2-)"
 }
 
 function init_hal_audio()
@@ -77,12 +69,84 @@ function init_hal_audio()
 			set_prop_if_empty hal.audio.out pcmC0D2p
 			;;
 	esac
-	
-	# choose the first connected HDMI port on card 0 or 1
-	pcm=$(alsa_ctl store -f - 0 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC0D${pcm}p"
-	pcm=$(alsa_ctl store -f - 1 2>/dev/null| grep "CARD" -A 2 | grep "value true" -B 1 | grep "HDMI.*pcm" | head -1 | sed -e's/.*pcm=\([0-9]*\).*/\1/')
-	[ -z "${pcm##*[!0-9]*}" ] || set_prop_if_empty hal.audio.out "pcmC1D${pcm}p"
+
+	case "$(ls /proc/asound)" in
+		*sofhdadsp*)
+			AUDIO_PRIMARY=x86_celadon
+			;;
+	esac
+	set_property ro.hardware.audio.primary ${AUDIO_PRIMARY:-x86}
+
+	if [ "$BOARD" == "Jupiter" ] && [ "$VENDOR" == "Valve" ]
+	then
+		alsaucm -c Valve-Jupiter-1 set _verb HiFi
+
+		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
+		# headset microphone on d0, 32bit only
+		set_property hal.audio.in.headset "pcmC${pcm_card}D0c"
+		set_property hal.audio.in.headset.format 1
+		amixer -c ${pcm_card} sset 'Headset Mic',0 on
+
+		# internal microphone on d0, 32bit only
+		set_property hal.audio.in.mic "pcmC${pcm_card}D0c"
+		set_property hal.audio.in.mic.format 1
+		amixer -c ${pcm_card} sset 'Int Mic',0 on
+		amixer -c ${pcm_card} sset 'DMIC Enable',0 on
+
+		# headphone jack on d0, 32bit only
+		set_property hal.audio.out.headphone "pcmC${pcm_card}D0p"
+		set_property hal.audio.out.headphone.format 1
+		amixer -c ${pcm_card} sset 'Headphone',0 on
+
+		# speaker on d1, 16bit only
+		set_property hal.audio.out.speaker "pcmC${pcm_card}D1p"
+		set_property hal.audio.out.speaker.format 0
+		amixer -c ${pcm_card} sset 'Left DSP RX1 Source',0 ASPRX1
+		amixer -c ${pcm_card} sset 'Right DSP RX1 Source',0 ASPRX2
+		amixer -c ${pcm_card} sset 'Left DSP RX2 Source',0 ASPRX1
+		amixer -c ${pcm_card} sset 'Right DSP RX2 Source',0 ASPRX2
+		amixer -c ${pcm_card} sset 'Left DSP1 Preload',0 on
+		amixer -c ${pcm_card} sset 'Right DSP1 Preload',0 on
+
+
+		# enable hdmi audio on the 3rd output, but it really depends on how docks wire things
+		# to make matters worse, jack detection on alsa does not seem to always work on my setup, so a dedicated hdmi hal might want to send data to all ports instead of just probing
+		pcm_card=$(cat /proc/asound/cards | grep HDA-Intel | awk '{print $1}')
+		set_property hal.audio.out.hdmi "pcmC${pcm_card}D8p"
+
+		# unmute them all
+		amixer -c ${pcm_card} sset 'IEC958',0 on
+		amixer -c ${pcm_card} sset 'IEC958',1 on
+		amixer -c ${pcm_card} sset 'IEC958',2 on
+		amixer -c ${pcm_card} sset 'IEC958',3 on
+	fi
+
+#	[ -d /proc/asound/card0 ] || modprobe snd-dummy
+	for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
+		f=/system/etc/alsa/$(cat /proc/asound/card$c/id).state
+		if [ -e $f ]; then
+			alsa_ctl -f $f restore $c
+		else
+			alsa_ctl init $c
+			alsa_amixer -c $c set Master on
+			alsa_amixer -c $c set Master 100%
+			alsa_amixer -c $c set Headphone on
+			alsa_amixer -c $c set Headphone 100%
+			alsa_amixer -c $c set Speaker on
+			alsa_amixer -c $c set Speaker 100%
+			alsa_amixer -c $c set Capture 80%
+			alsa_amixer -c $c set Capture cap
+			alsa_amixer -c $c set PCM 100% unmute
+			alsa_amixer -c $c set SPO unmute
+			alsa_amixer -c $c set IEC958 on
+			alsa_amixer -c $c set 'Mic Boost' 1
+			alsa_amixer -c $c set 'Internal Mic Boost' 1
+		fi
+		d=/data/vendor/alsa/$(cat /proc/asound/card$c/id).state
+		if [ -e $d ]; then
+			alsa_ctl -f $d restore $c
+		fi
+	done
 }
 
 function init_hal_bluetooth()
@@ -126,19 +190,6 @@ function init_hal_bluetooth()
 		set_property hal.bluetooth.uart $BTUART_PORT
 		chown bluetooth.bluetooth $BTUART_PORT
 		start btattach
-	fi
-
-	# rtl8723bs bluetooth
-	if dmesg -t | grep -qE '8723bs.*BT'; then
-		TTYSTRING=`dmesg -t | grep -E 'tty.*MMIO' | awk '{print $2}' | head -1`
-		if [ -n "$TTYSTRING" ]; then
-			echo "RTL8723BS BT uses $TTYSTRING for Bluetooth."
-			ln -sf $TTYSTRING /dev/rtk_h5
-			# HAXXX
-			modprobe -r 8250_dw
-			modprobe 8250_dw
-			start rtk_hciattach
-		fi
 	fi
 }
 
@@ -196,12 +247,26 @@ function init_uvesafb()
 function init_hal_gralloc()
 {
 	case "$(readlink /sys/class/graphics/fb0/device/driver)" in
-		*virtio_gpu)
-			HWC=${HWC:-drm_minigbm}
+		*virtio_gpu|*virtio-pci)
+			HWC=${HWC:-drm_minigbm_celadon}
 			GRALLOC=${GRALLOC:-minigbm_arcvm}
 			#video=${video:-1280x768}
 			;&
-		*i915|*radeon|*nouveau|*amdgpu)
+		*nouveau)
+			GRALLOC=${GRALLOC:-gbm_hack}
+			HWC=${HWC:-drm_celadon}
+			;&
+		*i915)
+			if [ "$(cat /sys/kernel/debug/dri/0/i915_capabilities | grep -e 'gen' -e 'graphics version' | awk '{print $NF}')" -gt 9 ]; then
+				HWC=${HWC:-drm_minigbm_celadon}
+				GRALLOC=${GRALLOC:-minigbm}
+			fi
+			;&
+		*amdgpu)
+			HWC=${HWC:-drm_minigbm_celadon}
+			GRALLOC=${GRALLOC:-minigbm}
+			;&
+		*radeon|*vmwgfx*)
 			if [ "$HWACCEL" != "0" ]; then
 				set_property ro.hardware.hwcomposer ${HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
@@ -322,48 +387,70 @@ function init_hal_hwcomposer()
 
 function init_hal_media()
 {
-	# Check if we want to set codec2
+	# Check if we want to use codec2
 	if [ -z ${CODEC2_LEVEL+x} ]; then
 		echo ""
 	else
 		set_property debug.stagefright.ccodec $CODEC2_LEVEL
 	fi
 
-	if [ "$FFMPEG_CODEC" -ge "1" ]; then
-	    set_property media.sf.omx-plugin libffmpeg_omx.so
-    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
-	    set_property media.sf.hwaccel 1
-		start android-hardware-media-c2-hal-1-2
-		if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
-			set_property media.sf.hwaccel 0
-		else
-			set_property media.sf.hwaccel 1
-		fi
-		if [ "$FFMPEG_OMX_DISABLE" -ge "1" ]; then
-			set_property debug.ffmpeg-omx.disable 1
-		else
-			set_property debug.ffmpeg-omx.disable 0
-		fi
-		if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
-			set_property debug.ffmpeg.loglevel verbose
-		fi
-		if [ "$FFMPEG_PREFER_C2" -ge "1" ]; then
-			set_property debug.ffmpeg-codec2.rank 0
-		else
-			set_property debug.ffmpeg-codec2.rank 4294967295
-		fi
-	else
-		set_property debug.ffmpeg-codec2.rank 4294967295
-	    set_property media.sf.omx-plugin ""
-    	set_property media.sf.extractor-plugin ""
-	    set_property debug.ffmpeg-omx.disable 0
-	fi
-
-	if [ "$NO_YUV420" -ge "1" ]; then
+	# Disable YUV420 planar on OMX codecs
+	if [ "$OMX_NO_YUV420" -ge "1" ]; then
 		set_property ro.yuv420.disable true
 	else
 		set_property ro.yuv420.disable false
 	fi
+
+	if [ "$BOARD" == "Jupiter" ] && [ "$VENDOR" == "Valve" ]
+	then
+		FFMPEG_CODEC2_PREFER=${FFMPEG_CODEC2_PREFER:-1}
+	fi
+
+#FFMPEG Codec Setup
+## Turn on/off FFMPEG OMX by default
+	if [ "$FFMPEG_OMX_CODEC" -ge "1" ]; then
+	    set_property media.sf.omx-plugin libffmpeg_omx.so
+    	set_property media.sf.extractor-plugin libffmpeg_extractor.so
+	else
+	    set_property media.sf.omx-plugin ""
+    	set_property media.sf.extractor-plugin ""
+	fi
+
+## Enable logging
+    if [ "$FFMPEG_CODEC_LOG" -ge "1" ]; then
+        set_property debug.ffmpeg.loglevel verbose
+    fi	
+## Disable HWAccel (currently only VA-API) and use software rendering
+    if [ "$FFMPEG_HWACCEL_DISABLE" -ge "1" ]; then
+        set_property media.sf.hwaccel 0
+    else
+        set_property media.sf.hwaccel 1
+    fi
+## Put c2.ffmpeg to the highest rank amongst the media codecs
+    if [ "$FFMPEG_CODEC2_PREFER" -ge "1" ]; then
+        set_property debug.ffmpeg-codec2.rank 0
+    else
+        set_property debug.ffmpeg-codec2.rank 4294967295
+    fi
+## FFMPEG deinterlace, we will put both software mode and VA-API one here
+	if [ -z "${FFMPEG_CODEC2_DEINTERLACE+x}" ]; then
+		echo ""
+	else
+		set_property debug.ffmpeg-codec2.deinterlace $FFMPEG_CODEC2_DEINTERLACE
+	fi
+	if [ -z "${FFMPEG_CODEC2_DEINTERLACE_VAAPI+x}" ]; then
+		echo ""
+	else
+		set_property debug.ffmpeg-codec2.deinterlace.vaapi $FFMPEG_CODEC2_DEINTERLACE_VAAPI
+	fi
+## Handle DRM prime on ffmpeg codecs, we will disable by default due to 
+## the fact that it doesn't work with gbm_gralloc yet
+	if [ "$FFMPEG_CODEC2_DRM" -ge "1" ]; then
+	    set_property debug.ffmpeg-codec2.hwaccel.drm 1
+	else
+	    set_property debug.ffmpeg-codec2.hwaccel.drm 0
+	fi
+
 }
 
 function init_hal_vulkan()
@@ -377,7 +464,7 @@ function init_hal_vulkan()
 			fi
 			;;
 		*amdgpu)
-			set_property ro.hardware.vulkan radeon
+			set_property ro.hardware.vulkan amd
 			;;
 		*virtio_gpu)
 			set_property ro.hardware.vulkan virtio
@@ -427,151 +514,112 @@ function init_hal_thermal()
 
 function init_hal_sensors()
 {
-	# if we have sensor module for our hardware, use it
-	ro_hardware=$(getprop ro.hardware)
-	[ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
+    if [ "$SENSORS_FORCE_KBDSENSOR" == "1" ]; then
+        # Option to force kbd sensor
+        hal_sensors=kbd
+        has_sensors=true
+    else
+        # if we have sensor module for our hardware, use it
+        ro_hardware=$(getprop ro.hardware)
+        [ -f /system/lib/hw/sensors.${ro_hardware}.so ] && return 0
 
-	local hal_sensors=kbd
-	local has_sensors=true
+        local hal_sensors=kbd
+        local has_sensors=true
+        case "$UEVENT" in
+            *MS-N0E1*)
+                set_property ro.ignore_atkbd 1
+                set_property poweroff.doubleclick 0
+                setkeycodes 0xa5 125
+                setkeycodes 0xa7 1
+                setkeycodes 0xe3 142
+                ;;
+            *Aspire1*25*)
+                modprobe lis3lv02d_i2c
+                echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
+                ;;
+            *Aspire*SW5-012*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *LenovoideapadD330*)
+                set_property ro.iio.accel.order 102
+                set_property ro.ignore_atkbd 1
+                ;&
+            *LINX1010B*)
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.z.opt_scale -1
+                ;;
+            *i7Stylus*|*M80TA*)
+                set_property ro.iio.accel.x.opt_scale -1
+                ;;
+            *LenovoMIIX320*|*ONDATablet*)
+                set_property ro.iio.accel.order 102
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+            *Venue*8*Pro*3845*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *ST70416-6*)
+                set_property ro.iio.accel.order 102
+                ;;
+            *T*0*TA*|*M80TA*)
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+			*Akoya*P2213T*)
+				set_property ro.iio.accel.order 102
+				;;
+            *TECLAST*X4*|*SF133AYR110*)
+                set_property ro.iio.accel.order 102
+                set_property ro.iio.accel.x.opt_scale -1
+                set_property ro.iio.accel.y.opt_scale -1
+                ;;
+			*TAIFAElimuTab*)
+				set_property ro.ignore_atkbd 1
+				set_property ro.iio.accel.quirks no-trig
+				set_property ro.iio.accel.order 102
+				;;
+            *SwitchSA5-271*|*SwitchSA5-271P*)
+                set_property ro.ignore_atkbd 1
+                has_sensors=true
+                hal_sensors=iio
+                ;&
+            *)
+                has_sensors=false
+                ;;
+        esac
+
+            # has iio sensor-hub?
+            if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
+                toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
+                [ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
+                hal_sensors=iio
+            elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
+                has_sensors=true
+            fi
+
+            # is steam deck?
+            if [ "$BOARD" == "Jupiter" ] && [ "$VENDOR" == "Valve" ]
+            then
+                set_property poweroff.disable_virtual_power_button 1
+                hal_sensors=jupiter
+                has_sensors=true
+            fi
+    fi
+
+    set_property ro.iio.accel.quirks "no-trig,no-event"
+    set_property ro.iio.anglvel.quirks "no-trig,no-event"
+    set_property ro.iio.magn.quirks "no-trig,no-event"
+    set_property ro.hardware.sensors $hal_sensors
+    set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
+}
+
+function init_hal_surface()
+{
 	case "$UEVENT" in
-		*Lucid-MWE*)
-			set_property ro.ignore_atkbd 1
-			hal_sensors=hdaps
-			;;
-		*ICONIA*W5*)
-			hal_sensors=w500
-			;;
-		*S10-3t*)
-			hal_sensors=s103t
-			;;
-		*Inagua*)
-			#setkeycodes 0x62 29
-			#setkeycodes 0x74 56
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 2
-			;;
-		*TEGA*|*2010:svnIntel:*)
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 1
-			io_switch 0x0 0x1
-			setkeycodes 0x6d 125
-			;;
-		*DLI*)
-			set_property ro.ignore_atkbd 1
-			set_property hal.sensors.kbd.type 1
-			setkeycodes 0x64 1
-			setkeycodes 0x65 172
-			setkeycodes 0x66 120
-			setkeycodes 0x67 116
-			setkeycodes 0x68 114
-			setkeycodes 0x69 115
-			setkeycodes 0x6c 114
-			setkeycodes 0x6d 115
-			;;
-		*tx2*)
-			setkeycodes 0xb1 138
-			setkeycodes 0x8a 152
-			set_property hal.sensors.kbd.type 6
-			set_property poweroff.doubleclick 0
-			set_property qemu.hw.mainkeys 1
-			;;
-		*MS-N0E1*)
-			set_property ro.ignore_atkbd 1
-			set_property poweroff.doubleclick 0
-			setkeycodes 0xa5 125
-			setkeycodes 0xa7 1
-			setkeycodes 0xe3 142
-			;;
-		*Aspire1*25*)
-			modprobe lis3lv02d_i2c
-			echo -n "enabled" > /sys/class/thermal/thermal_zone0/mode
-			;;
-		*Aspire*SW5-012*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.anglvel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			;;
-		*ThinkPad*Tablet*)
-			modprobe hdaps
-			hal_sensors=hdaps
-			;;
-		*LenovoideapadD330*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			set_property ro.ignore_atkbd 1
-			;&
-		*LINX1010B*)
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.z.opt_scale -1
-			;;
-		*i7-WN*|*SP111-33*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*i7Stylus*|*M80TA*)
-			set_property ro.iio.accel.x.opt_scale -1
-			;;
-		*LenovoMIIX320*|*ONDATablet*)
-			set_property ro.iio.accel.order 102
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*SP111-33*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*Venue*8*Pro*3845*)
-			set_property ro.iio.accel.order 102
-			;;
-		*ST70416-6*)
-			set_property ro.iio.accel.order 102
-			;;
-		*e-tabPro*|*pnEZpad*|*TECLAST:rntPAD*)
-			set_property ro.iio.accel.quirks no-trig
-			;&
-		*T*0*TA*|*M80TA*)
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*TECLAST*X4*)
-			set_property ro.iio.accel.quirks no-trig
-			set_property ro.iio.accel.order 102
-			set_property ro.iio.accel.x.opt_scale -1
-			set_property ro.iio.accel.y.opt_scale -1
-			;;
-		*SwitchSA5-271*|*SwitchSA5-271P*)
-			set_property ro.ignore_atkbd 1
-			has_sensors=true
-			hal_sensors=iio
-			;&
-		*)
-			has_sensors=false
+		*Surface*Pro*[4-9]*|*Surface*Book*|*Surface*Laptop*[1~4]*|*Surface*Laptop*Studio*)
+			start iptsd_runner
 			;;
 	esac
-
-	# has iio sensor-hub?
-	if [ -n "`ls /sys/bus/iio/devices/iio:device* 2> /dev/null`" ]; then
-		toybox chown -R 1000.1000 /sys/bus/iio/devices/iio:device*/
-		[ -n "`ls /sys/bus/iio/devices/iio:device*/in_accel_x_raw 2> /dev/null`" ] && has_sensors=true
-		hal_sensors=iio
-	elif lsmod | grep -q hid_sensor_accel_3d; then
-		hal_sensors=hsb
-		has_sensors=true
-	elif lsmod | grep -q lis3lv02d_i2c; then
-		hal_sensors=hdaps
-		has_sensors=true
-	elif [ "$hal_sensors" != "kbd" ] | [ hal_sensors=iio ]; then
-		has_sensors=true
-	fi
-	
-	# TODO close Surface Pro 4 sensor until bugfix 
-	case "$(cat $DMIPATH/uevent)" in 
-		*SurfacePro4*) 
-		  hal_sensors=kbd 
-		  ;; 
-		*) 
-		  ;; 
-	esac
-
-	set_property ro.hardware.sensors $hal_sensors
-	set_property config.override_forced_orient ${HAS_SENSORS:-$has_sensors}
 }
 
 function create_pointercal()
@@ -601,7 +649,7 @@ function init_tscal()
 
 	for usbts in $(lsusb | awk '{ print $6 }'); do
 		case "$usbts" in
-			0596:0001|0eef:0001)
+			0596:0001|0eef:0001|14e1:6000|14e1:5000)
 				create_pointercal
 				return
 				;;
@@ -642,11 +690,81 @@ function set_lowmem()
 	fi
 }
 
+function set_custom_ota()
+{
+	for c in `cat /proc/cmdline`; do
+		case $c in
+			*=*)
+				eval $c
+				if [ -z "$1" ]; then
+					case $c in
+						# Set TimeZone
+						SET_CUSTOM_OTA_URI=*)
+							setprop bliss.updater.uri "$SET_CUSTOM_OTA_URI"
+							;;
+					esac
+				fi
+				;;
+		esac
+	done
+	
+}
+
+function init_loop_links()
+{
+	mkdir -p /dev/block/by-name
+	for part in kernel initrd system; do
+		for suffix in _a _b; do
+			loop_device=$(losetup -a | grep "$part$suffix" | cut -d ":" -f1)
+			if [ ! -z "$loop_device" ]; then
+				ln -s $loop_device /dev/block/by-name/$part$suffix
+			fi
+		done
+	done
+	loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
+	ln -s $loop_device /dev/block/by-name/misc
+
+	ln -s /dev/block/by-name/kernel_a /dev/block/by-name/boot_a
+	ln -s /dev/block/by-name/kernel_b /dev/block/by-name/boot_b
+}
+
+function init_prepare_ota()
+{
+	# If there's slot set, turn on bootctrl
+	# If not, disable the OTA app (in bootcomplete)
+	if [ "$(getprop ro.boot.slot_suffix)" ]; then
+		start vendor.boot-hal-1-2
+	fi
+}
+
+function set_custom_timezone()
+{
+	for c in `cat /proc/cmdline`; do
+		case $c in
+			*=*)
+				eval $c
+				if [ -z "$1" ]; then
+					case $c in
+						# Set TimeZone
+						SET_TZ_LOCATION=*)
+							settings put global time_zone "$SET_TZ_LOCATION"
+							setprop persist.sys.timezone "$SET_TZ_LOCATION"
+							;;
+					esac
+				fi
+				;;
+		esac
+	done
+	
+}
+
 function do_init()
 {
 	init_misc
 	set_lowmem
+	set_custom_timezone
 	init_hal_audio
+	set_custom_ota
 	init_hal_bluetooth
 	init_hal_camera
 	init_hal_gps
@@ -658,8 +776,11 @@ function do_init()
 	init_hal_power
 	init_hal_thermal
 	init_hal_sensors
+	init_hal_surface
 	init_tscal
 	init_ril
+	init_loop_links
+	init_prepare_ota
 	post_init
 }
 
@@ -679,37 +800,6 @@ function do_bootcomplete()
 	lsmod | grep -Ehq "brcmfmac|rtl8723be" && setprop wlan.no-unload-driver 1
 
 	case "$PRODUCT" in
-		1866???|1867???|1869???) # ThinkPad X41 Tablet
-			start tablet-mode
-			start wacom-input
-			setkeycodes 0x6d 115
-			setkeycodes 0x6e 114
-			setkeycodes 0x69 28
-			setkeycodes 0x6b 158
-			setkeycodes 0x68 172
-			setkeycodes 0x6c 127
-			setkeycodes 0x67 217
-			;;
-		6363???|6364???|6366???) # ThinkPad X60 Tablet
-			;&
-		7762???|7763???|7767???) # ThinkPad X61 Tablet
-			start tablet-mode
-			start wacom-input
-			setkeycodes 0x6d 115
-			setkeycodes 0x6e 114
-			setkeycodes 0x69 28
-			setkeycodes 0x6b 158
-			setkeycodes 0x68 172
-			setkeycodes 0x6c 127
-			setkeycodes 0x67 217
-			;;
-		7448???|7449???|7450???|7453???) # ThinkPad X200 Tablet
-			start tablet-mode
-			start wacom-input
-			setkeycodes 0xe012 158
-			setkeycodes 0x66 172
-			setkeycodes 0x6b 127
-			;;
 		Surface*Go)
 			echo on > /sys/devices/pci0000:00/0000:00:15.1/i2c_designware.1/power/control
 			;;
@@ -723,28 +813,6 @@ function do_bootcomplete()
 			;;
 	esac
 
-#	[ -d /proc/asound/card0 ] || modprobe snd-dummy
-	for c in $(grep '\[.*\]' /proc/asound/cards | awk '{print $1}'); do
-		f=/system/etc/alsa/$(cat /proc/asound/card$c/id).state
-		if [ -e $f ]; then
-			alsa_ctl -f $f restore $c
-		else
-			alsa_ctl init $c
-			alsa_amixer -c $c set Master on
-			alsa_amixer -c $c set Master 100%
-			alsa_amixer -c $c set Headphone on
-			alsa_amixer -c $c set Headphone 100%
-			alsa_amixer -c $c set Speaker 100%
-			alsa_amixer -c $c set Capture 80%
-			alsa_amixer -c $c set Capture cap
-			alsa_amixer -c $c set PCM 100% unmute
-			alsa_amixer -c $c set SPO unmute
-			alsa_amixer -c $c set IEC958 on
-			alsa_amixer -c $c set 'Mic Boost' 1
-			alsa_amixer -c $c set 'Internal Mic Boost' 1
-		fi
-	done
-
 	# check wifi setup
 	FILE_CHECK=/data/misc/wifi/wpa_supplicant.conf
 
@@ -756,19 +824,27 @@ function do_bootcomplete()
 
 	POST_INST=/data/vendor/post_inst_complete
 	USER_APPS=/system/etc/user_app/*
+	BUILD_DATETIME=$(getprop ro.build.date.utc)
+	POST_INST_NUM=$(cat $POST_INST)
 
-	if [ ! -f "$POST_INST" ]; then
+	if [ ! "$BUILD_DATETIME" == "$POST_INST_NUM" ]; then
 		for apk in $USER_APPS
 		do		
 			pm install $apk
 		done
-		touch /data/vendor/post_inst_complete
+		rm "$POST_INST"
+		touch "$POST_INST"
+		echo $BUILD_DATETIME > "$POST_INST"
 	fi
 
 	#Auto activate XtMapper
-	env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
-	CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
-	/system/bin xtr.keymapper.server.InputService
+	#nohup env LD_LIBRARY_PATH=$(echo /data/app/*/xtr.keymapper*/lib/x86_64) \
+	#CLASSPATH=$(echo /data/app/*/xtr.keymapper*/base.apk) /system/bin/app_process \
+	#/system/bin xtr.keymapper.server.InputService > /dev/null 2>&1 &
+
+	if [ ! "$(getprop ro.boot.slot_suffix)" ]; then
+		pm disable org.lineageos.updater
+	fi
 
 	post_bootcomplete
 }
@@ -778,6 +854,7 @@ PATH=/sbin:/system/bin:/system/xbin
 DMIPATH=/sys/class/dmi/id
 BOARD=$(cat $DMIPATH/board_name)
 PRODUCT=$(cat $DMIPATH/product_name)
+VENDOR=$(cat $DMIPATH/sys_vendor)
 UEVENT=$(cat $DMIPATH/uevent)
 
 # import cmdline variables
@@ -798,6 +875,30 @@ for c in `cat /proc/cmdline`; do
 						;;
 					DPI=*)
 						set_property ro.sf.lcd_density "$DPI"
+						;;
+					SET_SF_ROTATION=*)
+						set_property ro.sf.hwrotation "$SET_SF_ROTATION"
+						;;
+					SET_OVERRIDE_FORCED_ORIENT=*)
+						set_property config.override_forced_orient "$SET_OVERRIDE_FORCED_ORIENT"
+						;;
+					SET_SYS_APP_ROTATION=*)
+						# property: persist.sys.app.rotation has three cases:
+						# 1.force_land: always show with landscape, if a portrait apk, system will scale up it
+						# 2.middle_port: if a portrait apk, will show in the middle of the screen, left and right will show black
+						# 3.original: original orientation, if a portrait apk, will rotate 270 degree
+						set_property persist.sys.app.rotation "$SET_SYS_APP_ROTATION"
+						;;
+					# Battery Stats
+					SET_FAKE_BATTERY_LEVEL=*)
+						# Let us fake the total battery percentage
+						# Range: 0-100
+						dumpsys battery set level "$SET_FAKE_BATTERY_LEVEL"
+						;;
+					SET_FAKE_CHARGING_STATUS=*)
+						# Allow forcing battery charging status
+						# Off: 0  On: 1
+						dumpsys battery set ac "$SET_FAKE_CHARGING_STATUS"
 						;;
 				esac
 				[ "$SETUPWIZARD" = "0" ] && set_property ro.setupwizard.mode DISABLED

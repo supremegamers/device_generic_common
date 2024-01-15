@@ -2,13 +2,7 @@
 # system.prop for Android-x86
 #
 
-persist.sys.enable_rescue=false
-persist.sys.disable_rescue=true
 persist.bluetooth.enablenewavrcp=true
-sys.rescue_level=0
-audio.safemedia.bypass=true
-camera.disable_treble=false
-ro.incremental.enable=yes
 
 # Set the Bluetooth Class of Device
 # Service Field: 0x5A -> 90

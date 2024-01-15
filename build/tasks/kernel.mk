@@ -8,15 +8,21 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
-TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r450784d/bin
+TARGET_CLANG_PATH := prebuilts/clang/host/linux-x86/clang-r498229b/bin
 
 ifneq ($(TARGET_NO_KERNEL),true)
+
+INSTALLED_KERNELIMAGE_TARGET := $(PRODUCT_OUT)/kernel.img
+
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 ifneq ($(filter x86%,$(TARGET_ARCH)),)
 
 KERNEL_DIR ?= kernel
-FIRMWARE_DIR := device/generic/firmware
-COPY_FIRMWARE_SCRIPT := $(FIRMWARE_DIR)/copy-firmware.sh
+SOF_FIRMWARE_DIR := vendor/intel/proprietary/sof-bin
+COPY_FIRMWARE_SCRIPT := device/generic/firmware/copy-firmware.sh
+COPY_FIRMWARE_SILEAD_SCRIPT := vendor/silead/proprietary/firmware/firmware/linux/copy-firmware.sh
+COPY_FIRMWARE_SOF_SCRIPT :=$(SOF_FIRMWARE_DIR)/install.sh
+FIRMWARE_DEST := $(abspath $(TARGET_OUT_VENDOR))/firmware
 
 TARGET_KERNEL_ARCH := $(TARGET_ARCH)
 KERNEL_TARGET := bzImage
@@ -79,8 +85,11 @@ $(BUILT_KERNEL_TARGET): $(KERNEL_DOTCONFIG_FILE) $(M4) $(LEX) $(BISON)
 	# A dirty hack to use ar & ld
 	$(mk_kernel) olddefconfig
 	$(mk_kernel) $(KERNEL_TARGET) $(if $(MOD_ENABLED),modules)
-	$(COPY_FIRMWARE_SCRIPT) -v $(abspath $(TARGET_OUT))/lib/firmware
+	$(COPY_FIRMWARE_SCRIPT) --zstd -v $(FIRMWARE_DEST)
+	$(if $(TARGET_HAS_SILEAD_FIRMWARE), $(COPY_FIRMWARE_SILEAD_SCRIPT) --zstd -v $(FIRMWARE_DEST))
+	$(if $(TARGET_HAS_SOF_FIRMWARE), FW_DEST=$(FIRMWARE_DEST)/intel FW_LOCATION=$(SOF_FIRMWARE_DIR) $(COPY_FIRMWARE_SOF_SCRIPT) $(SOF_FIRMWARE_VERSION))
 	$(if $(FIRMWARE_ENABLED),$(mk_kernel) INSTALL_MOD_PATH=$(abspath $(TARGET_OUT)) firmware_install)
+	$(hide) cp $@ $(INSTALLED_KERNELIMAGE_TARGET)
 
 ifneq ($(MOD_ENABLED),)
 KERNEL_MODULES_DEP := $(firstword $(wildcard $(TARGET_OUT)/lib/modules/*/modules.dep))
@@ -117,10 +126,13 @@ endif # TARGET_PREBUILT_KERNEL
 #ifndef LINEAGE_BUILD
 $(INSTALLED_KERNEL_TARGET): $(TARGET_PREBUILT_KERNEL) | $(ACP)
 	$(copy-file-to-new-target)
+	$(hide) cp $@ $(INSTALLED_KERNELIMAGE_TARGET)
 ifdef TARGET_PREBUILT_MODULES
 	mkdir -p $(TARGET_OUT)/lib
 	$(hide) cp -r $(TARGET_PREBUILT_MODULES) $(TARGET_OUT)/lib
 endif
 #endif # LINEAGE_BUILD
+
+INSTALLED_RADIOIMAGE_TARGET += $(INSTALLED_KERNELIMAGE_TARGET)
 
 endif # TARGET_NO_KERNEL

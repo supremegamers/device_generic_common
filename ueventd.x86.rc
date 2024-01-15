@@ -1,7 +1,9 @@
 /dev/ttyS*                0660  system        radio
 /dev/ttyACM*              0660  system        radio
 /dev/ttyUSB*              0660  radio         radio
-/dev/video*       		  0660  system        camera
+/dev/video*               0660  system        camera
+/dev/media*               0660  system        camera
+/dev/v4l-subdev*          0660  system        camera
 /dev/iio:device*          0660  system        system
 /dev/ion                  0664  system        system
 
@@ -19,5 +21,9 @@
 /sys/devices/virtual/thermal/thermal_zone*      trip_point_1_temp    0644 system system
 /dev/acpi_thermal_rel                                                0600 system system
 
-# USB switch
-/sys/devices/pci0000:00/0000:00:*.0/intel_xhci_usb_sw/usb_role/intel_xhci_usb_sw-role-switch role 0664 system system
+# allow binderized sensor hal access input devices
+# note that binderize cannot happen until all sensor hals are ready
+/dev/input/event* 0660 system system
+/dev/hidraw*      0660 system system
+# steamdeck virtual controller built into deck sensor hal
+/dev/uinput       0660 system system

@@ -1,5 +1,3 @@
-import /init.configfs_x86.rc
-
 on early-init
     write /proc/sys/kernel/ctrl-alt-del 1
 
@@ -8,10 +6,13 @@ on early-init
     export force_s3tc_enable true
     export EGL_LOG_LEVEL info
     export OPENSSL_armcap 0
-    export INTEL_DEBUG noccs,heur32
+    export INTEL_DEBUG heur32
     export VIRGL_DEBUG nocoherent
 #   export EGL_DRIVERS egl_dri2
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
+
+    # mapping properties
+    setprop ro.hardware.power ${ro.boot.hardware.power}
 
 on early-init && property:mesa.loader.override=*
     export MESA_LOADER_DRIVER_OVERRIDE ${mesa.loader.override}
@@ -116,12 +117,6 @@ service btattach /system/vendor/bin/btattach
     oneshot
     seclabel u:r:bluetooth:s0
 
-service rtk_hciattach /vendor/bin/rtk_hciattach -n -s 115200 /dev/rtk_h5 rtk_h5
-    class main
-    disabled
-    oneshot
-    seclabel u:r:bluetooth:s0
-
 service wacom-input /system/bin/wacom-input
     disabled
     oneshot
@@ -137,6 +132,11 @@ service ctrl-alt-del /system/bin/input keyevent --longpress POWER
     oneshot
     keycodes 97 100 111
     seclabel u:r:init:s0
+
+service iptsd_runner /system/vendor/bin/iptsd_runner
+    class main
+    disabled
+    seclabel u:r:zygote:s0
 
 on property:system_init.startsurfaceflinger=0
     # disable cursor blinking

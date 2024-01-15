@@ -32,6 +32,21 @@ PRODUCT_PACKAGES := \
     v86d \
     wacom-input \
 
+ifeq ($(IS_GO_VERSION), true)
+
+ifeq ($(USE_TREBUCHET), true)
+
+PRODUCT_PACKAGES += \
+    TrebuchetQuickstepGo
+    
+else 
+
+PRODUCT_PACKAGES += \
+    Launcher3GoIconRecents
+
+endif
+endif
+
 PRODUCT_PACKAGES += \
     libwpa_client \
     wificond \
@@ -53,8 +68,7 @@ PRODUCT_PACKAGES += \
 	btmon \
     hciconfig \
     hcitool \
-    thermal-daemon \
-    usb_otg_switch
+    thermal-daemon
 
 # Stagefright FFMPEG plugins
 PRODUCT_PACKAGES += \
@@ -105,3 +119,16 @@ PRODUCT_PACKAGES += \
 	pc.xml \
 	hpe.xml \
 	device.prop
+    
+# Some additional CLI programs
+PRODUCT_PACKAGES += tput dialog alsa-info.sh tree lspci dmidecode
+
+# Surface specific
+ifeq ($(BOARD_IS_SURFACE_BUILD),true)
+PRODUCT_PACKAGES += iptsd_runner iptsd \
+                    iptsd-find-hidraw \
+                    iptsd-calibrate \
+                    iptsd-check-device \
+                    iptsd-dump \
+                    iptsd-perf
+endif

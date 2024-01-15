@@ -8,6 +8,9 @@
 #      http://www.apache.org/licenses/LICENSE-2.0
 #
 
+# Minimal added packages option
+ifneq ($(BLISS_SUPER_VANILLA), true)
+
 LOCAL_PATH := $(call my-dir)
 LOCAL_APPS := $(subst $(LOCAL_PATH)/,,$(wildcard $(LOCAL_PATH)/*$(COMMON_ANDROID_PACKAGE_SUFFIX)))
 
@@ -35,3 +38,8 @@ ALL_DEFAULT_INSTALLED_MODULES += $$(LOCAL_INSTALLED_MODULE)
 endef
 
 $(foreach a,$(LOCAL_APPS),$(eval $(call include-app,$(a))))
+
+else
+include $(call all-subdir-makefiles)
+# END Minimal added packages
+endif
