@@ -61,6 +61,14 @@ function init_misc()
 
 function init_hal_audio()
 {
+	## HACK: if snd_hda_intel cannot be probed, reprobe it
+	if [ "$( lsmod | grep "snd_hda_intel" )" ]; then	
+		if [ "$( dmesg | grep "couldn't bind with audio component" )" ]; then
+		rmmod snd_hda_intel
+		modprobe snd_hda_intel
+		fi
+	fi
+
 	case "$PRODUCT" in
 		VirtualBox*|Bochs*)
 			[ -d /proc/asound/card0 ] || modprobe snd-sb16 isapnp=0 irq=5
