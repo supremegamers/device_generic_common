@@ -79,40 +79,54 @@ function init_hal_audio()
 
 	if [ "$BOARD" == "Jupiter" ] && [ "$VENDOR" == "Valve" ]
 	then
-		alsaucm -c Valve-Jupiter-1 set _verb HiFi
-
 		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
 		# headset microphone on d0, 32bit only
 		set_property hal.audio.in.headset "pcmC${pcm_card}D0c"
 		set_property hal.audio.in.headset.format 1
-		amixer -c ${pcm_card} sset 'Headset Mic',0 on
 
 		# internal microphone on d0, 32bit only
 		set_property hal.audio.in.mic "pcmC${pcm_card}D0c"
 		set_property hal.audio.in.mic.format 1
-		amixer -c ${pcm_card} sset 'Int Mic',0 on
-		amixer -c ${pcm_card} sset 'DMIC Enable',0 on
 
 		# headphone jack on d0, 32bit only
 		set_property hal.audio.out.headphone "pcmC${pcm_card}D0p"
 		set_property hal.audio.out.headphone.format 1
-		amixer -c ${pcm_card} sset 'Headphone',0 on
 
 		# speaker on d1, 16bit only
 		set_property hal.audio.out.speaker "pcmC${pcm_card}D1p"
 		set_property hal.audio.out.speaker.format 0
+
+		# enable hdmi audio on the 3rd output, but it really depends on how docks wire things
+		# to make matters worse, jack detection on alsa does not seem to always work on my setup, so a dedicated hdmi hal might want to send data to all ports instead of just probing
+		pcm_card=$(cat /proc/asound/cards | grep HDA-Intel | awk '{print $1}')
+		set_property hal.audio.out.hdmi "pcmC${pcm_card}D8p"
+	fi
+}
+
+function init_hal_audio_bootcomplete()
+{
+	if [ "$BOARD" == "Jupiter" ] && [ "$VENDOR" == "Valve" ]
+	then
+		alsaucm -c Valve-Jupiter-1 set _verb HiFi
+
+		pcm_card=$(cat /proc/asound/cards | grep acp5x | awk '{print $1}')
+		# headset microphone on d0, 32bit only
+		amixer -c ${pcm_card} sset 'Headset Mic',0 on
+
+		# internal microphone on d0, 32bit only
+		amixer -c ${pcm_card} sset 'Int Mic',0 on
+		amixer -c ${pcm_card} sset 'DMIC Enable',0 on
+
+		# headphone jack on d0, 32bit only
+		amixer -c ${pcm_card} sset 'Headphone',0 on
+
+		# speaker on d1, 16bit only
 		amixer -c ${pcm_card} sset 'Left DSP RX1 Source',0 ASPRX1
 		amixer -c ${pcm_card} sset 'Right DSP RX1 Source',0 ASPRX2
 		amixer -c ${pcm_card} sset 'Left DSP RX2 Source',0 ASPRX1
 		amixer -c ${pcm_card} sset 'Right DSP RX2 Source',0 ASPRX2
 		amixer -c ${pcm_card} sset 'Left DSP1 Preload',0 on
 		amixer -c ${pcm_card} sset 'Right DSP1 Preload',0 on
-
-
-		# enable hdmi audio on the 3rd output, but it really depends on how docks wire things
-		# to make matters worse, jack detection on alsa does not seem to always work on my setup, so a dedicated hdmi hal might want to send data to all ports instead of just probing
-		pcm_card=$(cat /proc/asound/cards | grep HDA-Intel | awk '{print $1}')
-		set_property hal.audio.out.hdmi "pcmC${pcm_card}D8p"
 
 		# unmute them all
 		amixer -c ${pcm_card} sset 'IEC958',0 on
@@ -812,6 +826,9 @@ function do_bootcomplete()
 		*)
 			;;
 	esac
+
+	# initialize audio in bootcomplete
+	init_hal_audio_bootcomplete
 
 	# check wifi setup
 	FILE_CHECK=/data/misc/wifi/wpa_supplicant.conf
