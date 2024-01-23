@@ -520,7 +520,7 @@ function init_hal_power()
 			;;
 	esac
 
-	set_prop_if_empty ro.hardware.audio.primary ${SLEEP_STATE}
+	set_property sleep.state ${SLEEP_STATE}
 }
 
 function init_hal_thermal()
