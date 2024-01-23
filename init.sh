@@ -511,14 +511,16 @@ function init_hal_power()
 	# TODO
 	case "$PRODUCT" in
 		HP*Omni*|OEMB|Standard*PC*|Surface*3|T10*TA|VMware*)
-			set_prop_if_empty sleep.state none
+			SLEEP_STATE=none
 			;;
 		e-tab*Pro)
-			set_prop_if_empty sleep.state force
+			SLEEP_STATE=force
 			;;
 		*)
 			;;
 	esac
+
+	set_prop_if_empty ro.hardware.audio.primary ${SLEEP_STATE}
 }
 
 function init_hal_thermal()

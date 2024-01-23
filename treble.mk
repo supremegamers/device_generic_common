@@ -25,7 +25,7 @@ PRODUCT_PACKAGES += \
 
 # Bluetooth HAL
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0-service.vbt \
+    android.hardware.bluetooth@1.1-service.vbt \
     android.hardware.bluetooth.audio@2.1-impl \
 #    android.hardware.bluetooth@1.1-service.btlinux \
 
@@ -83,8 +83,6 @@ PRODUCT_PACKAGES += \
 
 # Drm HAL
 PRODUCT_PACKAGES += \
-    android.hardware.drm@1.0-impl \
-    android.hardware.drm@1.0-service-lazy \
     android.hardware.drm@1.4-service-lazy.clearkey
 
 # GPS HAL
