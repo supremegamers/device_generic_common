@@ -24,4 +24,6 @@
     <bool name="def_accelerometer_rotation">true</bool>
     <!-- default setting for Settings.System.POWERMENU_ADVANCED -->
     <bool name="def_powermenu_advanced">false</bool>
+    <!-- Skip setup so Home softkey could work. -->
+    <bool name="def_user_setup_complete">true</bool>
 </resources>
