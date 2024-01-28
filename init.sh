@@ -290,7 +290,7 @@ function init_hal_gralloc()
 			;&
 		*radeon|*vmwgfx*)
 			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC}
+				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
 				set_drm_mode
 			fi
@@ -388,9 +388,14 @@ function init_hal_hwcomposer()
 {
 	# TODO
 	if [ "$HWACCEL" != "0" ]; then
-		if [ "$HWC" = "" ]; then
-			set_property debug.sf.hwc_service_name drmfb
-			start vendor.hwcomposer-2-1.drmfb
+		if [ "$HWC" = "default" ]; then
+			if [ "$HWC_IS_DRMFB" = "1" ]; then
+				set_property debug.sf.hwc_service_name drmfb
+				start vendor.hwcomposer-2-1.drmfb
+			else
+				set_property debug.sf.hwc_service_name default
+				start vendor.hwcomposer-2-1
+			fi
 		else
 			set_property debug.sf.hwc_service_name default
 			start vendor.hwcomposer-2-4
