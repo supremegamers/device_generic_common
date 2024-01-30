@@ -213,6 +213,12 @@ function init_hal_bluetooth()
 		chown bluetooth.bluetooth $BTUART_PORT
 		start btattach
 	fi
+
+	if [ "$BTLINUX_HAL" = "1" ]; then
+		start btlinux-1.1
+	else
+		start vendor.bluetooth-1-1
+	fi
 }
 
 function init_hal_camera()
