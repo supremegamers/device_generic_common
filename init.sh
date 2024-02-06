@@ -219,6 +219,16 @@ function init_hal_bluetooth()
 	else
 		start vendor.bluetooth-1-1
 	fi
+
+	if [ "$BT_BLE_DISABLE" = "1" ]; then
+		set_property bluetooth.core.le.disabled true
+		set_property bluetooth.hci.disabled_commands 246
+	fi
+
+	if [ "$BT_BLE_NO_VENDORCAPS" = "1" ]; then
+		set_property bluetooth.core.le.vendor_capabilities.enabled false
+		set_property persist.sys.bt.max_vendor_cap 0
+	fi
 }
 
 function init_hal_camera()
