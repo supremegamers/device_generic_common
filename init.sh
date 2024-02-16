@@ -213,6 +213,22 @@ function init_hal_bluetooth()
 		chown bluetooth.bluetooth $BTUART_PORT
 		start btattach
 	fi
+
+	if [ "$BTLINUX_HAL" = "1" ]; then
+		start btlinux-1.1
+	else
+		start vendor.bluetooth-1-1
+	fi
+
+	if [ "$BT_BLE_DISABLE" = "1" ]; then
+		set_property bluetooth.core.le.disabled true
+		set_property bluetooth.hci.disabled_commands 246
+	fi
+
+	if [ "$BT_BLE_NO_VENDORCAPS" = "1" ]; then
+		set_property bluetooth.core.le.vendor_capabilities.enabled false
+		set_property persist.sys.bt.max_vendor_cap 0
+	fi
 }
 
 function init_hal_camera()
@@ -290,7 +306,7 @@ function init_hal_gralloc()
 			;&
 		*radeon|*vmwgfx*)
 			if [ "$HWACCEL" != "0" ]; then
-				set_property ro.hardware.hwcomposer ${HWC}
+				${HWC:+set_property ro.hardware.hwcomposer $HWC}
 				set_property ro.hardware.gralloc ${GRALLOC:-gbm}
 				set_drm_mode
 			fi
@@ -388,9 +404,14 @@ function init_hal_hwcomposer()
 {
 	# TODO
 	if [ "$HWACCEL" != "0" ]; then
-		if [ "$HWC" = "" ]; then
-			set_property debug.sf.hwc_service_name drmfb
-			start vendor.hwcomposer-2-1.drmfb
+		if [ "$HWC" = "default" ]; then
+			if [ "$HWC_IS_DRMFB" = "1" ]; then
+				set_property debug.sf.hwc_service_name drmfb
+				start vendor.hwcomposer-2-1.drmfb
+			else
+				set_property debug.sf.hwc_service_name default
+				start vendor.hwcomposer-2-1
+			fi
 		else
 			set_property debug.sf.hwc_service_name default
 			start vendor.hwcomposer-2-4
@@ -488,7 +509,7 @@ function init_hal_vulkan()
 		*amdgpu)
 			set_property ro.hardware.vulkan amd
 			;;
-		*virtio_gpu)
+		*virtio_gpu|*virtio-pci)
 			set_property ro.hardware.vulkan virtio
 			;;
 		*)
