@@ -150,6 +150,11 @@ PRODUCT_COPY_FILES += \
     $(foreach f,$(wildcard $(LOCAL_PATH)/alsa/*),$(f):$(subst $(LOCAL_PATH),system/etc,$(f))) \
     $(foreach f,$(wildcard $(LOCAL_PATH)/idc/*.idc $(LOCAL_PATH)/keylayout/*.kl),$(f):$(subst $(LOCAL_PATH),system/usr,$(f)))
 
+# Recovery
+PRODUCT_COPY_FILES += \
+    $(if $(wildcard $(PRODUCT_DIR)init.recovery.$(TARGET_PRODUCT).rc),$(PRODUCT_DIR)init.recovery.$(TARGET_PRODUCT).rc,$(LOCAL_PATH)/init.recovery.x86.rc):recovery/root/init.recovery.$(TARGET_PRODUCT).rc \
+    $(if $(wildcard $(PRODUCT_DIR)init.recovery.sh),$(PRODUCT_DIR),$(LOCAL_PATH)/)init.recovery.sh:recovery/root/system/etc/init.recovery.sh \
+
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true

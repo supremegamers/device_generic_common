@@ -773,6 +773,8 @@ function init_loop_links()
 	done
 	loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
 	ln -s $loop_device /dev/block/by-name/misc
+	loop_device=$(losetup -a | grep recovery | cut -d ":" -f1)
+	ln -s $loop_device /dev/block/by-name/recovery
 
 	ln -s /dev/block/by-name/kernel_a /dev/block/by-name/boot_a
 	ln -s /dev/block/by-name/kernel_b /dev/block/by-name/boot_b

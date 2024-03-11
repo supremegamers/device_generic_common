@@ -1,0 +1,11 @@
+on early-init
+    setprop ro.minui.pixel_format ${ro.boot.pixel_format}
+
+on init
+    setprop sys.usb.configfs 1
+
+on post-fs
+    exec u:r:init:s0 -- /system/bin/sh /system/etc/init.recovery.sh
+
+on property:net.dns1=*
+    exec u:r:init:s0 -- /system/bin/sh /system/etc/init.recovery.sh netconsole

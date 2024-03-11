@@ -4,6 +4,8 @@
 
 TARGET_BOARD_PLATFORM := android-x86
 
+LOCAL_COMMON_TREE := device/generic/common
+
 ## Switch to EROFS image instead of Squashfs
 USE_SQUASHFS := 0
 USE_EROFS := 1
@@ -55,7 +57,7 @@ endif
 # the following variables could be overridden
 TARGET_PRELINK_MODULE := false
 TARGET_NO_KERNEL ?= false
-TARGET_NO_RECOVERY ?= true
+#TARGET_NO_RECOVERY ?= true
 TARGET_EXTRA_KERNEL_MODULES := 
 ifneq ($(filter efi_img,$(MAKECMDGOALS)),)
 TARGET_KERNEL_ARCH ?= x86_64
@@ -186,6 +188,7 @@ SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS := device/generic/common/sepolicy/plat_private
 
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4394967290
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 100663296
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := true
 BOARD_USES_OEMIMAGE := true
 BUILD_BROKEN_USES_NETWORK := true
@@ -206,6 +209,9 @@ STAGEFRIGHT_AVCENC_CFLAGS := -DANDROID_GCE
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
 TARGET_VENDOR_PROP += device/generic/common/props/vendor.prop
 TARGET_SYSTEM_PROP += device/generic/common/system.prop
+
+# Recovery
+TARGET_RECOVERY_FSTAB :=$(LOCAL_COMMON_TREE)/recovery.fstab
 
 # Include GloDroid components
 include device/generic/common/glodroid/BoardConfig_glodroid.mk
