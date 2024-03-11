@@ -1,4 +1,5 @@
 none			/cache		tmpfs	nosuid,nodev,noatime	defaults
+/dev/block/by-name/misc     /misc   emmc    defaults        defaults
 
 /devices/*/block/sr*		auto	auto	defaults		voldmanaged=cdrom:auto
 /devices/*/usb*/*		auto	auto	defaults		voldmanaged=usb:auto,noemulatedsd
