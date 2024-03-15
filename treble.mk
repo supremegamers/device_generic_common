@@ -98,5 +98,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.thermal@2.0-service.intel
 
+# Bootctrl HAL
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.2-x86impl \
+    android.hardware.boot@1.2-x86impl.recovery \
+    android.hardware.boot@1.2-service
+
 # vndservicemanager
 PRODUCT_PACKAGES += vndservicemanager
