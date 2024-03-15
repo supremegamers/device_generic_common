@@ -57,6 +57,21 @@ function init_loop_links()
 
         ln -s /dev/block/by-name/kernel /dev/block/by-name/boot
     fi
+
+    # Insert /data to recovery.fstab
+    if [ "$(getprop sys.recovery.data_is_part)" ] && [ "$(getprop sys.recovery.data_part)" ]; then
+        data_part=$(getprop sys.recovery.data_part)
+        if [ "$(toybox blkid /dev/block/$data_part | grep ext4)" ]; then
+            echo "/dev/block/$data_part     /data    ext4    rw,noatime       defaults" >> /etc/recovery.fstab
+        elif [ "$(toybox blkid /dev/block/$data_part | grep f2fs)" ]; then
+            echo "/dev/block/$data_part     /data    f2fs    rw,noatime       defaults" >> /etc/recovery.fstab
+        fi
+    fi
+    if [ "$(getprop sys.recovery.data_is_part)" ] && [ "$(getprop sys.recovery.data_is_img)" ]; then
+        loop_device=$(losetup -a | grep data | cut -d ":" -f1)
+        ln -s $loop_device /dev/block/by-name/userdata
+        echo "/dev/block/by-name/userdata     /data   ext4    defaults        defaults" >> /etc/recovery.fstab
+    fi
 }
 
 function do_netconsole()
