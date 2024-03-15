@@ -4,6 +4,25 @@
 # License: GNU Public License v2 or later
 #
 
+function set_property()
+{
+	setprop "$1" "$2"
+	[ -n "$DEBUG" ] && echo "$1"="$2" >> /dev/x86.prop
+}
+
+function set_prop_if_empty()
+{
+	[ -z "$(getprop $1)" ] && set_property "$1" "$2"
+}
+
+function init_misc()
+{
+	# Tell vold to use ntfs3 driver instead of ntfs-3g
+    if [ "$USE_NTFS3" -ge "1" ] || [ "$VOLD_USE_NTFS3" -ge 1 ]; then
+        set_property ro.vold.use_ntfs3 true
+    fi
+}
+
 function init_loop_links()
 {
 	if [ "$(cat /proc/cmdline | grep androidboot.slot_suffix)" ]; then
@@ -47,6 +66,7 @@ function do_netconsole()
 
 function do_init()
 {
+    init_misc
 	init_loop_links
 }
 
