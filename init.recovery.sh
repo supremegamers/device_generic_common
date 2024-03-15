@@ -25,6 +25,7 @@ function init_misc()
 
 function init_loop_links()
 {
+    # Setup partitions loop
 	if [ "$(cat /proc/cmdline | grep androidboot.slot_suffix)" ]; then
         mkdir -p /dev/block/by-name
         for part in kernel initrd system; do
@@ -71,6 +72,16 @@ function init_loop_links()
         loop_device=$(losetup -a | grep data | cut -d ":" -f1)
         ln -s $loop_device /dev/block/by-name/userdata
         echo "/dev/block/by-name/userdata     /data   ext4    defaults        defaults" >> /etc/recovery.fstab
+    fi
+
+    # Insert /system into recovery.fstab
+    ab_slot=$(getprop ro.boot.slot_suffix)
+    if [ "$ab_slot" = "_a" ]; then
+        echo "/dev/block/by-name/system_a     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
+    elif [ "$ab_slot" = "_b" ]; then
+        echo "/dev/block/by-name/system_b     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
+    else
+        echo "/dev/block/by-name/system     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
     fi
 }
 
