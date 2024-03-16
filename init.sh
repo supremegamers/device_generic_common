@@ -57,6 +57,11 @@ function init_misc()
 
 	#Set CPU name into a property
 	setprop ro.bliss.cpuname "$(grep "model name" /proc/cpuinfo | sort -u | cut -d : -f 2 | cut -c2-)"
+
+	# Tell vold to use ntfs3 driver instead of ntfs-3g
+    if [ "$USE_NTFS3" -ge "1" ] || [ "$VOLD_USE_NTFS3" -ge 1 ]; then
+        set_property ro.vold.use_ntfs3 true
+    fi
 }
 
 function init_hal_audio()
