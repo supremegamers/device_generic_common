@@ -86,10 +86,8 @@ function init_loop_links()
 
     # Insert /system into recovery.fstab
     ab_slot=$(getprop ro.boot.slot_suffix)
-    if [ "$ab_slot" = "_a" ]; then
-        echo "/dev/block/by-name/system_a     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
-    elif [ "$ab_slot" = "_b" ]; then
-        echo "/dev/block/by-name/system_b     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
+    if [ ! -z "$ab_slot" ]; then
+        echo "/dev/block/by-name/system     /system   ext4    defaults        slotselect,first_stage_mount" >> /etc/recovery.fstab
     else
         echo "/dev/block/by-name/system     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
     fi
