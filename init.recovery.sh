@@ -93,6 +93,11 @@ function init_loop_links()
     else
         echo "/dev/block/by-name/system     /system   ext4    defaults        defaults" >> /etc/recovery.fstab
     fi
+
+    # Create /dev/block/bootdevice/by-name
+    # because some scripts are dumb
+    mkdir -p /dev/block/bootdevice
+    ln -s /dev/block/by-name /dev/block/bootdevice/by-name
 }
 
 function do_netconsole()
