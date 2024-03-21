@@ -109,6 +109,33 @@ function do_init()
 	init_loop_links
 }
 
+# import cmdline variables
+for c in `cat /proc/cmdline`; do
+	case $c in
+		BOOT_IMAGE=*|iso-scan/*|*.*=*)
+			;;
+		nomodeset)
+			HWACCEL=0
+			;;
+		*=*)
+			eval $c
+			if [ -z "$1" ]; then
+				case $c in
+					DEBUG=*)
+						[ -n "$DEBUG" ] && set_property debug.logcat 1
+						[ "$DEBUG" = "0" ] || SETUPWIZARD=${SETUPWIZARD:-0}
+						;;
+					DPI=*)
+						set_property ro.sf.lcd_density "$DPI"
+						;;
+				esac
+			fi
+			;;
+	esac
+done
+
+[ -n "$DEBUG" ] && set -x || exec &> /dev/null
+
 case "$1" in
 	netconsole)
 		[ -n "$DEBUG" ] && do_netconsole
