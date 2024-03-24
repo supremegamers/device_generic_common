@@ -293,7 +293,7 @@ $(call inherit-product-if-exists, vendor/supremegamers/kokoro/kokoro.mk)
 endif
 
 # Add agp-apps
-$(call inherit-product-if-exists, vendor/agp-apps/agp-apps.mk)
+$(call inherit-product-if-exists, vendor/prebuilts/agp-apps/agp-apps.mk)
 
 # Add SettingsIntelligenceGooglePrebuilt
 $(call inherit-product-if-exists, vendor/google/proprietary/SettingsIntelligenceGooglePrebuilt/sigp.mk)
