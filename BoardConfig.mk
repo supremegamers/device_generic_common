@@ -25,17 +25,6 @@ AB_OTA_PARTITIONS += \
 # Rootfs
 BOARD_ROOT_EXTRA_FOLDERS := grub
 
-# A/B
-AB_OTA_UPDATER := true
-
-AB_OTA_PARTITIONS += \
-    system \
-    initrd \
-    kernel
-
-# Rootfs
-BOARD_ROOT_EXTRA_FOLDERS := grub
-
 # Some framework code requires this to enable BT
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_LINUX := true
