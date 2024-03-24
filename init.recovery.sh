@@ -28,7 +28,7 @@ function init_loop_links()
     # Setup partitions loop
 	if [ "$(cat /proc/cmdline | grep androidboot.slot_suffix)" ]; then
         mkdir -p /dev/block/by-name
-        for part in kernel initrd system; do
+        for part in kernel initrd system recovery; do
             for suffix in _a _b; do
                 loop_device=$(losetup -a | grep "$part$suffix" | cut -d ":" -f1)
                 loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
@@ -37,36 +37,34 @@ function init_loop_links()
                 fi
             done
         done
-        loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
-        loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
-        mknod "/dev/block/by-name/misc" b 7 $loop_device_num
-        loop_device=$(losetup -a | grep recovery | cut -d ":" -f1)
-        loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
-        mknod "/dev/block/by-name/recovery" b 7 $loop_device_num
+
         loop_device=$(losetup -a | grep kernel_a | cut -d ":" -f1)
         loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
         mknod "/dev/block/by-name/boot_a" b 7 $loop_device_num
         loop_device=$(losetup -a | grep kernel_b | cut -d ":" -f1)
         loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
         mknod "/dev/block/by-name/boot_b" b 7 $loop_device_num
+
+        loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
+        ln -s $loop_device /dev/block/by-name/misc
+
+        ln -s /dev/block/by-name/recovery_a /dev/block/by-name/ramdisk-recovery_a
+        ln -s /dev/block/by-name/recovery_b /dev/block/by-name/ramdisk-recovery_b
     else
         mkdir -p /dev/block/by-name
-        for part in kernel initrd system; do
+        for part in kernel initrd system recovery; do
                 loop_device=$(losetup -a | grep "$part" | cut -d ":" -f1)
                 loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
                 if [ ! -z "$loop_device_num" ]; then
                     mknod "/dev/block/by-name/$part" b 7 $loop_device_num
                 fi
         done
-        loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
-        loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
-        mknod "/dev/block/by-name/misc" b 7 $loop_device_num
-        loop_device=$(losetup -a | grep recovery | cut -d ":" -f1)
-        loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
-        mknod "/dev/block/by-name/recovery" b 7 $loop_device_num
         loop_device=$(losetup -a | grep kernel | cut -d ":" -f1)
         loop_device_num=$(echo $loop_device | cut -d '/' -f 4 | cut -d 'p' -f 2)
         mknod "/dev/block/by-name/boot" b 7 $loop_device_num
+
+        loop_device=$(losetup -a | grep misc | cut -d ":" -f1)
+        ln -s $loop_device /dev/block/by-name/misc
     fi
 
     # Insert /data to recovery.fstab
