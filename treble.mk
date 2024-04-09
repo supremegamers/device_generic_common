@@ -114,5 +114,5 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-x86impl.recovery \
     android.hardware.boot@1.2-service
 
-# vndservice & vndservicemanager
-PRODUCT_PACKAGES += vndservice vndservicemanager
+# vndservice & vndservicemanager & hwservicemanager
+PRODUCT_PACKAGES += vndservice vndservicemanager hwservicemanager
