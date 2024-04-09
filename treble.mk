@@ -50,7 +50,7 @@ PRODUCT_PACKAGES += \
 
 # Gatekeeper HAL
 PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-service.software
+    android.hardware.gatekeeper-service
 
 # Health HAL
 PRODUCT_PACKAGES += \
@@ -106,7 +106,7 @@ PRODUCT_PACKAGES += \
 
 # Thermal HAL
 PRODUCT_PACKAGES += \
-    android.hardware.thermal@2.0-service.intel
+    android.hardware.thermal@aidl-service.intel
 
 # Bootctrl HAL
 PRODUCT_PACKAGES += \
