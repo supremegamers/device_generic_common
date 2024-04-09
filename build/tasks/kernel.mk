@@ -17,7 +17,7 @@ INSTALLED_KERNELIMAGE_TARGET := $(PRODUCT_OUT)/kernel.img
 ifeq ($(TARGET_PREBUILT_KERNEL),)
 ifneq ($(filter x86%,$(TARGET_ARCH)),)
 
-KERNEL_DIR ?= kernel
+KERNEL_DIR ?= kernel/x86/common
 SOF_FIRMWARE_DIR := vendor/intel/proprietary/sof-bin
 COPY_FIRMWARE_SCRIPT := device/generic/firmware/copy-firmware.sh
 COPY_FIRMWARE_SILEAD_SCRIPT := vendor/silead/proprietary/firmware/firmware/linux/copy-firmware.sh

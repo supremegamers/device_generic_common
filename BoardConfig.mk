@@ -150,16 +150,19 @@ ifeq ($(BOARD_IS_GO_BUILD), true)
 MALLOC_SVELTE := true
 endif
 
+KERNEL_DIR ?= kernel/x86/common
+
 # Surface specific
 ifeq ($(BOARD_IS_SURFACE_BUILD),true)
-KERNEL_DIR := kernel-surface
+KERNEL_DIR := kernel/x86/surface
 endif
 
 # Zenith
 ifeq ($(BOARD_IS_ZENITH_BUILD),true)
-KERNEL_DIR := kernel-zenith
+KERNEL_DIR := kernel/x86/zenith
 endif
 
+TARGET_KERNEL_SOURCE := $(KERNEL_DIR)
 COMPATIBILITY_ENHANCEMENT_PACKAGE := true
 PRC_COMPATIBILITY_PACKAGE := true
 ZIP_OPTIMIZATION_NO_INTEGRITY := true
