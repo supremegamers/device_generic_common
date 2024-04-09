@@ -142,7 +142,7 @@ PRODUCT_PACKAGES += \
 	device.prop
     
 # Some additional CLI programs
-PRODUCT_PACKAGES += tput dialog alsa-info.sh tree lspci dmidecode vainfo
+PRODUCT_PACKAGES += tput alsa-info.sh tree lspci dmidecode vainfo htop nano bash
 
 # Surface specific
 ifeq ($(BOARD_IS_SURFACE_BUILD),true)
