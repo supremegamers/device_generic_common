@@ -25,10 +25,7 @@ PRODUCT_PACKAGES := \
     libEGL_angle \
     libGLESv1_CM_angle \
     libGLESv2_angle \
-    libEGL_swiftshader \
-    libGLESv2_swiftshader \
-    vulkan.pastel \
-    vulkan.pastel_legacy \
+    vulkan.pastel
 
 PRODUCT_PACKAGES += \
     libEGL_mesa \

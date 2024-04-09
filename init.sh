@@ -361,8 +361,6 @@ function init_egl()
 	else
 		if [ "$ANGLE" == "1" ]; then
 			set_property ro.hardware.egl angle
-		else
-			set_property ro.hardware.egl swiftshader
 		fi
 		set_property ro.hardware.vulkan pastel
 		start vendor.hwcomposer-2-1
