@@ -231,18 +231,12 @@ $(call inherit-product,$(if $(wildcard $(PRODUCT_DIR)packages.mk),$(PRODUCT_DIR)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/handheld_vendor.mk)
 
-# Inherit common Bliss stuff
-ifneq ($(BOARD_IS_GO_BUILD),true)
-$(call inherit-product-if-exists,vendor/bliss/config/common_full_tablet.mk)
-else
-$(call inherit-product-if-exists,vendor/bliss/config/common_mini_tablet.mk)
-endif
-TARGET_FACE_UNLOCK_SUPPORTED := false
-TARGET_WANTS_FOD_ANIMATIONS := false
+# Inherit common Calyx stuff
+$(call inherit-product-if-exists,vendor/calyx/config/common_tablet_wifionly.mk)
+#TARGET_FACE_UNLOCK_SUPPORTED := false
+#TARGET_WANTS_FOD_ANIMATIONS := false
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
-TARGET_BOOT_ANIMATION_RES := 720
-##CHOOSE THE BUILD YOU WANT HERE, FOSS OR OPENGAPPS
-#BLISS_BUILD_VARIANT := foss
+#TARGET_BOOT_ANIMATION_RES := 720
 WITH_SU := false
 
 ifeq ($(BOARD_IS_GO_BUILD),true)
