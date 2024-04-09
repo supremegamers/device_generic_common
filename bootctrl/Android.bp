@@ -30,6 +30,7 @@ cc_library_shared {
     header_libs: ["generated_kernel_headers"],
 
     shared_libs: [
+        "libbase",
         "liblog",
         "libhidlbase",
         "libhardware",
