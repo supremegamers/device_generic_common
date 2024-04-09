@@ -16,7 +16,7 @@ ifeq ($(BOARD_BUILD_AOSPEXT_LIBCAMERA),true)
 PRODUCT_PACKAGES += \
     ipa_ipu3.so ipa_ipu3.so.sign \
     camera.libcamera libcamera libcamera-base libcamera-cam lc-compliance \
-    android.hardware.camera.provider@2.5-service_64 libdav1d dav1d \
+    android.hardware.camera.provider@2.5-service_64
 
 PRODUCT_PROPERTY_OVERRIDES += ro.hardware.camera=libcamera
 endif

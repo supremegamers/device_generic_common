@@ -13,8 +13,8 @@ BCC_PATH := $(patsubst $(CURDIR)/%,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)
 BOARD_BUILD_AOSPEXT_MESA3D := true
 BOARD_MESA3D_SRC_DIR := external/mesa
 MESON_GEN_LLVM_STUB := true
-BOARD_BUILD_AOSPEXT_DAV1D := true
-BOARD_DAV1D_SRC_DIR := glodroid/dav1d
+#BOARD_BUILD_AOSPEXT_DAV1D := true
+#BOARD_DAV1D_SRC_DIR := glodroid/dav1d
 
 #BOARD_LIBCAMERA_EXTRA_TARGETS := \
 #    libetc:libcamera/ipa_ipu3.so:libcamera:ipa_ipu3.so:           \
