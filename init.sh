@@ -387,7 +387,7 @@ function init_egl()
 
 	# Set RenderEngine backend
 	if [ -z ${FORCE_RENDERENGINE+x} ]; then
-		set_property debug.renderengine.backend threaded
+		set_property debug.renderengine.backend skiaglthreaded
 	else
 		set_property debug.renderengine.backend $FORCE_RENDERENGINE
 	fi
