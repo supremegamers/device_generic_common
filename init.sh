@@ -62,6 +62,8 @@ function init_misc()
     if [ "$USE_NTFS3" -ge "1" ] || [ "$VOLD_USE_NTFS3" -ge 1 ]; then
         set_property ro.vold.use_ntfs3 true
     fi
+
+	ln -s /dev/hwrng /dev/hw_random
 }
 
 function init_hal_audio()
