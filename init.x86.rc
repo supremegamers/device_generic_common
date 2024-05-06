@@ -10,7 +10,6 @@ on early-init
     export VIRGL_DEBUG nocoherent
 #   export EGL_DRIVERS egl_dri2
     exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/etc/init.sh eglsetup
-    exec u:r:init:s0 -- /system/bin/logwrapper /system/bin/sh /system/vendor/etc/init.modprobe.sh
 
     # mapping properties
     setprop ro.hardware.power ${ro.boot.hardware.power}
